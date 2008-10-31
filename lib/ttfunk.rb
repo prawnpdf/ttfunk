@@ -11,9 +11,21 @@ class TTFunk
       end
     end
     
-    def head
-      return @head if @head
-      open_file { |fh| @head = Table::Head.new(fh, directory_info("head")) }
+    def self.has_tables(*tables)
+      tables.each do |t|
+        t = t.to_s
+        define_method t do
+          var = "@#{t}"
+          if ivar = instance_variable_get(var) 
+            return ivar  
+          else
+            open_file do |fh| 
+              instance_variable_set(var, 
+                Table.const_get(t.capitalize).new(fh, directory_info(t)))
+            end
+          end
+        end
+      end
     end
     
     def directory_info(table)
@@ -21,6 +33,7 @@ class TTFunk
     end
     
     attr_reader :directory
+    has_tables :head, :hhea
   end
   
   class Table 
@@ -44,6 +57,11 @@ class TTFunk
         data = fh.read(6)
         @font_direction_hint, @index_to_loc_format, @glyph_data_format =
           data.unpack("n3")        
+      end
+    end
+    
+    class Hhea < Table
+      def initialize(fh,info)
       end
     end
     
