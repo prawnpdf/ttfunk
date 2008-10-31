@@ -12,17 +12,21 @@ class TTFunk
     end
     
     def self.has_tables(*tables)
-      tables.each do |t|
-        t = t.to_s
-        define_method t do
-          var = "@#{t}"
-          if ivar = instance_variable_get(var) 
-            return ivar  
-          else
-            open_file do |fh| 
-              instance_variable_set(var, 
-                Table.const_get(t.capitalize).new(fh, directory_info(t)))
-            end
+      tables.each { |t| has_table(t) }
+    end
+    
+    def self.has_table(t)
+      t = t.to_s
+      
+      define_method t do
+        var = "@#{t}"
+        if ivar = instance_variable_get(var) 
+          return ivar  
+        else
+          klass = Table.const_get(t.capitalize)
+          open_file do |fh| 
+            instance_variable_set(var, 
+              klass.new(fh, self, directory_info(t)))
           end
         end
       end
@@ -33,13 +37,13 @@ class TTFunk
     end
     
     attr_reader :directory
-    has_tables :head, :hhea, :name, :maxp
+    has_tables :head, :hhea, :name, :maxp, :hmtx
   end
   
   class Table 
     
     class Head < Table
-      def initialize(fh, info)
+      def initialize(fh, font, info)
         fh.pos = info[:offset]
         data    = fh.read(20)
         @version, @font_revision, @check_sum_adjustment, @magic_number,
@@ -61,7 +65,7 @@ class TTFunk
     end
     
     class Hhea < Table
-      def initialize(fh,info)
+      def initialize(fh, font, info)
         fh.pos = info[:offset]
         @length = info[:length]
         data   = fh.read(4)
@@ -80,12 +84,30 @@ class TTFunk
         data.unpack("n11").map {|e| to_signed(e) }
         
         data = fh.read(2)
-        @num_of_long_hor_metrics = data.unpack("n")
+        @number_of_hmetrics = data.unpack("n").first
       end
     end
     
+    class Hmtx < Table
+      def initialize(fh, font, info)
+        fh.pos = info[:offset]
+        @values = []
+
+        font.hhea.number_of_hmetrics.times do
+          advance = fh.read(2).unpack("n").first
+          lsb     = to_signed(fh.read(2).unpack("n").first)
+          @values << [advance,lsb]
+        end
+        
+        lsb_count = font.hhea.number_of_hmetrics - font.maxp.num_glyphs
+        pattern = "n#{lsb_count}"
+        @lsb = fh.read(2*lsb_count).unpack(pattern).map { |e| to_signed(e) }
+      end
+    end
+        
+    
     class Maxp < Table
-      def initialize(fh,info)
+      def initialize(fh, font, info)
         fh.pos  = info[:offset]
         @length = info[:length]
         data    = fh.read(@length)
