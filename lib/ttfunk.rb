@@ -1,15 +1,51 @@
 class TTFunk
   class File
     def initialize(file)
-      ::File.open(file,"rb") do |fh|
-        @directory = Table::Directory.new(fh)
+      @file = file
+       open_file { |fh| @directory = Table::Directory.new(fh) }
+    end
+    
+    def open_file
+      ::File.open(@file,"rb") do |fh|
+        yield(fh)
       end
+    end
+    
+    def head
+      return @head if @head
+      open_file { |fh| @head = Table::Head.new(fh, directory_info("head")) }
+    end
+    
+    def directory_info(table)
+      directory.tables[table]
     end
     
     attr_reader :directory
   end
   
   class Table 
+    
+    class Head < Table
+      def initialize(fh, info)
+        fh.pos = info[:offset]
+        data    = fh.read(20)
+        @version, @font_revision, @check_sum_adjustment, @magic_number,
+        @flags, @units_per_em = data.unpack("N4n2")
+        
+        # skip dates
+        fh.read(16)
+        
+        data = fh.read(8)
+        @x_min, @y_min, @x_max, @y_max = data.unpack("n4").map { |e| to_signed(e) } 
+        
+        data = fh.read(4)
+        @mac_style, @lowest_rec_ppem = data.unpack("n2")
+        
+        data = fh.read(6)
+        @font_direction_hint, @index_to_loc_format, @glyph_data_format =
+          data.unpack("n3")        
+      end
+    end
     
     class Directory < Table
       def initialize(fh)
@@ -30,8 +66,7 @@ class TTFunk
         tag, checksum, offset, length = fh.read(16).unpack("a4NNN")
         { tag => { 
             :checksum => checksum, :offset => offset, :length => length } }
-      end 
-      
+      end    
     end
     
     def method_missing(*args, &block)
@@ -39,5 +74,13 @@ class TTFunk
       instance_variables.include?(var) ? instance_variable_get(var) : super
     end
     
+    private
+    
+    def to_signed(n, length=16)
+      max = 2**length-1
+      mid = 2**(length-1)
+      (n>=mid) ? -((n ^ max) + 1) : n
+    end
+      
   end
 end
