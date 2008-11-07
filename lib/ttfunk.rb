@@ -1,19 +1,9 @@
-class Array
-  alias_method :original_index, :index
-  
-  def index(*a)
-    if block_given?
-      (0...size).find { |e| yield(self[e]) }
-    else
-      original_index(*a)
-    end
-  end
-end
-
 class TTFunk
+  module BinaryUnpacks
+  
   class File
     def initialize(file)
-      @file = file
+       @file = file
        open_file { |fh| @directory = Table::Directory.new(fh) }
     end
     
@@ -64,6 +54,8 @@ class TTFunk
         process_subtables(info[:offset])
       end
       
+      private
+      
       def process_subtables(table_start)
         @sub_tables = {}
         @formats = {}
@@ -77,48 +69,67 @@ class TTFunk
           format = @file.read(2).unpack("n").first 
           case format
           when 0
-            @file.read(4) # skip length, language for now
-            glyph_ids = @file.read(256).unpack("C256")
-            @formats[0] = glyph_ids
+            read_format0
           when 4
-            length, language = @file.read(4).unpack("n2")
-            segcount_x2, search_range, entry_selector, range_shift = 
-              @file.read(8).unpack("n4")
-            end_count = @file.read(segcount_x2).unpack("n#{segcount_x2 / 2}")
-            
-            @file.read(2) # skip reserved value
-            
-            start_count = @file.read(segcount_x2).unpack("n#{segcount_x2 / 2}")
-            id_delta = @file.read(segcount_x2).unpack("n#{segcount_x2 / 2}").
-                         map { |e| to_signed(e) }
-            id_range_offset = @file.read(segcount_x2).unpack("n#{segcount_x2 / 2}")
-
-            remaining_shorts = (@file.pos - table_start) / 2
-            glyph_ids = @file.read(remaining_shorts*2).unpack("n#{remaining_shorts}")
-            
-            ######
-            
-            (0..1000).each do |char|
-              end_index = end_count.index { |e| e >= char }
-              if start_count[end_index] <= char
-                if id_range_offset[end_index] == 0
-                 # p [char + id_delta[end_index], char]
-                else
-                 gindex = id_range_offset[(id_range_offset[end_index] / 2) + (char - start_count[end_index] )]
-                 p [gindex ? glyph_ids[gindex] : 0, char]
-                end
-              else
-                0
-              end
-            end
-            
-            ######
-            
+            read_format4(table_start)
           else
             warn "TTFunk: Format #{format} not implemented, skipping"
           end
         end 
       end
+      
+      def read_segment
+        @file.read(@segcount_x2).unpack("n#{@segcount_x2 / 2}")
+      end
+      
+      def read_format0(table_start)
+        @file.read(4) # skip length, language for now
+        glyph_ids = @file.read(256).unpack("C256")
+        @formats[0] = glyph_ids
+      end
+      
+      def read_format4(table_start)
+        @formats[4] = {}
+        
+        length, language = @file.read(4).unpack("n2")
+        @segcount_x2, search_range, entry_selector, range_shift = 
+          @file.read(8).unpack("n4")
+        
+        extract_format4_glyph_ids(table_start)
+      end
+      
+      def extract_format4_glyph_ids(table_start)
+        end_count = read_segment
+        
+        @file.read(2) # skip reserved value
+        
+        start_count = read_segment
+        id_delta = read_segment.map { |e| to_signed(e) }
+        id_range_offset = read_segment
+        
+        remaining_shorts = (@file.pos - table_start) / 2
+        glyph_ids = @file.read(remaining_shorts*2).unpack("n#{remaining_shorts}")
+          
+        start_count.each_with_index do |start, i|
+          end_i = end_count[i]
+          delta = id_delta[i]
+          range = id_range_offset[i]
+           
+          start.upto(end_i) do |char|
+            if id_range_offset[i] == 0
+              gid = char + id_delta[i]
+            else
+              gindex = id_range_offset[i] / 2 + (char - start_count[i]) - 
+                  (segcount_x2 / 2 - i)
+                  gid = glyph_ids[gindex] || 0
+            end
+            gid += id_delta[i] if gid != 0      
+            gid %= 65536 
+            
+            @formats[4][char] = gid
+          end
+        end
+      end    
     end
     
     class Head < Table
