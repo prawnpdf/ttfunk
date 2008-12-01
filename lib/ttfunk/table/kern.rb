@@ -34,8 +34,6 @@ module TTFunk
         sub_table = {}
         pair_count, search_range, entry_selector, range_shift = @fh.read(8).unpack("n4")
         
-        p pair_count
-        
         pair_count.times do
           left, right = @fh.read(4).unpack("n2")
           fword = to_signed(@fh.read(2).unpack("n").first)

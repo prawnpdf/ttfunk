@@ -72,14 +72,14 @@ module TTFunk
           range = id_range_offset[i]
         
           start.upto(end_i) do |char|
-            if id_range_offset[i] == 0
-               gid = char + id_delta[i]
+            if range.zero?
+               gid = char + delta
             else
-             gindex = id_range_offset[i] / 2 + (char - start_count[i]) - 
+              gindex = range / 2 + (char - start_count[i]) - 
                   (segcount_x2 / 2 - i)
               gid = glyph_ids[gindex] || 0
-            end
-            gid += id_delta[i] if gid != 0      
+              gid += id_delta[i] if gid != 0   
+            end   
             gid %= 65536 
          
             @formats[4][char] = gid
