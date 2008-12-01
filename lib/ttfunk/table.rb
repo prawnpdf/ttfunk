@@ -1,5 +1,8 @@
-%w[cmap head hhea hmtx name directory].each do |lib|
+require "ttfunk/table/directory"
+
+%w[cmap head hhea hmtx name kern].each do |lib|
   require "ttfunk/table/" + lib
+  TTFunk::File.has_table lib
 end
 
 module TTFunk

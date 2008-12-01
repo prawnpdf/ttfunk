@@ -2,7 +2,7 @@ module TTFunk
   class Table
     class Directory < Table
       def initialize(fh)
-        @scaler_type, @table_count, @search_rage,
+        @scaler_type, @table_count, @search_range,
         @entry_selector, @range_shift = fh.read(12).unpack("Nnnnn")
         parse_table_list(fh)
       end

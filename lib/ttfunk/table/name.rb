@@ -1,7 +1,7 @@
 module TTFunk
   class Table
     class Name < Table
-      def initialize(fh,info)
+      def initialize(fh, font, info)
         fh.pos = info[:offset]
         data = fh.read(6)
         @table_start = info[:offset]

@@ -5,7 +5,7 @@ module TTFunk
         @file = fh
         @file.pos = info[:offset]
     
-        @version, @num_tables = @file.read(4).unpack("n2")
+        @version, @table_count = @file.read(4).unpack("n2")
     
         process_subtables(info[:offset])
       end
@@ -15,7 +15,7 @@ module TTFunk
       def process_subtables(table_start)
         @sub_tables = {}
         @formats = {}
-        @num_tables.times do
+        @table_count.times do
           platform_id, encoding_id, offset = @file.read(8).unpack("n2N")
           @sub_tables[[platform_id, encoding_id]] = offset
         end

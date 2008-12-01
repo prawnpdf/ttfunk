@@ -1,5 +1,3 @@
-require "ttfunk/table"
-
 module TTFunk
   class File
     def initialize(file)
@@ -35,10 +33,16 @@ module TTFunk
     end
     
     def directory_info(table)
-      directory.tables[table]
+      directory.tables[table.to_s]
+    end
+    
+    def method_missing(id,*a,&b)
+      super unless id.to_s["?"]
+      !!directory_info(id.to_s.chop)
     end
     
     attr_reader :directory
-    has_tables :head, :hhea, :name, :maxp, :hmtx, :cmap
   end   
 end
+
+require "ttfunk/table"
