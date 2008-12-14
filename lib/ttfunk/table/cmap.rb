@@ -29,7 +29,9 @@ module TTFunk
           when 4
             read_format4(table_start)
           else
-            warn "TTFunk: Format #{format} not implemented, skipping"
+            if $DEBUG
+              warn "TTFunk: Format #{format} not implemented, skipping"
+            end
           end
         end 
       end
