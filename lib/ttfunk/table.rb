@@ -9,7 +9,13 @@ module TTFunk
   class Table
     def method_missing(*args, &block)
       var = "@#{args.first}"
-      instance_variables.include?(var) ? instance_variable_get(var) : super
+      
+      # RUBY 1.9 compatability
+      if instance_variables.map { |e| e.to_s }.include?(var)
+        instance_variable_get(var)
+      else
+        super
+      end
     end
     
     private

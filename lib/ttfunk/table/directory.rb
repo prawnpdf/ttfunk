@@ -4,15 +4,9 @@ module TTFunk
       def initialize(fh)
         @scaler_type, @table_count, @search_range,
         @entry_selector, @range_shift = fh.read(12).unpack("Nnnnn")
-        parse_table_list(fh)
-      end
-  
-      def parse_table_list(fh)
-        first_table = parse_table(fh)
-        @tables = first_table
-        offset = first_table[first_table.keys.first][:offset]
-
-        @tables.update(parse_table(fh)) while fh.pos < offset
+        
+        @tables = {}
+        @table_count.times { |i| @tables.update(parse_table(fh)) }
       end
   
       def parse_table(fh)
