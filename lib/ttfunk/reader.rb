@@ -20,7 +20,7 @@ module TTFunk
 
       def parse_from(position)
         saved, io.pos = io.pos, position
-        result = yield
+        result = yield position
         io.pos = saved
         return result
       end

@@ -3,16 +3,25 @@ require 'ttfunk/table'
 module TTFunk
   class Table
     class Glyf < Table
-      def at(glyph_offset)
-        return @cache[glyph_offset] if @cache.key?(glyph_offset)
+      def for(glyph_id)
+        return @cache[glyph_id] if @cache.key?(glyph_id)
 
-        parse_from(offset + glyph_offset) do
-          number_of_contours, x_min, y_min, x_max, y_max = read_signed(5)
+        index = file.glyph_locations.index_of(glyph_id)
+        size  = file.glyph_locations.size_of(glyph_id)
 
-          @cache[glyph_offset] = if number_of_contours == -1
-              Compound.new(io, x_min, y_min, x_max, y_max)
+        if size.zero? # blank glyph, e.g. space character
+          @cache[glyph_id] = nil
+          return nil
+        end
+
+        parse_from(offset + index) do
+          raw = io.read(size)
+          number_of_contours, x_min, y_min, x_max, y_max = raw.unpack("n5").map { |i| to_signed(i) }
+
+          @cache[glyph_id] = if number_of_contours == -1
+              Compound.new(raw, x_min, y_min, x_max, y_max)
             else
-              Simple.new(io, number_of_contours, x_min, y_min, x_max, y_max)
+              Simple.new(raw, number_of_contours, x_min, y_min, x_max, y_max)
             end
         end
       end

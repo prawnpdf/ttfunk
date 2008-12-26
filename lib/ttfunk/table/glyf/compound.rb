@@ -13,58 +13,56 @@ module TTFunk
         WE_HAVE_A_TWO_BY_TWO     = 0x0080
         WE_HAVE_INSTRUCTIONS     = 0x0100
 
+        attr_reader :raw
         attr_reader :x_min, :y_min, :x_max, :y_max
-        attr_reader :components
-        attr_reader :instructions
+        attr_reader :glyph_ids
 
         Component = Struct.new(:flags, :glyph_index, :arg1, :arg2, :transform)
 
-        def initialize(io, x_min, y_min, x_max, y_max)
-          @io = io
+        def initialize(raw, x_min, y_min, x_max, y_max)
+          @raw = raw
           @x_min, @y_min, @x_max, @y_max = x_min, y_min, x_max, y_max
 
-          @components = []
-          instr_requests = 0
+          # Because TTFunk only cares about glyphs insofar as they (1) provide
+          # a bounding box for each glyph, and (2) can be rewritten into a
+          # font subset, we don't really care about the rest of the glyph data
+          # except as a whole. Thus, we don't actually decompose the glyph
+          # into it's parts--all we really care about are the locations within
+          # the raw string where the component glyph ids are stored, so that
+          # when we rewrite this glyph into a subset we can rewrite the
+          # component glyph-ids so they are correct for the subset.
+
+          @glyph_ids = []
+          @glyph_id_offsets = []
+          offset = 10 # 2 bytes for each of num-contours, min x/y, max x/y
 
           loop do
-            flags, glyph_index = read(4, "n*")
+            flags, glyph_id = @raw[offset, 4].unpack("n*")
+            @glyph_ids << glyph_id
+            @glyph_id_offsets << offset + 2
+
+            break unless flags & MORE_COMPONENTS != 0
+            offset += 4
+
             if flags & ARG_1_AND_2_ARE_WORDS != 0
-              arg1, arg2 = read(4, "n*")
+              offset += 4
             else
-              arg1, arg2 = read(2, "C*")
+              offset += 2
             end
 
             if flags & WE_HAVE_A_TWO_BY_TWO != 0
-              transform = read(8, "n*")
+              offset += 8
             elsif flags & WE_HAVE_AN_X_AND_Y_SCALE != 0
-              transform = read(4, "n*")
+              offset += 4
             elsif flags & WE_HAVE_A_SCALE != 0
-              transform = read(2, "n")
-            else
-              transform = []
+              offset += 2
             end
-
-            instr_requests += 1 if flags & WE_HAVE_INSTRUCTIONS != 0
-
-            @components << Component.new(flags, glyph_index, arg1, arg2, transform)
-            break unless flags & MORE_COMPONENTS != 0
-          end
-
-          # The docs are a bit vague on how instructions are to be parsed from
-          # a compound glyph. This seems to work for the glyphs I've tried, but...
-          @instructions = ""
-          while instr_requests > 0
-            length = read(2, "n").first
-            @instructions << io.read(length)
-            instr_requests -= 1
           end
         end
 
-        private
-
-          def io
-            @io
-          end
+        def compound?
+          true
+        end
       end
     end
   end
