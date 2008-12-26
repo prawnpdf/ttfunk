@@ -1,48 +1,62 @@
+require 'ttfunk/table'
+
 module TTFunk
   class Table
     class Kern < Table
-      def initialize(fh, font, info)
-        fh.pos = info[:offset]
-        data = fh.read(4)
-        @fh = fh
-        @version, @table_count = data.unpack("n2")
-        
-        @table_headers = {}
-        
-        @table_count.times do
-          version, length, coverage = fh.read(6).unpack("n3")
-          @table_headers[version] = { :length   => length, 
-                                      :coverage => coverage,
-                                      :format   => coverage >> 8 }
-        end   
-        
-        generate_subtables
-      end
-        
-      def generate_subtables
-        @sub_tables = {}
-        @table_headers.each do |version, data|
-          if data[:format].zero?
-            @sub_tables[0] = parse_subtable_format0
+      attr_reader :version
+      attr_reader :tables
+
+      private
+
+        def parse!
+          @version, num_tables = read(4, "n*")
+          @tables = []
+
+          if @version == 1 # Mac OS X fonts
+            @version = (@version << 16) + num_tables
+            num_tables = read(4, "N").first
+            parse_version_1_tables(num_tables)
           else
-            warn "TTFunk does not support kerning tables of format #{data[:format]}"
+            parse_version_0_tables(num_tables)
           end
         end
-      end
-      
-      def parse_subtable_format0
-        sub_table = {}
-        pair_count, search_range, entry_selector, range_shift = @fh.read(8).unpack("n4")
-        
-        pair_count.times do
-          left, right = @fh.read(4).unpack("n2")
-          fword = to_signed(@fh.read(2).unpack("n").first)
-          sub_table[[left,right]] = fword
+
+        def parse_version_0_tables(num_tables)
+          num_tables.times do # MS fonts
+            version, length, coverage = read(6, "n*")
+            format = coverage >> 8
+
+            add_table format, :version => version, :length => length,
+              :coverage => coverage, :data => handle.read(length-6),
+              :vertical => (coverage & 0x1 == 0),
+              :minimum => (coverage & 0x2 != 0),
+              :cross => (coverage & 0x4 != 0),
+              :override => (coverage & 0x8 != 0)
+          end
         end
-        
-        return sub_table
-      end
-      
+
+        def parse_version_1_tables(num_tables)
+          num_tables.times do
+            length, coverage, tuple_index = read(8, "Nnn")
+            format = coverage & 0x0FF
+
+            add_table format, :length => length, :coverage => coverage,
+              :tuple_index => tuple_index, :data => handle.read(length-8),
+              :vertical => (coverage & 0x8000 != 0),
+              :cross => (coverage & 0x4000 != 0),
+              :variation => (coverage & 0x2000 != 0)
+          end
+        end
+
+        def add_table(format, attributes={})
+          if format == 0
+            @tables << Kern::Format0.new(attributes)
+          else
+            # silently ignore unsupported kerning tables
+          end
+        end
     end
   end
 end
+
+require 'ttfunk/table/kern/format0'

@@ -1,29 +1,32 @@
-require "ttfunk/table/directory"
-
-%w[cmap head hhea hmtx name kern maxp].each do |lib|
-  require "ttfunk/table/" + lib
-  TTFunk::File.has_table lib
-end
+require 'ttfunk/reader'
 
 module TTFunk
   class Table
-    def method_missing(*args, &block)
-      var = "@#{args.first}"
-      
-      # RUBY 1.9 compatability
-      if instance_variables.map { |e| e.to_s }.include?(var)
-        instance_variable_get(var)
-      else
-        super
+    include Reader
+
+    attr_reader :file
+    attr_reader :offset
+    attr_reader :length
+
+    def initialize(file)
+      @file = file
+
+      info = file.directory_info(tag)
+
+      if info
+        @offset = info[:offset]
+        @length = info[:length]
+
+        parse_from(@offset) { parse! }
       end
     end
-    
-    private
-    
-    def to_signed(n, length=16)
-      max = 2**length-1
-      mid = 2**(length-1)
-      (n>=mid) ? -((n ^ max) + 1) : n
+
+    def exists?
+      !@offset.nil?
+    end
+
+    def tag
+      self.class.name.split(/::/).last.downcase
     end
   end
 end

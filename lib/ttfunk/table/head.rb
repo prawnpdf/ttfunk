@@ -1,25 +1,37 @@
+require 'ttfunk/table'
+
 module TTFunk  
   class Table
     class Head < TTFunk::Table
-      def initialize(fh, font, info)
-        fh.pos = info[:offset]
-        data = fh.read(20)
-        @version, @font_revision, @check_sum_adjustment, @magic_number,
-        @flags, @units_per_em = data.unpack("N4n2")
-    
-        # skip dates
-        fh.read(16)
-    
-        data = fh.read(8)
-        @x_min, @y_min, @x_max, @y_max = data.unpack("n4").map { |e| to_signed(e) }
-    
-        data = fh.read(4)
-        @mac_style, @lowest_rec_ppem = data.unpack("n2")
-    
-        data = fh.read(6)
-        @font_direction_hint, @index_to_loc_format, @glyph_data_format =
-          data.unpack("n3")
-      end
+      attr_reader :version
+      attr_reader :font_revision
+      attr_reader :checksum_adjustment
+      attr_reader :magic_number
+      attr_reader :flags
+      attr_reader :units_per_em
+      attr_reader :created
+      attr_reader :modified
+      attr_reader :x_min
+      attr_reader :y_min
+      attr_reader :x_max
+      attr_reader :y_max
+      attr_reader :mac_style
+      attr_reader :lowest_rec_ppem
+      attr_reader :font_direction_hint
+      attr_reader :index_to_loc_format
+      attr_reader :glyph_data_format
+
+      private
+
+        def parse!
+          @version, @font_revision, @check_sum_adjustment, @magic_number,
+            @flags, @units_per_em, @created, @modified = read(36, "N4n2q2")
+      
+          @x_min, @y_min, @x_max, @y_max = read_signed(4)
+      
+          @mac_style, @lowest_rec_ppem, @font_direction_hint,
+            @index_to_loc_format, @glyph_data_format = read(10, "n*")
+        end
     end
   end
 end

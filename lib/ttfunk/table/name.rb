@@ -1,52 +1,90 @@
+require 'ttfunk/table'
+
 module TTFunk
   class Table
     class Name < Table
-      def initialize(fh, font, info)
-        fh.pos = info[:offset]
-        data = fh.read(6)
-        @table_start = info[:offset]
-        @format, @record_count, @string_offset = data.unpack("nnn")
-        parse_name_records(fh)
-        parse_strings(fh)
-      end
-  
-      def parse_name_records(fh)
-        @records = {}
-        @record_count.times { @records.update(parse_name_record(fh)) }
-      end
-  
-      def parse_name_record(fh)
-        data = fh.read(12).unpack("n6")
-        platform, encoding, language, id, length, offset = data
-        { id => { 
-            :platform => platform, :encoding => encoding, 
-            :language => language, :length   => length,
-            :offset   => offset } }
-      end
-  
-      def parse_strings(fh)
-        @strings = @records.inject({}) do |s,v|
-          id, options = v
-      
-          fh.pos = @table_start + @string_offset + options[:offset]
-          s.merge(id => fh.read(options[:length]).delete("\000"))
+      class String < ::String
+        attr_reader :platform_id
+        attr_reader :encoding_id
+        attr_reader :language_id
+
+        def initialize(text, platform_id, encoding_id, language_id)
+          super(text)
+          @platform_id = platform_id
+          @encoding_id = encoding_id
+          @language_id = language_id
         end
       end
-  
-      def name_data 
-        [:copyright, :font_family, :font_subfamily, :unique_subfamily_id,
-         :full_name, :name_table_version, :postscript_name, :trademark_notice,
-         :manufacturer_name, :designer, :description, :vendor_url,
-         :designer_url, :license_description, :license_info_url ]
-      end
-    
-      def method_missing(*args,&block)
-        if name_data.include?(args.first)
-          @strings[name_data.index(args.first)]
-        else
-          super
+
+      attr_reader :strings
+
+      attr_reader :copyright
+      attr_reader :font_family
+      attr_reader :font_subfamily
+      attr_reader :unique_subfamily
+      attr_reader :font_name
+      attr_reader :version
+      attr_reader :postscript_name
+      attr_reader :trademark
+      attr_reader :manufacturer
+      attr_reader :designer
+      attr_reader :description
+      attr_reader :vendor_url
+      attr_reader :designer_url
+      attr_reader :license
+      attr_reader :license_url
+      attr_reader :preferred_family
+      attr_reader :preferred_subfamily
+      attr_reader :compatible_full
+      attr_reader :sample_text
+
+      private
+
+        def parse!
+          format, count, string_offset = read(6, "n*")
+
+          entries = []
+          count.times do
+            platform, encoding, language, id, length, start_offset = read(12, "n*")
+            entries << {
+              :platform_id => platform,
+              :encoding_id => encoding,
+              :language_id => language,
+              :name_id => id,
+              :length => length,
+              :offset => offset + string_offset + start_offset
+            }
+          end
+
+          @strings = Hash.new { |h,k| h[k] = [] }
+
+          count.times do |i|
+            io.pos = entries[i][:offset]
+            text = io.read(entries[i][:length])
+            @strings[entries[i][:name_id]] << Name::String.new(text,
+              entries[i][:platform_id], entries[i][:encoding_id], entries[i][:language_id])
+          end
+
+          @copyright = @strings[0]
+          @font_family = @strings[1]
+          @font_subfamily = @strings[2]
+          @unique_subfamily = @strings[3]
+          @font_name = @strings[4]
+          @version = @strings[5]
+          @postscript_name = @strings[6].first # should only be ONE postscript name
+          @trademark = @strings[7]
+          @manufacturer = @strings[8]
+          @designer = @strings[9]
+          @description = @strings[10]
+          @vendor_url = @strings[11]
+          @designer_url = @strings[12]
+          @license = @strings[13]
+          @license_url = @strings[14]
+          @preferred_family = @strings[15]
+          @preferred_subfamily = @strings[17]
+          @compatible_full = @strings[18]
+          @sample_text = @strings[19]
         end
-      end
     end
   end
 end

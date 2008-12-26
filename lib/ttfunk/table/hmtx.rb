@@ -1,20 +1,37 @@
+require 'ttfunk/table'
+
 module TTFunk  
   class Table 
     class Hmtx < Table
-      def initialize(fh, font, info)
-        fh.pos = info[:offset]
-        @values = []
+      attr_reader :metrics
+      attr_reader :left_side_bearings
+      attr_reader :widths
 
-        font.hhea.number_of_hmetrics.times do
-          advance = fh.read(2).unpack("n").first
-          lsb     = to_signed(fh.read(2).unpack("n").first)
-          @values << [advance,lsb]
-        end
-    
-        lsb_count = font.hhea.number_of_hmetrics - font.maxp.num_glyphs
-        pattern = "n#{lsb_count}"
-        @lsb = fh.read(2*lsb_count).unpack(pattern).map { |e| to_signed(e) }
+      HorizontalMetric = Struct.new(:advance_width, :left_side_bearing)
+
+      def for(glyph_id)
+        @metrics[glyph_id] ||
+          HorizontalMetric.new(@metrics.last.advance_width,
+            @left_side_bearings[glyph_id - @metrics.length])
       end
+
+      private
+
+        def parse!
+          @metrics = []
+
+          file.horizontal_header.number_of_metrics.times do
+            advance = read(2, "n").first
+            lsb     = read_sshort(1).first
+            @metrics.push HorizontalMetric.new(advance, lsb)
+          end
+
+          lsb_count = file.maximum_profile.num_glyphs - file.horizontal_header.number_of_metrics
+          @left_side_bearings = read_sshort(lsb_count)
+
+          @widths = @metrics.map { |metric| metric.advance_width }
+          @widths += @left_side_bearings.length * @widths.last
+        end
     end
   end
 end

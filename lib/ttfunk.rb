@@ -1,48 +1,93 @@
+require 'stringio'
+require 'ttfunk/directory'
+
 module TTFunk
   class File
-    def initialize(file)
-       @file = file
-       open_file { |fh| @directory = Table::Directory.new(fh) }
-    end
-    
-    def open_file
-      ::File.open(@file,"rb") do |fh|
-        yield(fh)
-      end
-    end
-    
-    def self.has_tables(*tables)
-      tables.each { |t| has_table(t) }
-    end
-    
-    def self.has_table(t)
-      t = t.to_s
-      
-      define_method t do
-        var = "@#{t}"
-        if ivar = instance_variable_get(var) 
-          return ivar  
-        else
-          klass = Table.const_get(t.capitalize)
-          open_file do |fh| 
-            instance_variable_set(var, 
-              klass.new(fh, self, directory_info(t)))
-          end
-        end
-      end
-    end
-    
-    def directory_info(table)
-      directory.tables[table.to_s]
-    end
-    
-    def method_missing(id,*a,&b)
-      super unless id.to_s["?"]
-      !!directory_info(id.to_s.chop)
-    end
-    
+    attr_reader :contents
     attr_reader :directory
+
+    def initialize(file)
+      @contents = StringIO.new(IO.read(file))
+      @directory = Directory.new(@contents)
+    end
+
+
+    def ascent
+      @ascent ||= os2.exists? && os2.ascent || horizontal_header.ascent
+    end
+
+    def descent
+      @descent ||= os2.exists? && os2.descent || horizontal_header.descent
+    end
+
+    def line_gap
+      @line_gap ||= os2.exists? && os2.line_gap || horizontal_header.line_gap
+    end
+
+    def bbox
+      [header.x_min, header.y_min, header.x_max, header.y_max]
+    end
+
+
+    def directory_info(tag)
+      directory.tables[tag.to_s]
+    end
+
+    def header
+      @header ||= TTFunk::Table::Head.new(self)
+    end
+
+    def cmap
+      @cmap ||= TTFunk::Table::Cmap.new(self)
+    end
+
+    def horizontal_header
+      @horizontal_header ||= TTFunk::Table::Hhea.new(self)
+    end
+
+    def horizontal_metrics
+      @horizontal_metrics ||= TTFunk::Table::Hmtx.new(self)
+    end
+
+    def maximum_profile
+      @maximum_profile ||= TTFunk::Table::Maxp.new(self)
+    end
+
+    def kerning
+      @kerning ||= TTFunk::Table::Kern.new(self)
+    end
+
+    def name
+      @name ||= TTFunk::Table::Name.new(self)
+    end
+
+    def os2
+      @os2 ||= TTFunk::Table::OS2.new(self)
+    end
+
+    def postscript
+      @postscript ||= TTFunk::Table::Post.new(self)
+    end
+
+    def glyph_locations
+      @glyph_locations ||= TTFunk::Table::Loca.new(self)
+    end
+
+    def glyph_outlines
+      @glyph_outlines ||= TTFunk::Table::Glyf.new(self)
+    end
   end   
 end
 
-require "ttfunk/table"
+require "ttfunk/table/cmap"
+require "ttfunk/table/glyf"
+require "ttfunk/table/head"
+require "ttfunk/table/hhea"
+require "ttfunk/table/hmtx"
+require "ttfunk/table/kern"
+require "ttfunk/table/loca"
+require "ttfunk/table/maxp"
+require "ttfunk/table/name"
+require "ttfunk/table/os2"
+require "ttfunk/table/post"
+
