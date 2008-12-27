@@ -3,6 +3,29 @@ require 'ttfunk/table'
 module TTFunk
   class Table
     class Glyf < Table
+      # Accepts a hash mapping (old) glyph-ids to glyph objects, and a hash
+      # mapping old glyph-ids to new glyph-ids.
+      #
+      # Returns a hash containing:
+      # 
+      # * :table - a string representing the encoded 'glyf' table containing
+      #   the given glyphs.
+      # * :offsets - an array of offsets for each glyph
+      def self.encode(glyphs, new2old, old2new)
+        result = { :table => "", :offsets => [] }
+
+        new2old.keys.sort.each do |new_id|
+          glyph = glyphs[new2old[new_id]]
+          result[:offsets] << result[:table].length
+          result[:table] << glyph.recode(old2new) if glyph
+        end
+
+        # include an offset at the end of the table, for use in computing the
+        # size of the last glyph
+        result[:offsets] << result[:table].length
+        return result
+      end
+
       def for(glyph_id)
         return @cache[glyph_id] if @cache.key?(glyph_id)
 

@@ -26,6 +26,10 @@ module TTFunk
         def compound?
           false
         end
+
+        def recode(mapping)
+          raw
+        end
       end
     end
   end

@@ -6,6 +6,75 @@ module TTFunk
         attr_reader :language
         attr_reader :code_map
 
+        # Expects a hash mapping character codes to glyph ids (where the
+        # glyph ids are from the original font). Returns a hash including
+        # a new map (:charmap) that maps the characters in charmap to a
+        # another hash containing both the old (:old) and new (:new) glyph
+        # ids. The returned hash also includes a :subtable key, which contains
+        # the encoded subtable for the given charmap.
+        def self.encode(charmap)
+          end_codes = []
+          start_codes = []
+          next_id = 0
+          last = nil
+
+          new_map = charmap.keys.sort.inject({}) do |map, code|
+            map[code] = { :old => charmap[code], :new => next_id }
+            next_id += 1
+
+            if last.nil? || code != last+1
+              end_codes << last if last
+              start_codes << code
+            end
+            last = code
+
+            map
+          end
+
+          end_codes << last if last
+          end_codes << 0xFFFF
+          start_codes << 0xFFFF
+          segcount = start_codes.length
+
+          # build the conversion tables
+          deltas = []
+          range_offsets = []
+          glyph_indices = []
+
+          offset = 0
+          start_codes.zip(end_codes).each_with_index do |(a, b), segment|
+            if a == 0xFFFF
+              deltas << 0
+              range_offsets << 0
+              break
+            end
+
+            start_glyph_id = new_map[a][:new]
+            if a - start_glyph_id >= 0x8000
+              deltas << 0
+              range_offsets << 2 * (glyph_indices.length + segcount - segment)
+              a.upto(b) { |code| glyph_indices << new_map[code][:new] }
+            else
+              deltas << -a + start_glyph_id
+              range_offsets << 0
+            end
+            offset += 2
+          end
+
+          # format, length, language
+          subtable = [4, 16 + 8 * segcount + 2 * glyph_indices.length, 0].pack("nnn")
+
+          search_range = 2 * 2 ** (Math.log(segcount) / Math.log(2)).to_i
+          entry_selector = (Math.log(search_range / 2) / Math.log(2)).to_i
+          range_shift = (2 * segcount) - search_range
+          subtable << [segcount * 2, search_range, entry_selector, range_shift].pack("nnnn")
+
+          subtable << end_codes.pack("n*") << "\0\0" << start_codes.pack("n*")
+          subtable << deltas.pack("n*") << range_offsets.pack("n*") << glyph_indices.pack("n*")
+
+          { :charmap => new_map, :subtable => subtable, :max_glyph_id => next_id }
+        end
+
         def [](code)
           @code_map[code] || 0
         end

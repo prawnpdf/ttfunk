@@ -1,9 +1,10 @@
 module TTFunk
   class Directory
     attr_reader :tables
+    attr_reader :scaler_type
 
     def initialize(io)
-      scaler_type, table_count, search_range,
+      @scaler_type, table_count, search_range,
         entry_selector, range_shift = io.read(12).unpack("Nn*")
       
       @tables = {}

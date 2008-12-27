@@ -7,6 +7,16 @@ module TTFunk
       attr_reader :left_side_bearings
       attr_reader :widths
 
+      def self.encode(hmtx, mapping)
+        metrics = mapping.keys.sort.map do |new_id|
+          metric = hmtx.for(new_id)
+          [metric.advance_width, metric.left_side_bearing]
+        end
+
+        { :number_of_metrics => metrics.length,
+          :table => metrics.flatten.pack("n*") }
+      end
+
       HorizontalMetric = Struct.new(:advance_width, :left_side_bearing)
 
       def for(glyph_id)
@@ -22,15 +32,15 @@ module TTFunk
 
           file.horizontal_header.number_of_metrics.times do
             advance = read(2, "n").first
-            lsb     = read_sshort(1).first
+            lsb     = read_signed(1).first
             @metrics.push HorizontalMetric.new(advance, lsb)
           end
 
           lsb_count = file.maximum_profile.num_glyphs - file.horizontal_header.number_of_metrics
-          @left_side_bearings = read_sshort(lsb_count)
+          @left_side_bearings = read_signed(lsb_count)
 
           @widths = @metrics.map { |metric| metric.advance_width }
-          @widths += @left_side_bearings.length * @widths.last
+          @widths += [@widths.last] * @left_side_bearings.length
         end
     end
   end

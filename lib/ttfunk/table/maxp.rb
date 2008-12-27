@@ -19,6 +19,13 @@ module TTFunk
       attr_reader :max_component_elements
       attr_reader :max_component_depth
 
+      def self.encode(maxp, mapping)
+        num_glyphs = mapping.length
+        raw = maxp.raw
+        raw[4,2] = [num_glyphs].pack("n")
+        return raw
+      end
+
       private
 
         def parse!

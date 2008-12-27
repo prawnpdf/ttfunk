@@ -15,12 +15,45 @@ module TTFunk
 
       attr_reader :subtable
 
+      def self.encode(post, mapping)
+        return nil unless post.exists?
+        post.recode(mapping)
+      end
+
       def fixed_pitch?
         @fixed_pitch != 0
       end
 
       def glyph_for(code)
         ".notdef"
+      end
+
+      def recode(mapping)
+        return raw if format == 0x00030000
+
+        table = raw[0,32]
+        table[0,4] = [0x00020000].pack("N")
+
+        index = []
+        strings = []
+
+        mapping.keys.sort.each do |new_id|
+          post_glyph = glyph_for(mapping[new_id])
+          position = Format10::POSTSCRIPT_GLYPHS.index(post_glyph)
+          if position
+            index << position
+          else
+            index << 257 + strings.length
+            strings << post_glyph
+          end
+        end
+
+        table << [mapping.length, *index].pack("n*")
+        strings.each do |string|
+          table << [string.length, string].pack("CA*")
+        end
+
+        return table
       end
 
       private
@@ -40,10 +73,10 @@ module TTFunk
             when 0x00040000 then extend(Post::Format40)
             end
 
-          parse_table!
+          parse_format!
         end
 
-        def parse_table!
+        def parse_format!
           warn "postscript table format 0x%08X is not supported" % @format
         end
     end

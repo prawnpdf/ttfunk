@@ -25,6 +25,14 @@ module TTFunk
       !@offset.nil?
     end
 
+    def raw
+      if exists?
+        parse_from(offset) { io.read(length) }
+      else
+        nil
+      end
+    end
+
     def tag
       self.class.name.split(/::/).last.downcase
     end

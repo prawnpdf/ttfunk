@@ -20,7 +20,7 @@ def character_lookup(file, character)
   end
 end
 
-file = TTFunk::File.new("data/fonts/DejaVuSans.ttf")
+file = TTFunk::File.new(ARGV.first || "data/fonts/DejaVuSans.ttf")
 
 puts "-- FONT ------------------------------------"
 

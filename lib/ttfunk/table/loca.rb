@@ -5,6 +5,21 @@ module TTFunk
     class Loca < Table
       attr_reader :offsets
 
+      # Accepts an array of offsets, with each index corresponding to the
+      # glyph id with that index.
+      #
+      # Returns a hash containing:
+      #
+      # * :table - the string representing the table's contents
+      # * :type  - the type of offset (to be encoded in the 'head' table)
+      def self.encode(offsets)
+        if offsets.any? { |ofs| ofs > 0xFFFF }
+          { :type => 1, :table => offsets.pack("N*") }
+        else
+          { :type => 0, :table => offsets.map { |o| o/2 }.pack("n*") }
+        end
+      end
+
       def index_of(glyph_id)
         @offsets[glyph_id]
       end

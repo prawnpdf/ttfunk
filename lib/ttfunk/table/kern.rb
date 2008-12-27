@@ -6,6 +6,14 @@ module TTFunk
       attr_reader :version
       attr_reader :tables
 
+      def self.encode(kerning, mapping)
+        return nil unless kerning.exists? && kerning.tables.any?
+        tables = kerning.tables.map { |table| table.recode(mapping) }.compact
+        return nil if tables.empty?
+
+        [0, tables.length, tables.join].pack("nnA*")
+      end
+
       private
 
         def parse!
@@ -27,7 +35,7 @@ module TTFunk
             format = coverage >> 8
 
             add_table format, :version => version, :length => length,
-              :coverage => coverage, :data => handle.read(length-6),
+              :coverage => coverage, :data => io.read(length-6),
               :vertical => (coverage & 0x1 == 0),
               :minimum => (coverage & 0x2 != 0),
               :cross => (coverage & 0x4 != 0),
@@ -41,7 +49,7 @@ module TTFunk
             format = coverage & 0x0FF
 
             add_table format, :length => length, :coverage => coverage,
-              :tuple_index => tuple_index, :data => handle.read(length-8),
+              :tuple_index => tuple_index, :data => io.read(length-8),
               :vertical => (coverage & 0x8000 != 0),
               :cross => (coverage & 0x4000 != 0),
               :variation => (coverage & 0x2000 != 0)

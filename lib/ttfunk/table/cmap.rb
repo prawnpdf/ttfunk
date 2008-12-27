@@ -4,6 +4,14 @@ module TTFunk
       attr_reader :version
       attr_reader :tables
 
+      def self.encode(charmap)
+        result = Cmap::Subtable.encode(charmap)
+
+        # pack 'version' and 'table-count'
+        result[:table] = [0, 1, result.delete(:subtable)].pack("nnA*")
+        return result
+      end
+
       def unicode
         @unicode ||= @tables.select { |table| table.unicode? }
       end

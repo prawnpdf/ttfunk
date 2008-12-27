@@ -16,6 +16,12 @@ module TTFunk
       attr_reader :metric_data_format
       attr_reader :number_of_metrics
 
+      def self.encode(hhea, hmtx)
+        raw = hhea.raw
+        raw[-2,2] = [hmtx[:number_of_metrics]].pack("n")
+        return raw
+      end
+
       private
 
         def parse!

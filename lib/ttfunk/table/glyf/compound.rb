@@ -63,6 +63,17 @@ module TTFunk
         def compound?
           true
         end
+
+        def recode(mapping)
+          result = @raw.dup
+          new_ids = glyph_ids.map { |id| mapping[id] }
+
+          new_ids.zip(@glyph_id_offsets).each do |new_id, offset|
+            result[offset, 2] = [new_id].pack("n")
+          end
+
+          return result
+        end
       end
     end
   end

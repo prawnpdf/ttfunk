@@ -10,21 +10,28 @@ module TTFunk
         attr_reader :encoding_id
         attr_reader :format
 
+        def self.encode(charmap)
+          result = Format04.encode(charmap)
+          # platform-id, encoding-id, offset
+          result[:subtable] = [0, 0, 12, result[:subtable]].pack("nnNA*")
+          return result
+        end
+
         def initialize(file, table_start)
           @file = file
           @platform_id, @encoding_id, @offset = read(8, "nnN")
           @offset += table_start
 
-          saved, io.pos = io.pos, @offset
-          @format = read(2, "n").first
+          parse_from(@offset) do
+            @format = read(2, "n").first
 
-          case @format
-            when 0 then extend(TTFunk::Table::Cmap::Format00)
-            when 4 then extend(TTFunk::Table::Cmap::Format04)
+            case @format
+              when 0 then extend(TTFunk::Table::Cmap::Format00)
+              when 4 then extend(TTFunk::Table::Cmap::Format04)
+            end
+
+            parse_cmap!
           end
-
-          parse_cmap!
-          io.pos = saved
         end
 
         def unicode?

@@ -10,7 +10,6 @@ module TTFunk
         attr_reader :pairs
 
         def initialize(attributes={})
-          @file = file
           @attributes = attributes
 
           num_pairs, search_range, entry_selector, range_shift, *pairs =
@@ -35,6 +34,26 @@ module TTFunk
 
         def cross_stream?
           @attributes[:cross]
+        end
+
+        def recode(mapping)
+          subset = []
+          pairs.each do |(left, right), value|
+            if mapping[left] && mapping[right]
+              subset << [mapping[left], mapping[right], value]
+            end
+          end
+
+          return nil if subset.empty?
+
+          num_pairs = subset.length
+          search_range = 2 * 2 ** (Math.log(num_pairs) / Math.log(2)).to_i
+          entry_selector = (Math.log(search_range / 2) / Math.log(2)).to_i
+          range_shift = (2 * num_pairs) - search_range
+
+          [attributes[:version], num_pairs * 6 + 14, attributes[:coverage],
+            num_pairs, search_range, entry_selector, range_shift, subset].
+            flatten.pack("n*")
         end
       end
     end

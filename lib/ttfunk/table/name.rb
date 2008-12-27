@@ -24,7 +24,6 @@ module TTFunk
       attr_reader :unique_subfamily
       attr_reader :font_name
       attr_reader :version
-      attr_reader :postscript_name
       attr_reader :trademark
       attr_reader :manufacturer
       attr_reader :designer
@@ -37,6 +36,36 @@ module TTFunk
       attr_reader :preferred_subfamily
       attr_reader :compatible_full
       attr_reader :sample_text
+
+      @@subset_tag = "AAAAAA"
+
+      def self.encode(names)
+        tag = @@subset_tag.dup
+        @@subset_tag.succ!
+
+        postscript_name = Name::String.new("#{tag}+#{names.postscript_name}", 1, 0, 0)
+
+        strings = names.strings.dup
+        strings[6] = [postscript_name]
+        str_count = strings.inject(0) { |sum, (id, list)| sum + list.length }
+
+        table = [0, str_count, 6 + 12 * str_count].pack("n*")
+        strtable = ""
+
+        strings.each do |id, list|
+          list.each do |string|
+            table << [string.platform_id, string.encoding_id, string.language_id, id, string.length, strtable.length].pack("n*")
+            strtable << string
+          end
+        end
+
+        table << strtable
+      end
+
+      def postscript_name
+        return @postscript_name if @postscript_name
+        font_family.first || "unnamed"
+      end
 
       private
 
