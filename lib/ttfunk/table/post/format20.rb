@@ -12,7 +12,7 @@ module TTFunk
           if index <= 257
             POSTSCRIPT_GLYPHS[index]
           else
-            @names[index - 257] || ".notdef"
+            @names[index - 258] || ".notdef"
           end
         end
 
