@@ -9,7 +9,7 @@ module TTFunk
 
       def self.encode(hmtx, mapping)
         metrics = mapping.keys.sort.map do |new_id|
-          metric = hmtx.for(new_id)
+          metric = hmtx.for(mapping[new_id])
           [metric.advance_width, metric.left_side_bearing]
         end
 

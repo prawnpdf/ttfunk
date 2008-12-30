@@ -4,8 +4,8 @@ module TTFunk
       attr_reader :version
       attr_reader :tables
 
-      def self.encode(charmap)
-        result = Cmap::Subtable.encode(charmap)
+      def self.encode(charmap, encoding)
+        result = Cmap::Subtable.encode(charmap, encoding)
 
         # pack 'version' and 'table-count'
         result[:table] = [0, 1, result.delete(:subtable)].pack("nnA*")

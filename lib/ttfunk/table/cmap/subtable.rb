@@ -10,10 +10,28 @@ module TTFunk
         attr_reader :encoding_id
         attr_reader :format
 
-        def self.encode(charmap)
-          result = Format04.encode(charmap)
+        ENCODING_MAPPINGS = {
+          :windows_1252 => { :platform_id => 0, :encoding_id => 0 },
+          :mac_roman    => { :platform_id => 1, :encoding_id => 0 },
+          :unicode      => { :platform_id => 0, :encoding_id => 0 }
+        }
+
+        def self.encode(charmap, encoding)
+          case encoding
+          when :mac_roman
+            result = Format00.encode(charmap, encoding)
+          when :windows_1252, :unicode
+            result = Format04.encode(charmap, encoding)
+          else
+            raise NotImplementedError, "encoding #{encoding.inspect} is not supported"
+          end
+
+          mapping = ENCODING_MAPPINGS[encoding]
+
           # platform-id, encoding-id, offset
-          result[:subtable] = [0, 0, 12, result[:subtable]].pack("nnNA*")
+          result[:subtable] = [mapping[:platform_id], mapping[:encoding_id],
+            12, result[:subtable]].pack("nnNA*")
+
           return result
         end
 

@@ -4,28 +4,51 @@ require 'ttfunk/table/glyf'
 require 'ttfunk/table/hmtx'
 require 'ttfunk/table/kern'
 require 'ttfunk/table/loca'
+require 'ttfunk/encoding/mac_roman'
+require 'ttfunk/encoding/windows_1252'
 
 module TTFunk
   class Subset
     attr_reader :original
+    attr_reader :encoding
 
-    def initialize(original)
+    def initialize(original, encoding)
       @original = original
-      @subset = Set.new([0])
+      @encoding = encoding
+      @subset = Set.new
     end
 
-    def use(characters)
-      @subset.merge(characters)
+    def use(character)
+      @subset << character
     end
 
-    def encode
+    def covers?(character)
+      case @encoding
+      when :unicode then true
+      when :mac_roman then Encoding::MacRoman.covers?(character)
+      when :windows_1252 then Encoding::Windows1252.covers?(character)
+      else false
+      end
+    end
+
+    def from_unicode(character)
+      case @encoding
+        when :unicode then character
+        when :mac_roman then Encoding::MacRoman::FROM_UNICODE[character]
+        when :windows_1252 then Encoding::Windows1252::FROM_UNICODE[character]
+        else nil
+      end
+    end
+
+    def encode(options={})
       cmap = original.cmap.unicode.first
 
+      # map unicode -> corresponding glyph id in original font
       charmap = @subset.inject({}) { |map, code| map[code] = cmap[code]; map }
-      cmap_table = TTFunk::Table::Cmap.encode(charmap)
+      cmap_table = TTFunk::Table::Cmap.encode(charmap, @encoding)
 
-      glyph_ids = @subset.map { |character| cmap[character] }
-      glyphs = collect_glyphs(glyph_ids)
+      glyph_ids = @subset.map { |character| cmap[character] } << 0
+      glyphs = collect_glyphs(glyph_ids.uniq)
 
       old2new_glyph = cmap_table[:charmap].inject({}) { |map, (code, ids)| map[ids[:old]] = ids[:new]; map }
       next_glyph_id = cmap_table[:max_glyph_id]
@@ -41,7 +64,6 @@ module TTFunk
 
       glyf_table = TTFunk::Table::Glyf.encode(glyphs, new2old_glyph, old2new_glyph)
       loca_table = TTFunk::Table::Loca.encode(glyf_table[:offsets])
-      kern_table = TTFunk::Table::Kern.encode(original.kerning, old2new_glyph)
       hmtx_table = TTFunk::Table::Hmtx.encode(original.horizontal_metrics, new2old_glyph)
       hhea_table = TTFunk::Table::Hhea.encode(original.horizontal_header, hmtx_table)
       maxp_table = TTFunk::Table::Maxp.encode(original.maximum_profile, old2new_glyph)
@@ -49,6 +71,14 @@ module TTFunk
       post_table = TTFunk::Table::Post.encode(original.postscript, new2old_glyph)
       name_table = TTFunk::Table::Name.encode(original.name)
       head_table = TTFunk::Table::Head.encode(original.header, loca_table)
+
+      # for PDF's, the kerning info is all included in the PDF as the text is
+      # drawn. Thus, the PDF readers do not actually use the kerning info in
+      # embedded fonts. If the library is used for something else, the generated
+      # subfont may need a kerning table... in that case, you need to opt into it.
+      if options[:kerning]
+        kern_table = TTFunk::Table::Kern.encode(original.kerning, old2new_glyph)
+      end
 
       tables = { 'cmap' => cmap_table[:table],
                  'glyf' => glyf_table[:table],

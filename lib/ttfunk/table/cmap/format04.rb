@@ -12,19 +12,23 @@ module TTFunk
         # another hash containing both the old (:old) and new (:new) glyph
         # ids. The returned hash also includes a :subtable key, which contains
         # the encoded subtable for the given charmap.
-        def self.encode(charmap)
+        def self.encode(charmap, encoding)
           end_codes = []
           start_codes = []
           next_id = 0
-          last = nil
+          last = difference = nil
 
+          glyph_map = { 0 => 0 }
           new_map = charmap.keys.sort.inject({}) do |map, code|
-            map[code] = { :old => charmap[code], :new => next_id }
-            next_id += 1
+            old = charmap[code]
+            glyph_map[old] ||= next_id += 1
+            map[code] = { :old => old, :new => glyph_map[old] }
 
-            if last.nil? || code != last+1
+            delta = glyph_map[old] - code
+            if last.nil? || delta != difference
               end_codes << last if last
               start_codes << code
+              difference = delta
             end
             last = code
 
@@ -72,7 +76,7 @@ module TTFunk
           subtable << end_codes.pack("n*") << "\0\0" << start_codes.pack("n*")
           subtable << deltas.pack("n*") << range_offsets.pack("n*") << glyph_indices.pack("n*")
 
-          { :charmap => new_map, :subtable => subtable, :max_glyph_id => next_id }
+          { :charmap => new_map, :subtable => subtable, :max_glyph_id => next_id+1 }
         end
 
         def [](code)
