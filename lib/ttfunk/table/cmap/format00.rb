@@ -9,18 +9,13 @@ module TTFunk
         attr_reader :language
         attr_reader :code_map
 
-        # Expects a hash mapping unicode character codes to glyph ids (where the
+        # Expects a hash mapping character codes to glyph ids (where the
         # glyph ids are from the original font). Returns a hash including
         # a new map (:charmap) that maps the characters in charmap to a
         # another hash containing both the old (:old) and new (:new) glyph
         # ids. The returned hash also includes a :subtable key, which contains
         # the encoded subtable for the given charmap.
-        def self.encode(charmap, encoding)
-          translator = case encoding
-            when :mac_roman then TTFunk::Encoding::MacRoman
-            else raise NotImplementedError, "encoding #{encoding.inspect} is not supported"
-          end
-
+        def self.encode(charmap)
           next_id = 0 
           glyph_indexes = Array.new(256, 0)
           glyph_map = { 0 => 0 }
@@ -28,7 +23,7 @@ module TTFunk
           new_map = charmap.keys.sort.inject({}) do |map, code|
             glyph_map[charmap[code]] ||= next_id += 1
             map[code] = { :old => charmap[code], :new => glyph_map[charmap[code]] }
-            glyph_indexes[translator::FROM_UNICODE[code]] = glyph_map[charmap[code]]
+            glyph_indexes[code] = glyph_map[charmap[code]]
             map
           end
 

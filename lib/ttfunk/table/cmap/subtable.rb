@@ -11,17 +11,17 @@ module TTFunk
         attr_reader :format
 
         ENCODING_MAPPINGS = {
-          :windows_1252 => { :platform_id => 0, :encoding_id => 0 },
           :mac_roman    => { :platform_id => 1, :encoding_id => 0 },
-          :unicode      => { :platform_id => 0, :encoding_id => 0 }
+          # use microsoft unicode, instead of generic unicode, for optimal windows support
+          :unicode      => { :platform_id => 3, :encoding_id => 1 }
         }
 
         def self.encode(charmap, encoding)
           case encoding
           when :mac_roman
-            result = Format00.encode(charmap, encoding)
-          when :windows_1252, :unicode
-            result = Format04.encode(charmap, encoding)
+            result = Format00.encode(charmap)
+          when :unicode
+            result = Format04.encode(charmap)
           else
             raise NotImplementedError, "encoding #{encoding.inspect} is not supported"
           end

@@ -12,7 +12,7 @@ module TTFunk
         # another hash containing both the old (:old) and new (:new) glyph
         # ids. The returned hash also includes a :subtable key, which contains
         # the encoded subtable for the given charmap.
-        def self.encode(charmap, encoding)
+        def self.encode(charmap)
           end_codes = []
           start_codes = []
           next_id = 0

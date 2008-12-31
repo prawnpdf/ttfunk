@@ -1,0 +1,36 @@
+require 'set'
+require 'ttfunk/subset/base'
+
+module TTFunk
+  module Subset
+    class Unicode < Base
+      def initialize(original)
+        super
+        @subset = Set.new
+      end
+
+      def use(character)
+        @subset << character
+      end
+
+      def covers?(character)
+        true
+      end
+
+      def from_unicode(character)
+        character
+      end
+
+      protected
+
+        def new_cmap_table(options)
+          mapping = @subset.inject({}) { |map, code| map[code] = unicode_cmap[code]; map }
+          TTFunk::Table::Cmap.encode(mapping, :unicode)
+        end
+
+        def original_glyph_ids
+          ([0] + @subset.map { |code| unicode_cmap[code] }).uniq.sort
+        end
+    end
+  end
+end

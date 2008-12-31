@@ -1,0 +1,51 @@
+require 'set'
+require 'ttfunk/subset/base'
+
+module TTFunk
+  module Subset
+    class Unicode8Bit < Base
+      def initialize(original)
+        super
+        @subset = { 0x20 => 0x20 }
+        @unicodes = { 0x20 => 0x20 }
+        @next = 0
+      end
+
+      def use(character)
+        if !@unicodes.key?(character)
+          @subset[@next] = character
+          @unicodes[character] = @next
+          @next += 1 while @subset[@next]
+        end
+      end
+
+      def covers?(character)
+        @unicodes.key?(character) || @next < 256
+      end
+
+      def from_unicode(character)
+        @unicodes[character]
+      end
+
+      protected
+
+        def new_cmap_table(options)
+          mapping = @subset.inject({}) do |map, (code,unicode)|
+            map[code] = unicode_cmap[unicode]
+            map
+          end
+
+          # since we're mapping a subset of the unicode glyphs into an
+          # arbitrary 256-character space, the actual encoding we're
+          # using is irrelevant. We choose MacRoman because it's a 256-character
+          # encoding that happens to be well-supported in both TTF and
+          # PDF formats.
+          TTFunk::Table::Cmap.encode(mapping, :mac_roman)
+        end
+
+        def original_glyph_ids
+          ([0] + @unicodes.keys.map { |unicode| unicode_cmap[unicode] }).uniq.sort
+        end
+    end
+  end
+end
