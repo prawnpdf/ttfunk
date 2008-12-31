@@ -30,8 +30,8 @@ module TTFunk
         0xFE => 0x02DB, 0xFF => 0x02C7
       )
 
-      FROM_UNICODE = Hash.new { |h,k| k > 0xFF ? nil : k }
-      FROM_UNICODE.update(TO_UNICODE.invert)
+      FROM_UNICODE = {}
+      (0..255).each { |key| FROM_UNICODE[TO_UNICODE[key]] = key }
 
       # Maps MacRoman codes to their corresponding index in the Postscript glyph
       # table (see TTFunk::Table::Post::Format10). If any entry in this array is a string,

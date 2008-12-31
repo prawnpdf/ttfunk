@@ -17,6 +17,10 @@ module TTFunk
         true
       end
 
+      def includes?(character)
+        @subset.includes(character)
+      end
+
       def from_unicode(character)
         character
       end

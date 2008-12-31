@@ -18,6 +18,11 @@ module TTFunk
         Encoding::MacRoman.covers?(character)
       end
 
+      def includes?(character)
+        code = Encoding::MacRoman::FROM_UNICODE[character]
+        code && @subset[code]
+      end
+
       def from_unicode(character)
         Encoding::MacRoman::FROM_UNICODE[character]
       end

@@ -23,6 +23,10 @@ module TTFunk
         @unicodes.key?(character) || @next < 256
       end
 
+      def includes?(character)
+        @unicodes.key?(character)
+      end
+
       def from_unicode(character)
         @unicodes[character]
       end

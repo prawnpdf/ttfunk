@@ -11,8 +11,8 @@ module TTFunk
         0x9E => 0x017E, 0x9F => 0x0178
       )
 
-      FROM_UNICODE = Hash.new { |h,k| k > 0xFF ? nil : k }
-      FROM_UNICODE.update(TO_UNICODE.invert)
+      FROM_UNICODE = {}
+      (0..255).each { |key| FROM_UNICODE[TO_UNICODE[key]] = key }
 
       # Maps Windows-1252 codes to their corresponding index in the Postscript glyph
       # table (see TTFunk::Table::Post::Format10). If any entry in this array is a string,

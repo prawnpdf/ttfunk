@@ -18,6 +18,11 @@ module TTFunk
         Encoding::Windows1252.covers?(character)
       end
 
+      def includes?(character)
+        code = Encoding::Windows1252::FROM_UNICODE[character]
+        code && @subset[code]
+      end
+
       def from_unicode(character)
         Encoding::Windows1252::FROM_UNICODE[character]
       end
