@@ -6,8 +6,12 @@ module TTFunk
     attr_reader :contents
     attr_reader :directory
 
-    def initialize(file)
-      @contents = StringIO.new(IO.read(file))
+    def self.open(file)
+      new(IO.read(file))
+    end
+
+    def initialize(contents)
+      @contents = StringIO.new(contents)
       @directory = Directory.new(@contents)
     end
 
