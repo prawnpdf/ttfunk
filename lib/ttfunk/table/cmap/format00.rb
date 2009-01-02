@@ -44,7 +44,7 @@ module TTFunk
         private
 
           def parse_cmap!
-            length, @language = read(6, "nn")
+            length, @language = read(4, "nn")
             @code_map = read(256, "C*")
           end
       end
