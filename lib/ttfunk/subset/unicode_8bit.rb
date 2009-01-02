@@ -8,14 +8,14 @@ module TTFunk
         super
         @subset = { 0x20 => 0x20 }
         @unicodes = { 0x20 => 0x20 }
-        @next = 0
+        @next = 0x21 # apparently, PDF's don't like to use chars between 0-31
       end
 
       def use(character)
         if !@unicodes.key?(character)
           @subset[@next] = character
           @unicodes[character] = @next
-          @next += 1 while @subset[@next]
+          @next += 1
         end
       end
 

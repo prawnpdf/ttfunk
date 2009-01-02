@@ -1,10 +1,13 @@
 require 'ttfunk/table/cmap'
 require 'ttfunk/table/glyf'
+require 'ttfunk/table/head'
+require 'ttfunk/table/hhea'
 require 'ttfunk/table/hmtx'
 require 'ttfunk/table/kern'
 require 'ttfunk/table/loca'
-require 'ttfunk/encoding/mac_roman'
-require 'ttfunk/encoding/windows_1252'
+require 'ttfunk/table/maxp'
+require 'ttfunk/table/name'
+require 'ttfunk/table/post'
 
 module TTFunk
   module Subset
@@ -19,7 +22,7 @@ module TTFunk
         cmap_table = new_cmap_table(options)
         glyphs = collect_glyphs(original_glyph_ids)
 
-        old2new_glyph = cmap_table[:charmap].inject({}) { |map, (code, ids)| map[ids[:old]] = ids[:new]; map }
+        old2new_glyph = cmap_table[:charmap].inject({ 0 => 0 }) { |map, (code, ids)| map[ids[:old]] = ids[:new]; map }
         next_glyph_id = cmap_table[:max_glyph_id]
 
         glyphs.keys.each do |old_id|
