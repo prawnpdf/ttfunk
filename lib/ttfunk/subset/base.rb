@@ -18,6 +18,14 @@ module TTFunk
         @original = original
       end
 
+      def unicode?
+        false
+      end
+
+      def to_unicode_map
+        {}
+      end
+
       def encode(options={})
         cmap_table = new_cmap_table(options)
         glyphs = collect_glyphs(original_glyph_ids)

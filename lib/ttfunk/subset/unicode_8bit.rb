@@ -11,6 +11,14 @@ module TTFunk
         @next = 0x21 # apparently, PDF's don't like to use chars between 0-31
       end
 
+      def unicode?
+        true
+      end
+
+      def to_unicode_map
+        @subset.dup
+      end
+
       def use(character)
         if !@unicodes.key?(character)
           @subset[@next] = character

@@ -9,6 +9,14 @@ module TTFunk
         @subset = Set.new
       end
 
+      def unicode?
+        true
+      end
+
+      def to_unicode_map
+        @subset.inject({}) { |map, code| map[code] = code; map }
+      end
+
       def use(character)
         @subset << character
       end
