@@ -8,6 +8,7 @@ require 'ttfunk/table/loca'
 require 'ttfunk/table/maxp'
 require 'ttfunk/table/name'
 require 'ttfunk/table/post'
+require 'ttfunk/table/simple'
 
 module TTFunk
   module Subset
@@ -42,15 +43,24 @@ module TTFunk
 
         new2old_glyph = old2new_glyph.invert
 
+        # "mandatory" tables. Every font should ("should") have these, including
+        # the cmap table (encoded above).
         glyf_table = TTFunk::Table::Glyf.encode(glyphs, new2old_glyph, old2new_glyph)
         loca_table = TTFunk::Table::Loca.encode(glyf_table[:offsets])
         hmtx_table = TTFunk::Table::Hmtx.encode(original.horizontal_metrics, new2old_glyph)
         hhea_table = TTFunk::Table::Hhea.encode(original.horizontal_header, hmtx_table)
         maxp_table = TTFunk::Table::Maxp.encode(original.maximum_profile, old2new_glyph)
-        os2_table  = original.os2.raw
         post_table = TTFunk::Table::Post.encode(original.postscript, new2old_glyph)
         name_table = TTFunk::Table::Name.encode(original.name)
         head_table = TTFunk::Table::Head.encode(original.header, loca_table)
+
+        # "optional" tables. Fonts may omit these if they do not need them. Because they
+        # apply globally, we can simply copy them over, without modification, if they
+        # exist.
+        os2_table  = original.os2.raw
+        cvt_table  = TTFunk::Table::Simple.new(original, "cvt ").raw
+        fpgm_table = TTFunk::Table::Simple.new(original, "fpgm").raw
+        prep_table = TTFunk::Table::Simple.new(original, "prep").raw
 
         # for PDF's, the kerning info is all included in the PDF as the text is
         # drawn. Thus, the PDF readers do not actually use the kerning info in
@@ -70,7 +80,10 @@ module TTFunk
                    'OS/2' => os2_table,
                    'post' => post_table,
                    'name' => name_table,
-                   'head' => head_table }
+                   'head' => head_table,
+                   'prep' => prep_table,
+                   'fpgm' => fpgm_table,
+                   'cvt ' => cvt_table }
 
         tables.delete_if { |tag, table| table.nil? }
 

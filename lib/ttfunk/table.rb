@@ -36,5 +36,11 @@ module TTFunk
     def tag
       self.class.name.split(/::/).last.downcase
     end
+
+    private
+
+      def parse!
+        # do nothing, by default
+      end
   end
 end
