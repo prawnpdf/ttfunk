@@ -38,6 +38,8 @@ module TTFunk
     # and so may not look (in the raw) like what was passed in, but
     # they will render correctly with the indicated subset font.
     def encode(characters)
+      return [] if characters.empty?
+
       # TODO: probably would be more optimal to nix the #use method,
       # and merge it into this one, so it can be done in a single
       # pass instead of two passes.
