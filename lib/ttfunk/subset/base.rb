@@ -99,7 +99,6 @@ module TTFunk
         table_data = ""
         head_offset = nil
         tables.each do |tag, data|
-          data.force_encoding('BINARY') if data.respond_to?(:force_encoding)
           newfont << [tag, checksum(data), offset, data.length].pack("A4N*")
           table_data << data
           head_offset = offset if tag == 'head'

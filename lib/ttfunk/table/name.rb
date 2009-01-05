@@ -13,7 +13,6 @@ module TTFunk
           @platform_id = platform_id
           @encoding_id = encoding_id
           @language_id = language_id
-          force_encoding('BINARY') if respond_to?(:force_encoding)
         end
       end
 

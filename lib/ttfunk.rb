@@ -7,7 +7,7 @@ module TTFunk
     attr_reader :directory
 
     def self.open(file)
-      new(IO.read(file))
+      new(::File.open(file, "rb") { |f| f.read })
     end
 
     def initialize(contents)
