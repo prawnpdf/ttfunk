@@ -1,5 +1,6 @@
 require 'stringio'
 require 'ttfunk/directory'
+require 'ttfunk/resource_file'
 
 module TTFunk
   class File
@@ -8,6 +9,10 @@ module TTFunk
 
     def self.open(file)
       new(::File.open(file, "rb") { |f| f.read })
+    end
+
+    def self.from_dfont(file, which=0)
+      new(ResourceFile.open(file) { |dfont| dfont["sfnt", which] })
     end
 
     def initialize(contents)
