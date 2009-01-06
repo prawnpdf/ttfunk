@@ -17,6 +17,7 @@ module TTFunk
 
           @pairs = {}
           num_pairs.times do |i|
+            break if i*3+2 > pairs.length # sanity check, in case there's a bad length somewhere
             left = pairs[i*3]
             right = pairs[i*3+1]
             value = to_signed(pairs[i*3+2])

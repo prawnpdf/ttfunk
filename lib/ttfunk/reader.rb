@@ -24,5 +24,21 @@ module TTFunk
         io.pos = saved
         return result
       end
+
+      # For debugging purposes
+      def hexdump(string)
+        bytes = string.unpack("C*")
+        bytes.each_with_index do |c, i|
+          print "%02X" % c
+          if (i+1) % 16 == 0
+            puts
+          elsif (i+1) % 8 == 0
+            print "  "
+          else
+            print " "
+          end
+        end
+        puts unless bytes.length % 16 == 0
+      end
   end
 end

@@ -30,17 +30,26 @@ module TTFunk
         end
 
         def parse_version_0_tables(num_tables)
-          num_tables.times do # MS fonts
-            version, length, coverage = read(6, "n*")
-            format = coverage >> 8
+          # It looks like some MS fonts report their kerning subtable lengths
+          # wrong. In one case, the length was reported to be some 19366, and yet
+          # the table also claimed to hold 14148 pairs (each pair consisting of 6 bytes).
+          # You do the math!
+          #
+          # We're going to assume that the microsoft fonts hold only a single kerning
+          # subtable, which occupies the entire length of the kerning table. Worst
+          # case, we lose any other subtables that the font contains, but it's better
+          # than reading a truncated kerning table.
+          #
+          # And what's more, it appears to work. So.
+          version, length, coverage = read(6, "n*")
+          format = coverage >> 8
 
-            add_table format, :version => version, :length => length,
-              :coverage => coverage, :data => io.read(length-6),
-              :vertical => (coverage & 0x1 == 0),
-              :minimum => (coverage & 0x2 != 0),
-              :cross => (coverage & 0x4 != 0),
-              :override => (coverage & 0x8 != 0)
-          end
+          add_table format, :version => version, :length => length,
+            :coverage => coverage, :data => raw[10..-1],
+            :vertical => (coverage & 0x1 == 0),
+            :minimum => (coverage & 0x2 != 0),
+            :cross => (coverage & 0x4 != 0),
+            :override => (coverage & 0x8 != 0)
         end
 
         def parse_version_1_tables(num_tables)
