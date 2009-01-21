@@ -14,6 +14,12 @@ module TTFunk
           @encoding_id = encoding_id
           @language_id = language_id
         end
+
+        def strip_extended
+          stripped = gsub(/[\x00-\x19\x80-\xff]/n, "")
+          stripped = "[not-postscript]" if stripped.empty?
+          return stripped
+        end
       end
 
       attr_reader :strings
@@ -100,7 +106,7 @@ module TTFunk
           @unique_subfamily = @strings[3]
           @font_name = @strings[4]
           @version = @strings[5]
-          @postscript_name = @strings[6].first # should only be ONE postscript name
+          @postscript_name = @strings[6].first.strip_extended # should only be ONE postscript name
           @trademark = @strings[7]
           @manufacturer = @strings[8]
           @designer = @strings[9]
