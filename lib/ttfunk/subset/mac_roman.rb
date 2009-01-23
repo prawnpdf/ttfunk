@@ -10,6 +10,10 @@ module TTFunk
         @subset = Array.new(256)
       end
 
+      def to_unicode_map
+        Encoding::MacRoman::TO_UNICODE
+      end
+
       def use(character)
         @subset[Encoding::MacRoman::FROM_UNICODE[character]] = character
       end

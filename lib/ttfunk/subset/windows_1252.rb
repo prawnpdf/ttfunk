@@ -10,6 +10,10 @@ module TTFunk
         @subset = Array.new(256)
       end
 
+      def to_unicode_map
+        Encoding::Windows1252::TO_UNICODE
+      end
+
       def use(character)
         @subset[Encoding::Windows1252::FROM_UNICODE[character]] = character
       end
