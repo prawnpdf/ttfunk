@@ -22,15 +22,15 @@ module TTFunk
 
 
     def ascent
-      @ascent ||= os2.exists? && os2.ascent || horizontal_header.ascent
+      @ascent ||= (os2.exists? && os2.ascent && os2.ascent.nonzero?) || horizontal_header.ascent
     end
 
     def descent
-      @descent ||= os2.exists? && os2.descent || horizontal_header.descent
+      @descent ||= (os2.exists? && os2.descent && os2.descent.nonzero?) || horizontal_header.descent
     end
 
     def line_gap
-      @line_gap ||= os2.exists? && os2.line_gap || horizontal_header.line_gap
+      @line_gap ||= (os2.exists? && os2.line_gap && os2.line_gap.nonzero?) || horizontal_header.line_gap
     end
 
     def bbox
