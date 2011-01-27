@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
   spec.summary = "TrueType Font Metrics Parser"
   spec.description = "Get Ya TrueType Funk On! (Font Metrics Parser for Prawn)"
 
-  spec.files =  Dir.glob("{lib,data}/**/*") + ['example.rb']
+  spec.files =  Dir.glob("{lib,data}/**/*") + ['example.rb','CHANGELOG','README.rdoc']
   spec.required_ruby_version = '>= 1.8.7'
   spec.required_rubygems_version = ">= 1.3.6"
 

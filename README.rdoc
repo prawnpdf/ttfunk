@@ -1,0 +1,39 @@
+TTFunk is a TrueType font parser written in pure ruby.
+
+= Installation
+
+The recommended installation method is via Rubygems.
+
+  gem install ttfunk
+
+= Usage
+
+Basic usage:
+
+    require 'ttfunk'
+
+    file = TTFunk::File.open("some/path/myfont.ttf")
+    puts "name    : #{file.name.font_name.join(', ')}"
+    puts "ascent  : #{file.ascent}"
+    puts "descent : #{file.descent}"
+
+For more detailed examples, explore the examples directory.
+
+= Maintainers
+
+- Brad Ediger
+- Daniel Nelson
+- Jonathen Green
+- James Healy
+
+= Licensing
+
+??
+
+= Mailing List
+
+TTFunk is maintaiend as a dependency of prawn, the ruby PDF generation library.
+
+Any questions or feedback should be sent to the Prawn google group.
+
+http://groups.google.com/group/prawn-ruby
