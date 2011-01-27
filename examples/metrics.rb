@@ -1,5 +1,5 @@
 # encoding: utf-8
-$LOAD_PATH << "#{File.dirname(__FILE__)}/lib"
+$LOAD_PATH << "#{File.dirname(__FILE__)}/../lib"
 require "ttfunk"
 
 def character_lookup(file, character)
@@ -21,7 +21,7 @@ def character_lookup(file, character)
   end
 end
 
-file = TTFunk::File.open(ARGV.first || "data/fonts/DejaVuSans.ttf")
+file = TTFunk::File.open(ARGV.first || "#{File.dirname(__FILE__)}/../data/fonts/DejaVuSans.ttf")
 
 puts "-- FONT ------------------------------------"
 
