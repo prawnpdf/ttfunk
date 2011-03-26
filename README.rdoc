@@ -28,7 +28,7 @@ For more detailed examples, explore the examples directory.
 
 = Licensing
 
-??
+GPL v2
 
 = Mailing List
 
