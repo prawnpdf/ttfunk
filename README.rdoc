@@ -23,7 +23,7 @@ For more detailed examples, explore the examples directory.
 
 - Brad Ediger
 - Daniel Nelson
-- Jonathen Green
+- Jonathan Greenberg
 - James Healy
 
 = Licensing
