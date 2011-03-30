@@ -32,7 +32,7 @@ Matz's terms for Ruby, GPLv2, or GPLv3. See LICENSING for details.
 
 = Mailing List
 
-TTFunk is maintaiend as a dependency of prawn, the ruby PDF generation library.
+TTFunk is maintained as a dependency of prawn, the ruby PDF generation library.
 
 Any questions or feedback should be sent to the Prawn google group.
 
