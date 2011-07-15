@@ -1,6 +1,7 @@
 module TTFunk
   module Encoding
     class Windows1252
+      # XXX: Ruby 1.9.2 on OS X Lion segfaults on range1.zip(range2)
       TO_UNICODE = Hash[*(0..255).zip((0..255).to_a).flatten]
       TO_UNICODE.update(
         0x80 => 0x20AC, 0x82 => 0x201A, 0x83 => 0x0192, 0x84 => 0x201E, 0x85 => 0x2026,

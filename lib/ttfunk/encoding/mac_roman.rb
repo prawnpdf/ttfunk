@@ -1,6 +1,7 @@
 module TTFunk
   module Encoding
     class MacRoman
+      # XXX: Ruby 1.9.2 on OS X Lion segfaults on range1.zip(range2)
       TO_UNICODE = Hash[*(0..255).zip((0..255).to_a).flatten]
 
       TO_UNICODE.update(
