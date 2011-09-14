@@ -10,6 +10,8 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 1.8.7'
   spec.required_rubygems_version = ">= 1.3.6"
 
-  spec.authors = ["Gregory Brown","Brad Ediger","Daniel Nelson","Jonathen Greenberg","James Healy"]
-  spec.email = ["gregory.t.brown@gmail.com","brad@bradediger.com","dnelson@bluejade.com","greenberg@entryway.net","jimmy@deefa.com"]
+  spec.authors = ["Gregory Brown","Brad Ediger","Daniel Nelson",
+    "Jonathan Greenberg","James Healy"]
+  spec.email = ["gregory.t.brown@gmail.com","brad@bradediger.com",
+    "dnelson@bluejade.com","greenberg@entryway.net","jimmy@deefa.com"]
 end
