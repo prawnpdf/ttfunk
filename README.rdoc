@@ -30,6 +30,22 @@ For more detailed examples, explore the examples directory.
 
 Matz's terms for Ruby, GPLv2, or GPLv3. See LICENSING for details.
 
+= Authorship
+
+ttfunk was originally developed by Gregory Brown as part of the Prawn
+project. In 2010, Gregory officially handed the project off to the Prawn core
+team. Currently active maintainers include Brad Ediger, Daniel Nelson, James
+Healy, and Jonathan Greenberg.
+
+While he was only with us for a short time before moving on to other things,
+we'd also like to thank Prawn core team emeritus Jamis Buck for his
+contributions.
+
+You can find the full list of Github users who have at least one patch accepted
+to ttfunk at:
+
+  https://github.com/sandal/ttfunk/contributors
+
 = Mailing List
 
 TTFunk is maintained as a dependency of prawn, the ruby PDF generation library.
