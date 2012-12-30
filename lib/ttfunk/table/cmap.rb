@@ -13,7 +13,9 @@ module TTFunk
       end
 
       def unicode
-        @unicode ||= @tables.select { |table| table.unicode? }
+        # Because most callers just call .first on the result, put tables with highest-number format first.
+        # (Tables with higher format numbers tend to be more complete, especially in higher/astral Unicode ranges.)
+        @unicode ||= @tables.select { |table| table.unicode? }.sort{|a,b| b.format <=> a.format }
       end
 
       private
