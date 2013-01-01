@@ -1,5 +1,8 @@
 # encoding: utf-8
 
+require "bundler"
+Bundler.setup
+
 require "ttfunk"
 require "rspec"
 

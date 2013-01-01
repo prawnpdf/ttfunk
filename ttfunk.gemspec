@@ -9,6 +9,9 @@ Gem::Specification.new do |spec|
     ['CHANGELOG', 'README.rdoc', 'COPYING', 'LICENSE', 'GPLv2', 'GPLv3']
   spec.required_ruby_version = '>= 1.8.7'
   spec.required_rubygems_version = ">= 1.3.6"
+  spec.add_development_dependency('rdoc')
+  spec.add_development_dependency('rspec')
+  spec.add_development_dependency('rake')
 
   spec.authors = ["Gregory Brown","Brad Ediger","Daniel Nelson",
     "Jonathan Greenberg","James Healy"]
