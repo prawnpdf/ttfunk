@@ -55,7 +55,11 @@ module TTFunk
           char = @subsets[current_subset].from_unicode(char)
 
           if parts.empty? || parts.last[0] != current_subset
-            parts << [current_subset, char.chr]
+            encoded_char = char.chr
+            if encoded_char.respond_to?(:force_encoding)
+              encoded_char.force_encoding("ASCII-8BIT")
+            end
+            parts << [current_subset, encoded_char]
           else
             parts.last[1] << char
           end
