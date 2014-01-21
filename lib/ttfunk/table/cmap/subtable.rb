@@ -13,7 +13,8 @@ module TTFunk
         ENCODING_MAPPINGS = {
           :mac_roman    => { :platform_id => 1, :encoding_id => 0 },
           # use microsoft unicode, instead of generic unicode, for optimal windows support
-          :unicode      => { :platform_id => 3, :encoding_id => 1 }
+          :unicode      => { :platform_id => 3, :encoding_id => 1 },
+          :unicode_ucs4 => { :platform_id => 3, :encoding_id => 10 }
         }
 
         def self.encode(charmap, encoding)
@@ -22,6 +23,8 @@ module TTFunk
             result = Format00.encode(charmap)
           when :unicode
             result = Format04.encode(charmap)
+          when :unicode_ucs4
+            result = Format12.encode(charmap)
           else
             raise NotImplementedError, "encoding #{encoding.inspect} is not supported"
           end
@@ -44,8 +47,11 @@ module TTFunk
             @format = read(2, "n").first
 
             case @format
-              when 0 then extend(TTFunk::Table::Cmap::Format00)
-              when 4 then extend(TTFunk::Table::Cmap::Format04)
+              when 0  then extend(TTFunk::Table::Cmap::Format00)
+              when 4  then extend(TTFunk::Table::Cmap::Format04)
+              when 6  then extend(TTFunk::Table::Cmap::Format06)
+              when 10 then extend(TTFunk::Table::Cmap::Format10)
+              when 12 then extend(TTFunk::Table::Cmap::Format12)
             end
 
             parse_cmap!
@@ -53,8 +59,8 @@ module TTFunk
         end
 
         def unicode?
-          platform_id == 3 && encoding_id == 1 && format == 4 ||
-          platform_id == 0 && format == 4
+          platform_id == 3 && (encoding_id == 1 || encoding_id == 10) && format != 0 ||
+          platform_id == 0 && format != 0
         end
 
         def supported?
@@ -77,3 +83,6 @@ end
 
 require 'ttfunk/table/cmap/format00'
 require 'ttfunk/table/cmap/format04'
+require 'ttfunk/table/cmap/format06'
+require 'ttfunk/table/cmap/format10'
+require 'ttfunk/table/cmap/format12'
