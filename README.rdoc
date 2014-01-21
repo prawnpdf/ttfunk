@@ -21,6 +21,7 @@ For more detailed examples, explore the examples directory.
 
 = Maintainers
 
+- Gregory Brown
 - Brad Ediger
 - Daniel Nelson
 - Jonathan Greenberg
