@@ -115,7 +115,7 @@ module TTFunk
           @designer_url = @strings[12]
           @license = @strings[13]
           @license_url = @strings[14]
-          @preferred_family = @strings[15]
+          @preferred_family = @strings[16]
           @preferred_subfamily = @strings[17]
           @compatible_full = @strings[18]
           @sample_text = @strings[19]

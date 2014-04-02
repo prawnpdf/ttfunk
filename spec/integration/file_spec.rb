@@ -46,6 +46,17 @@ describe TTFunk::File, "#bbox" do
   end
 end
 
+describe TTFunk::File, "preferred_family_name" do
+
+  context "with DejaVuSans" do
+    let!(:file) { TTFunk::File.open(test_font("DejaVuSans"))}
+    it "should extract the correct value" do
+      puts "DOING #{file.name.preferred_family.first}"
+      file.name.preferred_family.first.should == 'DejaVu Sans'
+    end
+  end
+end
+
 describe TTFunk::File, "#directory_info" do
 
   context "with DejaVuSans" do
