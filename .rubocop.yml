@@ -7,6 +7,8 @@ EndAlignment:
 
 # Temporarily disabled style checks while we bring the code up to standard
 # without breaking the build.
+Encoding:
+  Enabled: false
 DotPosition:
   Enabled: false
 EmptyLinesAroundAccessModifier:
