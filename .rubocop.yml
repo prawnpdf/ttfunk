@@ -1,0 +1,87 @@
+# Temporarily disabled warnings while we bring the code up to standard
+# without breaking the build.
+UselessAssignment:
+  Enabled: false
+EndAlignment:
+  Enabled: false
+
+# Temporarily disabled style checks while we bring the code up to standard
+# without breaking the build.
+DotPosition:
+  Enabled: false
+EmptyLinesAroundAccessModifier:
+  Enabled: false
+EmptyLinesAroundBody:
+  Enabled: false
+IndentationConsistency:
+  Enabled: false
+TrailingWhitespace:
+  Enabled: false
+EmptyLines:
+  Enabled: false
+IndentationWidth:
+  Enabled: false
+TrailingBlankLines:
+  Enabled: false
+IndentArray:
+  Enabled: false
+NegatedWhile:
+  Enabled: false
+NegatedIf:
+  Enabled: false
+BracesAroundHashParameters:
+  Enabled: false
+Semicolon:
+  Enabled: false
+SingleLineBlockParams:
+  Enabled: false
+CollectionMethods:
+  Enabled: false
+NonNilCheck:
+  Enabled: false
+SpaceInsideBlockBraces:
+  Enabled: false
+CyclomaticComplexity:
+  Enabled: false
+Documentation:
+  Enabled: false
+LineLength:
+  Enabled: false
+SpaceAroundEqualsInParameterDefault:
+  Enabled: false
+SpaceAroundOperators:
+  Enabled: false
+SpaceAfterComma:
+  Enabled: false
+AlignParameters:
+  Enabled: false
+MethodLength:
+  Enabled: false
+ClassVars:
+  Enabled: false
+AlignHash:
+  Enabled: false
+RedundantReturn:
+  Enabled: false
+ParameterLists:
+  Enabled: false
+SpaceBeforeBlockBraces:
+  Enabled: false
+FormatString:
+  Enabled: false
+AlignArray:
+  Enabled: false
+
+# Possibly won't remove due to intentional style decisions
+SignalException:
+  Enabled: false
+CaseIndentation:
+  Enabled: false
+IfUnlessModifier:
+  Enabled: false
+StringLiterals:
+  Enabled: false
+
+# Won't remove while supporting ruby 1.8
+HashSyntax:
+  Enabled: false
