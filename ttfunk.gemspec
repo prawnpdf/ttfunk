@@ -11,6 +11,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('rdoc')
   spec.add_development_dependency('rspec')
   spec.add_development_dependency('rake')
+  spec.add_development_dependency('rubocop')
 
   spec.authors = ["Gregory Brown","Brad Ediger","Daniel Nelson",
     "Jonathan Greenberg","James Healy"]
