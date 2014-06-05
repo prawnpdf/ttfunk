@@ -10,13 +10,13 @@ module TTFunk
     attr_reader :directory
 
     def self.open(file_or_url)
-      if file_or_url =~ /\A#{URI::regexp(['https'])}\z/
+      if file_or_url =~ /\A#{URI.regexp(['https'])}\z/
         uri = URI.parse file_or_url
         Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
           request = Net::HTTP::Get.new uri
           new http.request(request).body
         end
-      elsif file_or_url =~ /\A#{URI::regexp(['http'])}\z/
+      elsif file_or_url =~ /\A#{URI.regexp(['http'])}\z/
         uri = URI.parse file_or_url
         Net::HTTP.start(uri.host, uri.port) do |http|
           request = Net::HTTP::Get.new uri
