@@ -2,6 +2,27 @@
 
 require "spec_helper"
 
+describe TTFunk::File, "::open" do
+  it "opens file paths" do
+    font = TTFunk::File.open test_font("DejaVuSans")
+    font.contents.read(4).should == "\x00\x00\x00\x01"
+  end
+
+  it "opens http URLs" do
+    url = "http://example.com/DejaVuSans.ttf"
+    FakeWeb.register_uri :get, url, body: test_font("DejaVuSans")
+    font = TTFunk::File.open url
+    font.contents.read(4).should == "\x00\x00\x00\x01"
+  end
+
+  it "opens https URLs" do
+    url = "https://example.com/DejaVuSans.ttf"
+    FakeWeb.register_uri :get, url, body: test_font("DejaVuSans")
+    font = TTFunk::File.open url
+    font.contents.read(4).should == "\x00\x00\x00\x01"
+  end
+end
+
 describe TTFunk::File, "#ascent" do
 
   context "with DejaVuSans" do
