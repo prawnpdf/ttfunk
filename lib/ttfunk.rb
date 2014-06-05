@@ -1,14 +1,30 @@
 require 'stringio'
 require 'ttfunk/directory'
 require 'ttfunk/resource_file'
+require 'uri'
+require 'net/https'
 
 module TTFunk
   class File
     attr_reader :contents
     attr_reader :directory
 
-    def self.open(file)
-      new(::File.open(file, "rb") { |f| f.read })
+    def self.open(file_or_url)
+      if file_or_url =~ /\A#{URI.regexp(['https'])}\z/
+        uri = URI.parse file_or_url
+        Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+          request = Net::HTTP::Get.new uri
+          new http.request(request).body
+        end
+      elsif file_or_url =~ /\A#{URI.regexp(['http'])}\z/
+        uri = URI.parse file_or_url
+        Net::HTTP.start(uri.host, uri.port) do |http|
+          request = Net::HTTP::Get.new uri
+          new http.request(request).body
+        end
+      else
+        new(::File.open(file_or_url, "rb") { |f| f.read })
+      end
     end
 
     def self.from_dfont(file, which=0)
