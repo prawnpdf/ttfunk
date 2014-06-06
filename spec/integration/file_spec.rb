@@ -2,6 +2,19 @@
 
 require "spec_helper"
 
+describe TTFunk::File, "::open" do
+  it "opens file paths" do
+    font = TTFunk::File.open test_font("DejaVuSans")
+    font.contents.read(4).should == "\x00\x00\x00\x01"
+  end
+
+  it "opens IO Objects" do
+    io = File.open test_font("DejaVuSans")
+    font = TTFunk::File.open io
+    font.contents.read(4).should == "\x00\x00\x00\x01"
+  end
+end
+
 describe TTFunk::File, "#ascent" do
 
   context "with DejaVuSans" do
