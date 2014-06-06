@@ -30,7 +30,7 @@ This project is maintained by the same folks who run the Prawn PDF project.
 You can find the full list of Github users who have at least one patch accepted
 to ttfunk at:
 
-  https://github.com/sandal/ttfunk/contributors
+  https://github.com/prawnpdf/ttfunk/contributors
 
 = Mailing List
 
