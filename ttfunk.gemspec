@@ -1,9 +1,9 @@
 Gem::Specification.new do |spec|
   spec.name = 'ttfunk'
-  spec.version = '1.1.1'
+  spec.version = '1.2.0'
   spec.platform = Gem::Platform::RUBY
   spec.summary = "TrueType Font Metrics Parser"
-  spec.description = "Get Ya TrueType Funk On! (Font Metrics Parser for Prawn)"
+  spec.description = "Font Metrics Parser for the Prawn PDF generator"
 
   spec.files =  Dir.glob("{lib,data,examples}/**/*") +
     ['CHANGELOG', 'README.rdoc', 'COPYING', 'LICENSE', 'GPLv2', 'GPLv3']
