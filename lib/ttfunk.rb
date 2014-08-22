@@ -1,4 +1,5 @@
 require 'stringio'
+require 'pathname'
 require 'ttfunk/directory'
 require 'ttfunk/resource_file'
 
