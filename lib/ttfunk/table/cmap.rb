@@ -13,10 +13,10 @@ module TTFunk
       end
 
       def unicode
-        # Because most callers just call .first on the result, put tables with highest-number format first.
-        # However, ignore tables with a format number greater than 12 since ttfunk doesn't support them
-        # (Tables with higher format numbers tend to be more complete, especially in higher/astral Unicode ranges.)
-        @unicode ||= @tables.select { |table| table.unicode? && table.format <= 12 }.sort{|a,b| b.format <=> a.format }
+        # Because most callers just call .first on the result, put tables with 
+        # highest-number format first. Unsupported formats will be ignored.
+        @unicode ||= @tables.select { |table| table.unicode? && table.supported? }
+                            .sort{|a,b| b.format <=> a.format }
       end
 
       private
