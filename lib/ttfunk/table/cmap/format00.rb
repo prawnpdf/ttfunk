@@ -16,7 +16,7 @@ module TTFunk
         # ids. The returned hash also includes a :subtable key, which contains
         # the encoded subtable for the given charmap.
         def self.encode(charmap)
-          next_id = 0 
+          next_id = 0
           glyph_indexes = Array.new(256, 0)
           glyph_map = { 0 => 0 }
 
@@ -44,7 +44,8 @@ module TTFunk
         private
 
           def parse_cmap!
-            length, @language = read(4, "nn")
+            # length, language
+            _, @language = read(4, "nn")
             @code_map = read(256, "C*")
           end
       end

@@ -31,11 +31,11 @@ module TTFunk
         cmap_table = new_cmap_table(options)
         glyphs = collect_glyphs(original_glyph_ids)
 
-        old2new_glyph = cmap_table[:charmap].inject({ 0 => 0 }) { |map, (code, ids)| map[ids[:old]] = ids[:new]; map }
+        old2new_glyph = cmap_table[:charmap].inject({ 0 => 0 }) { |map, (_, ids)| map[ids[:old]] = ids[:new]; map }
         next_glyph_id = cmap_table[:max_glyph_id]
 
         glyphs.keys.each do |old_id|
-          unless old2new_glyph.key?(old_id) 
+          unless old2new_glyph.key?(old_id)
             old2new_glyph[old_id] = next_glyph_id
             next_glyph_id += 1
           end

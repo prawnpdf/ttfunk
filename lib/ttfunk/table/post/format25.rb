@@ -14,7 +14,8 @@ module TTFunk
         private
 
           def parse_format!
-            number_of_glyphs = read(2, 'n').first
+            # number_of_glyphs
+            _ = read(2, 'n').first
             @offsets = read(@number_of_glyphs, "c*")
           end
       end

@@ -7,7 +7,7 @@ module TTFunk
         attr_reader :code_map
 
         def self.encode(charmap)
-          next_id = 0 
+          next_id = 0
           glyph_map = { 0 => 0 }
 
           sorted_chars = charmap.keys.sort
@@ -37,7 +37,8 @@ module TTFunk
 
         private
           def parse_cmap!
-            fractional_version, length, @language, firstcode, entrycount = read(18, 'nNNNN')
+            # fractional_version, length, language, firstcode, entrycount
+            fractional_version, _, @language, firstcode, entrycount = read(18, 'nNNNN')
             raise NotImplementedError, "cmap version 10.#{fractional_version} is not supported" if fractional_version != 0
             @code_map = {}
             (firstcode...(firstcode+entrycount)).each do |code|
