@@ -64,11 +64,17 @@ module TTFunk
             @min_mem_type1, @max_mem_type1 = read(32, "N2n2N*")
 
           @subtable = case @format
-            when 0x00010000 then extend(Post::Format10)
-            when 0x00020000 then extend(Post::Format20)
-            when 0x00025000 then extend(Post::Format25)
-            when 0x00030000 then extend(Post::Format30)
-            when 0x00040000 then extend(Post::Format40)
+            when 0x00010000 
+              extend(Post::Format10)
+            when 0x00020000
+              extend(Post::Format20)
+            when 0x00025000
+              raise NotImplementedError, 
+                    "Post format 2.5 is not supported by TTFunk"
+            when 0x00030000 
+              extend(Post::Format30)
+            when 0x00040000 
+              extend(Post::Format40)
             end
 
           parse_format!
@@ -84,6 +90,5 @@ end
 
 require 'ttfunk/table/post/format10'
 require 'ttfunk/table/post/format20'
-require 'ttfunk/table/post/format25'
 require 'ttfunk/table/post/format30'
 require 'ttfunk/table/post/format40'
