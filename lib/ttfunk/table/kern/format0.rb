@@ -12,9 +12,7 @@ module TTFunk
         def initialize(attributes={})
           @attributes = attributes
 
-          # num_pairs, search_range, entry_selector, range_shift, *pairs
-          num_pairs, _, _, _, *pairs =
-            attributes.delete(:data).unpack("n*")
+          num_pairs, *pairs = attributes.delete(:data).unpack("nx6n*")
 
           @pairs = {}
           num_pairs.times do |i|

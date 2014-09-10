@@ -48,8 +48,7 @@ module TTFunk
 
         private
           def parse_cmap!
-            # fractional_version, length, language, groupcount
-            fractional_version, _, @language, groupcount = read(14, 'nNNN')
+            fractional_version, @language, groupcount = read(14, 'nx4NN')
             raise NotImplementedError, "cmap version 12.#{fractional_version} is not supported" if fractional_version != 0
             @code_map = {}
             (1..groupcount).each do

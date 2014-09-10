@@ -76,8 +76,7 @@ module TTFunk
       private
 
         def parse!
-          # format, count, string_offset
-          _, count, string_offset = read(6, "n*")
+          count, string_offset = read(6, "x2n*")
 
           entries = []
           count.times do
