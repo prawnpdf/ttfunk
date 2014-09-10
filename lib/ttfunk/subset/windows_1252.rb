@@ -1,6 +1,7 @@
 require 'set'
-require 'ttfunk/subset/base'
-require 'ttfunk/encoding/windows_1252'
+
+require_relative 'base'
+require_relative '../encoding/windows_1252'
 
 module TTFunk
   module Subset

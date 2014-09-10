@@ -1,4 +1,4 @@
-require 'ttfunk/table/post/format10'
+require_relative 'format10'
 require 'stringio'
 
 module TTFunk

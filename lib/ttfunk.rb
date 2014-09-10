@@ -1,7 +1,8 @@
 require 'stringio'
 require 'pathname'
-require 'ttfunk/directory'
-require 'ttfunk/resource_file'
+
+require_relative 'ttfunk/directory'
+require_relative 'ttfunk/resource_file'
 
 module TTFunk
   class File
@@ -108,15 +109,14 @@ module TTFunk
   end   
 end
 
-require "ttfunk/table/cmap"
-require "ttfunk/table/glyf"
-require "ttfunk/table/head"
-require "ttfunk/table/hhea"
-require "ttfunk/table/hmtx"
-require "ttfunk/table/kern"
-require "ttfunk/table/loca"
-require "ttfunk/table/maxp"
-require "ttfunk/table/name"
-require "ttfunk/table/os2"
-require "ttfunk/table/post"
-
+require_relative "ttfunk/table/cmap"
+require_relative "ttfunk/table/glyf"
+require_relative "ttfunk/table/head"
+require_relative "ttfunk/table/hhea"
+require_relative "ttfunk/table/hmtx"
+require_relative "ttfunk/table/kern"
+require_relative "ttfunk/table/loca"
+require_relative "ttfunk/table/maxp"
+require_relative "ttfunk/table/name"
+require_relative "ttfunk/table/os2"
+require_relative "ttfunk/table/post"

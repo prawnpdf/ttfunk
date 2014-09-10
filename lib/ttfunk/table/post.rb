@@ -1,4 +1,4 @@
-require 'ttfunk/table'
+require_relative '../table'
 
 module TTFunk
   class Table
@@ -88,7 +88,7 @@ module TTFunk
   end
 end
 
-require 'ttfunk/table/post/format10'
-require 'ttfunk/table/post/format20'
-require 'ttfunk/table/post/format30'
-require 'ttfunk/table/post/format40'
+require_relative 'post/format10'
+require_relative 'post/format20'
+require_relative 'post/format30'
+require_relative 'post/format40'

@@ -1,4 +1,4 @@
-require 'ttfunk/reader'
+require_relative 'reader'
 
 module TTFunk
   class Table

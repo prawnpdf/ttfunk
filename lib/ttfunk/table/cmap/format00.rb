@@ -1,5 +1,5 @@
-require 'ttfunk/encoding/mac_roman'
-require 'ttfunk/encoding/windows_1252'
+require_relative '../../encoding/mac_roman'
+require_relative '../../encoding/windows_1252'
 
 module TTFunk
   class Table

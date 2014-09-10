@@ -1,4 +1,4 @@
-require 'ttfunk/table'
+require_relative '../table'
 
 module TTFunk
   class Table
@@ -76,4 +76,4 @@ module TTFunk
   end
 end
 
-require 'ttfunk/table/kern/format0'
+require_relative 'kern/format0'

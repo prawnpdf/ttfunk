@@ -1,4 +1,4 @@
-require 'ttfunk/reader'
+require_relative '../../reader'
 
 module TTFunk
   class Table
@@ -81,8 +81,8 @@ module TTFunk
   end
 end
 
-require 'ttfunk/table/cmap/format00'
-require 'ttfunk/table/cmap/format04'
-require 'ttfunk/table/cmap/format06'
-require 'ttfunk/table/cmap/format10'
-require 'ttfunk/table/cmap/format12'
+require_relative 'format00'
+require_relative 'format04'
+require_relative 'format06'
+require_relative 'format10'
+require_relative 'format12'

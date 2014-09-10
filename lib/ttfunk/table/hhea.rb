@@ -1,4 +1,4 @@
-require 'ttfunk/table'
+require_relative '../table'
 
 module TTFunk  
   class Table

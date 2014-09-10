@@ -1,6 +1,5 @@
 # encoding: utf-8
-$LOAD_PATH << "#{File.dirname(__FILE__)}/../lib"
-require "ttfunk"
+require_relative "../lib/ttfunk"
 
 def character_lookup(file, character)
   puts "character     : #{character}"

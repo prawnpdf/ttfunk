@@ -1,4 +1,4 @@
-require 'ttfunk/table'
+require_relative '../table'
 
 module TTFunk
   class Table
@@ -60,5 +60,5 @@ module TTFunk
   end
 end
 
-require 'ttfunk/table/glyf/compound'
-require 'ttfunk/table/glyf/simple'
+require_relative 'glyf/compound'
+require_relative 'glyf/simple'

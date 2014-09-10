@@ -34,4 +34,4 @@ module TTFunk
   end
 end
 
-require 'ttfunk/table/cmap/subtable'
+require_relative 'cmap/subtable'

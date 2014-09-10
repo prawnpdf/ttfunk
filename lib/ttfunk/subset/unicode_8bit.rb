@@ -1,5 +1,5 @@
 require 'set'
-require 'ttfunk/subset/base'
+require_relative 'base'
 
 module TTFunk
   module Subset

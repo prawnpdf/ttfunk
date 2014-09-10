@@ -1,4 +1,4 @@
-require 'ttfunk/subset'
+require_relative 'subset'
 
 module TTFunk
   class SubsetCollection
