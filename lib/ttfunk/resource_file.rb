@@ -12,7 +12,7 @@ module TTFunk
     def initialize(io)
       @io = io
 
-      data_offset, map_offset, data_length, map_length = @io.read(16).unpack("N*")
+      data_offset, map_offset, map_length = @io.read(16).unpack("NNx4N")
 
       @map = {}
       @io.pos = map_offset + 24 # skip header copy, next map handle, file reference, and attrs

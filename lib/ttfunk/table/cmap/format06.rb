@@ -7,7 +7,7 @@ module TTFunk
         attr_reader :code_map
 
         def self.encode(charmap)
-          next_id = 0 
+          next_id = 0
           glyph_map = { 0 => 0 }
 
           sorted_chars = charmap.keys.sort
@@ -37,7 +37,7 @@ module TTFunk
 
         private
           def parse_cmap!
-            length, @language, firstcode, entrycount = read(8, 'nnnn')
+            @language, firstcode, entrycount = read(8, 'x2nnn')
             @code_map = {}
             (firstcode...(firstcode+entrycount)).each do |code|
               @code_map[code] = read(2, 'n').first & 0xFFFF

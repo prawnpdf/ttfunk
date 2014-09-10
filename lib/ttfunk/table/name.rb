@@ -53,7 +53,7 @@ module TTFunk
 
         strings = names.strings.dup
         strings[6] = [postscript_name]
-        str_count = strings.inject(0) { |sum, (id, list)| sum + list.length }
+        str_count = strings.inject(0) { |sum, (_, list)| sum + list.length }
 
         table = [0, str_count, 6 + 12 * str_count].pack("n*")
         strtable = ""
@@ -76,7 +76,7 @@ module TTFunk
       private
 
         def parse!
-          format, count, string_offset = read(6, "n*")
+          count, string_offset = read(6, "x2n*")
 
           entries = []
           count.times do
