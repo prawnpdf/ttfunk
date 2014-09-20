@@ -115,3 +115,33 @@ describe TTFunk::File, "#directory_info" do
     it "should extract the correct value"
   end
 end
+
+describe TTFunk::File, "#sbix" do
+
+  context "with ColorTestSbix" do
+    # Thank you http://typophile.com/node/103268 for ColorTestSbix.ttf
+    let!(:file) { TTFunk::File.open(test_font("ColorTestSbix"))}
+
+    it "should should extract headers" do
+      expect(file.sbix.version).to eq(1)
+      expect(file.sbix.flags).to eq(1)
+      expect(file.sbix.num_strikes).to eq(1)
+    end
+
+    it "should extract bitmap data given a glyph id and strike index" do
+      bitmap = file.sbix.bitmap_data_for(4, 0)
+      expect(bitmap.x).to eq(0)
+      expect(bitmap.y).to eq(0)
+      expect(bitmap.type).to eq("png")
+      expect(bitmap.data.read).to match(/IHDR.*ImageReady.*IEND/m)
+      expect(bitmap.ppem).to eq(150)
+      expect(bitmap.resolution).to eq(72)
+    end
+
+    it "should extract an array of all bitmap data given a glyph id" do
+      all_bitmaps = file.sbix.all_bitmap_data_for(4)
+      expect(all_bitmaps.size).to eq(1)
+      expect(all_bitmaps[0].ppem).to eq(150)
+    end
+  end
+end
