@@ -11,7 +11,8 @@ module TTFunk
       BitmapData = Struct.new(:x, :x, :type, :data, :ppem, :resolution)
 
       def bitmap_data_for(glyph_id, strike_index)
-        return unless strike = strikes[strike_index]
+        strike = strikes[strike_index]
+        return if strike.nil?
 
         glyph_offset = strike[:glyph_data_offset][glyph_id]
         next_glyph_offset = strike[:glyph_data_offset][glyph_id + 1]
