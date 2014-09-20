@@ -8,7 +8,7 @@ module TTFunk
       attr_reader :num_strikes
       attr_reader :strikes
 
-      BitmapData = Struct.new(:x, :x, :type, :data, :ppem, :resolution)
+      BitmapData = Struct.new(:x, :y, :type, :data, :ppem, :resolution)
 
       def bitmap_data_for(glyph_id, strike_index)
         strike = strikes[strike_index]
