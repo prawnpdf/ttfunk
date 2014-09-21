@@ -106,7 +106,11 @@ module TTFunk
     def glyph_outlines
       @glyph_outlines ||= TTFunk::Table::Glyf.new(self)
     end
-  end   
+
+    def sbix
+      @sbix ||= TTFunk::Table::Sbix.new(self)
+    end
+  end
 end
 
 require_relative "ttfunk/table/cmap"
@@ -120,3 +124,4 @@ require_relative "ttfunk/table/maxp"
 require_relative "ttfunk/table/name"
 require_relative "ttfunk/table/os2"
 require_relative "ttfunk/table/post"
+require_relative "ttfunk/table/sbix"
