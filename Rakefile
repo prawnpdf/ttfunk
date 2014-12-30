@@ -10,4 +10,4 @@ task :default => [:rubocop, :spec]
 desc "Run all rspec files"
 RSpec::Core::RakeTask.new("spec")
 
-Rubocop::RakeTask.new
+RuboCop::RakeTask.new
