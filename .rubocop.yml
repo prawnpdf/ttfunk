@@ -13,8 +13,6 @@ DotPosition:
   Enabled: false
 EmptyLinesAroundAccessModifier:
   Enabled: false
-EmptyLinesAroundBody:
-  Enabled: false
 IndentationConsistency:
   Enabled: false
 TrailingWhitespace:
@@ -72,6 +70,34 @@ SpaceBeforeBlockBraces:
 FormatString:
   Enabled: false
 AlignArray:
+  Enabled: false
+EmptyLinesAroundBlockBody:
+  Enabled: false
+EmptyLinesAroundClassBody:
+  Enabled: false
+UnusedMethodArgument:
+  Enabled: false
+EmptyElse:
+  Enabled: false
+GuardClause:
+  Enabled: false
+AbcSize:
+  Enabled: false
+SymbolProc:
+  Enabled: false
+ElseAlignment:
+  Enabled: false
+PerceivedComplexity:
+  Enabled: false
+EachWithObject:
+  Enabled: false
+MultilineOperationIndentation:
+  Enabled: false
+EmptyLinesAroundModuleBody:
+  Enabled: false
+Next:
+  Enabled: false
+UnusedBlockArgument:
   Enabled: false
 
 # Possibly won't remove due to intentional style decisions
