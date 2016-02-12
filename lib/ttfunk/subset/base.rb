@@ -51,7 +51,7 @@ module TTFunk
         hhea_table = TTFunk::Table::Hhea.encode(original.horizontal_header, hmtx_table)
         maxp_table = TTFunk::Table::Maxp.encode(original.maximum_profile, old2new_glyph)
         post_table = TTFunk::Table::Post.encode(original.postscript, new2old_glyph)
-        name_table = TTFunk::Table::Name.encode(original.name)
+        name_table = TTFunk::Table::Name.encode(original.name, glyf_table[:table])
         head_table = TTFunk::Table::Head.encode(original.header, loca_table)
 
         # "optional" tables. Fonts may omit these if they do not need them. Because they
