@@ -1,12 +1,16 @@
+# TTFunk
+
+![Maintained: yes](https://img.shields.io/badge/maintained-yes-brightgreen.png)
+
 TTFunk is a TrueType font parser written in pure ruby.
 
-= Installation
+## Installation
 
 The recommended installation method is via Rubygems.
 
-  gem install ttfunk
+    gem install ttfunk
 
-= Usage
+## Usage
 
 Basic usage:
 
@@ -19,11 +23,11 @@ Basic usage:
 
 For more detailed examples, explore the examples directory.
 
-= Licensing
+## Licensing
 
 Matz's terms for Ruby, GPLv2, or GPLv3. See LICENSE for details.
 
-= Authorship
+##  Authorship
 
 This project is maintained by the same folks who run the Prawn PDF project.
 
@@ -32,10 +36,10 @@ to ttfunk at:
 
   https://github.com/prawnpdf/ttfunk/contributors
 
-= Mailing List
+## Mailing List
 
-TTFunk is maintained as a dependency of prawn, the ruby PDF generation library.
+TTFunk is maintained as a dependency of Prawn, the ruby PDF generation library.
 
 Any questions or feedback should be sent to the Prawn google group.
 
-http://groups.google.com/group/prawn-ruby
+https://groups.google.com/group/prawn-ruby
