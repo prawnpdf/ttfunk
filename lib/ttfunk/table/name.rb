@@ -1,4 +1,5 @@
 require_relative '../table'
+require 'digest/sha1'
 
 module TTFunk
   class Table
@@ -43,11 +44,8 @@ module TTFunk
       attr_reader :compatible_full
       attr_reader :sample_text
 
-      @@subset_tag = "AAAAAA"
-
-      def self.encode(names)
-        tag = @@subset_tag.dup
-        @@subset_tag.succ!
+      def self.encode(names, key = "")
+        tag = Digest::SHA1.hexdigest(key)[0, 6]
 
         postscript_name = Name::String.new("#{tag}+#{names.postscript_name}", 1, 0, 0)
 
