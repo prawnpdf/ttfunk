@@ -16,9 +16,8 @@ describe TTFunk::File, "::open" do
 end
 
 describe TTFunk::File, "#ascent" do
-
   context "with DejaVuSans" do
-    let!(:file) { TTFunk::File.open(test_font("DejaVuSans"))}
+    let!(:file) { TTFunk::File.open(test_font("DejaVuSans")) }
 
     it "should extract the correct value" do
       expect(file.ascent).to eq(1556)
@@ -27,9 +26,8 @@ describe TTFunk::File, "#ascent" do
 end
 
 describe TTFunk::File, "#descent" do
-
   context "with DejaVuSans" do
-    let!(:file) { TTFunk::File.open(test_font("DejaVuSans"))}
+    let!(:file) { TTFunk::File.open(test_font("DejaVuSans")) }
 
     it "should extract the correct value" do
       expect(file.descent).to eq(-492)
@@ -38,9 +36,8 @@ describe TTFunk::File, "#descent" do
 end
 
 describe TTFunk::File, "#line_gap" do
-
   context "with DejaVuSans" do
-    let!(:file) { TTFunk::File.open(test_font("DejaVuSans"))}
+    let!(:file) { TTFunk::File.open(test_font("DejaVuSans")) }
 
     it "should extract the correct value" do
       expect(file.line_gap).to eq(410)
@@ -49,9 +46,8 @@ describe TTFunk::File, "#line_gap" do
 end
 
 describe TTFunk::File, "#bbox" do
-
   context "with DejaVuSans" do
-    let!(:file) { TTFunk::File.open(test_font("DejaVuSans"))}
+    let!(:file) { TTFunk::File.open(test_font("DejaVuSans")) }
 
     it "should extract the correct value" do
       expect(file.bbox).to eq([-2090, -850, 3442, 2389])
@@ -60,9 +56,8 @@ describe TTFunk::File, "#bbox" do
 end
 
 describe TTFunk::File, "preferred_family_name" do
-
   context "with DejaVuSans" do
-    let!(:file) { TTFunk::File.open(test_font("DejaVuSans"))}
+    let!(:file) { TTFunk::File.open(test_font("DejaVuSans")) }
     it "should extract the correct value" do
       expect(file.name.preferred_family.first).to eq('DejaVu Sans')
     end
@@ -70,9 +65,8 @@ describe TTFunk::File, "preferred_family_name" do
 end
 
 describe TTFunk::File, "#cmap" do
-
   context "with DejaVuSans" do
-    let!(:file) { TTFunk::File.open(test_font("DejaVuSans"))}
+    let!(:file) { TTFunk::File.open(test_font("DejaVuSans")) }
 
     it "should extract cmap tables in descending order of format" do
       cmaps = file.cmap.unicode
@@ -81,16 +75,16 @@ describe TTFunk::File, "#cmap" do
     end
 
     it "should lookup code in cmap format 12 table" do
-      cmap_format_12 = file.cmap.unicode.first
-      expect(cmap_format_12.format).to eq(12)
-      expect(cmap_format_12[32]).to eq(3)
+      cmap_format12 = file.cmap.unicode.first
+      expect(cmap_format12.format).to eq(12)
+      expect(cmap_format12[32]).to eq(3)
     end
   end
 
-  # M+ 1p is a CJK font that includes a cmap format 14 table
-  # we use a trimmed down version of the font generated with fontforge for testing purposes
+  # M+ 1p is a CJK font that includes a cmap format 14 table we use a trimmed
+  # down version of the font generated with fontforge for testing purposes
   context "with M+ 1p" do
-    let!(:file) { TTFunk::File.open(test_font("Mplus1p"))}
+    let!(:file) { TTFunk::File.open(test_font("Mplus1p")) }
 
     # this test verifies that the cmap format 14 table is ignored
     it "should extract cmap tables in descending order of format" do
@@ -100,27 +94,25 @@ describe TTFunk::File, "#cmap" do
     end
 
     it "should lookup code in cmap format 4 table" do
-      cmap_format_4 = file.cmap.unicode.first
-      expect(cmap_format_4.format).to eq(4)
-      expect(cmap_format_4[32]).to eq(4)
+      cmap_format4 = file.cmap.unicode.first
+      expect(cmap_format4.format).to eq(4)
+      expect(cmap_format4[32]).to eq(4)
     end
   end
 end
 
 describe TTFunk::File, "#directory_info" do
-
   context "with DejaVuSans" do
-    let!(:file) { TTFunk::File.open(test_font("DejaVuSans"))}
+    let!(:file) { TTFunk::File.open(test_font("DejaVuSans")) }
 
     it "should extract the correct value"
   end
 end
 
 describe TTFunk::File, "#sbix" do
-
   context "with ColorTestSbix" do
     # Thank you http://typophile.com/node/103268 for ColorTestSbix.ttf
-    let!(:file) { TTFunk::File.open(test_font("ColorTestSbix"))}
+    let!(:file) { TTFunk::File.open(test_font("ColorTestSbix")) }
 
     it "should should extract headers" do
       expect(file.sbix.version).to eq(1)

@@ -7,12 +7,12 @@ module TTFunk
       # mapping old glyph-ids to new glyph-ids.
       #
       # Returns a hash containing:
-      # 
+      #
       # * :table - a string representing the encoded 'glyf' table containing
       #   the given glyphs.
       # * :offsets - an array of offsets for each glyph
       def self.encode(glyphs, new2old, old2new)
-        result = { :table => "", :offsets => [] }
+        result = { table: "", offsets: [] }
 
         new2old.keys.sort.each do |new_id|
           glyph = glyphs[new2old[new_id]]
@@ -23,7 +23,7 @@ module TTFunk
         # include an offset at the end of the table, for use in computing the
         # size of the last glyph
         result[:offsets] << result[:table].length
-        return result
+        result
       end
 
       def for(glyph_id)
@@ -32,16 +32,18 @@ module TTFunk
         index = file.glyph_locations.index_of(glyph_id)
         size  = file.glyph_locations.size_of(glyph_id)
 
-        if size.zero? # blank glyph, e.g. space character
+        if size == 0 # blank glyph, e.g. space character
           @cache[glyph_id] = nil
           return nil
         end
 
         parse_from(offset + index) do
           raw = io.read(size)
-          number_of_contours, x_min, y_min, x_max, y_max = raw.unpack("n5").map { |i| to_signed(i) }
+          number_of_contours, x_min, y_min, x_max, y_max =
+            raw.unpack("n5").map { |i| to_signed(i) }
 
-          @cache[glyph_id] = if number_of_contours == -1
+          @cache[glyph_id] =
+            if number_of_contours == -1
               Compound.new(raw, x_min, y_min, x_max, y_max)
             else
               Simple.new(raw, number_of_contours, x_min, y_min, x_max, y_max)
@@ -51,11 +53,11 @@ module TTFunk
 
       private
 
-        def parse!
-          # because the glyf table is rather complex to parse, we defer
-          # the parse until we need a specific glyf, and then cache it.
-          @cache = {}
-        end
+      def parse!
+        # because the glyf table is rather complex to parse, we defer
+        # the parse until we need a specific glyf, and then cache it.
+        @cache = {}
+      end
     end
   end
 end

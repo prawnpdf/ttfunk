@@ -1,7 +1,7 @@
 require_relative '../table'
 
-module TTFunk  
-  class Table 
+module TTFunk
+  class Table
     class Hmtx < Table
       attr_reader :metrics
       attr_reader :left_side_bearings
@@ -13,35 +13,40 @@ module TTFunk
           [metric.advance_width, metric.left_side_bearing]
         end
 
-        { :number_of_metrics => metrics.length,
-          :table => metrics.flatten.pack("n*") }
+        {
+          number_of_metrics: metrics.length,
+          table: metrics.flatten.pack("n*")
+        }
       end
 
       HorizontalMetric = Struct.new(:advance_width, :left_side_bearing)
 
       def for(glyph_id)
         @metrics[glyph_id] ||
-          HorizontalMetric.new(@metrics.last.advance_width,
-            @left_side_bearings[glyph_id - @metrics.length])
+          HorizontalMetric.new(
+            @metrics.last.advance_width,
+            @left_side_bearings[glyph_id - @metrics.length]
+          )
       end
 
       private
 
-        def parse!
-          @metrics = []
+      def parse!
+        @metrics = []
 
-          file.horizontal_header.number_of_metrics.times do
-            advance = read(2, "n").first
-            lsb     = read_signed(1).first
-            @metrics.push HorizontalMetric.new(advance, lsb)
-          end
-
-          lsb_count = file.maximum_profile.num_glyphs - file.horizontal_header.number_of_metrics
-          @left_side_bearings = read_signed(lsb_count)
-
-          @widths = @metrics.map { |metric| metric.advance_width }
-          @widths += [@widths.last] * @left_side_bearings.length
+        file.horizontal_header.number_of_metrics.times do
+          advance = read(2, "n").first
+          lsb     = read_signed(1).first
+          @metrics.push HorizontalMetric.new(advance, lsb)
         end
+
+        lsb_count = file.maximum_profile.num_glyphs -
+          file.horizontal_header.number_of_metrics
+        @left_side_bearings = read_signed(lsb_count)
+
+        @widths = @metrics.map(&:advance_width)
+        @widths += [@widths.last] * @left_side_bearings.length
+      end
     end
   end
 end

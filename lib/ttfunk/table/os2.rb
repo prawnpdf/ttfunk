@@ -46,33 +46,33 @@ module TTFunk
 
       private
 
-        def parse!
-          @version = read(2, "n").first
+      def parse!
+        @version = read(2, "n").first
 
-          @ave_char_width = read_signed(1)
-          @weight_class, @width_class = read(4, "nn")
-          @type, @y_subscript_x_size, @y_subscript_y_size, @y_subscript_x_offset,
-            @y_subscript_y_offset, @y_superscript_x_size, @y_superscript_y_size,
-            @y_superscript_x_offset, @y_superscript_y_offset, @y_strikeout_size,
-            @y_strikeout_position, @family_class = read_signed(12)
-          @panose = io.read(10)
+        @ave_char_width = read_signed(1)
+        @weight_class, @width_class = read(4, "nn")
+        @type, @y_subscript_x_size, @y_subscript_y_size, @y_subscript_x_offset,
+          @y_subscript_y_offset, @y_superscript_x_size, @y_superscript_y_size,
+          @y_superscript_x_offset, @y_superscript_y_offset, @y_strikeout_size,
+          @y_strikeout_position, @family_class = read_signed(12)
+        @panose = io.read(10)
 
-          @char_range = io.read(16)
-          @vendor_id = io.read(4)
+        @char_range = io.read(16)
+        @vendor_id = io.read(4)
 
-          @selection, @first_char_index, @last_char_index = read(6, "n*")
+        @selection, @first_char_index, @last_char_index = read(6, "n*")
 
-          if @version > 0
-            @ascent, @descent, @line_gap = read_signed(3)
-            @win_ascent, @win_descent = read(4, "nn")
-            @code_page_range = io.read(8)
+        if @version > 0
+          @ascent, @descent, @line_gap = read_signed(3)
+          @win_ascent, @win_descent = read(4, "nn")
+          @code_page_range = io.read(8)
 
-            if @version > 1
-              @x_height, @cap_height = read_signed(2)
-              @default_char, @break_char, @max_context = read(6, "nnn")
-            end
+          if @version > 1
+            @x_height, @cap_height = read_signed(2)
+            @default_char, @break_char, @max_context = read(6, "nnn")
           end
         end
+      end
     end
   end
 end

@@ -13,7 +13,7 @@ module TTFunk
       new verify_and_open(io_or_path).read
     end
 
-    def self.from_dfont(file, which=0)
+    def self.from_dfont(file, which = 0)
       new(ResourceFile.open(file) { |dfont| dfont["sfnt", which] })
     end
 
@@ -41,23 +41,24 @@ module TTFunk
       @directory = Directory.new(@contents)
     end
 
-
     def ascent
-      @ascent ||= (os2.exists? && os2.ascent && os2.ascent.nonzero?) || horizontal_header.ascent
+      @ascent ||= (os2.exists? && os2.ascent && os2.ascent.nonzero?) ||
+        horizontal_header.ascent
     end
 
     def descent
-      @descent ||= (os2.exists? && os2.descent && os2.descent.nonzero?) || horizontal_header.descent
+      @descent ||= (os2.exists? && os2.descent && os2.descent.nonzero?) ||
+        horizontal_header.descent
     end
 
     def line_gap
-      @line_gap ||= (os2.exists? && os2.line_gap && os2.line_gap.nonzero?) || horizontal_header.line_gap
+      @line_gap ||= (os2.exists? && os2.line_gap && os2.line_gap.nonzero?) ||
+        horizontal_header.line_gap
     end
 
     def bbox
       [header.x_min, header.y_min, header.x_max, header.y_max]
     end
-
 
     def directory_info(tag)
       directory.tables[tag.to_s]

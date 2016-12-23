@@ -18,17 +18,17 @@ module TTFunk
 
         private
 
-          def parse_format!
-            number_of_glyphs = read(2, 'n').first
-            @glyph_name_index = read(number_of_glyphs*2, 'n*')
-            @names = []
+        def parse_format!
+          number_of_glyphs = read(2, 'n').first
+          @glyph_name_index = read(number_of_glyphs * 2, 'n*')
+          @names = []
 
-            strings = StringIO.new(io.read(offset + length - io.pos))
-            while !strings.eof?
-              length = strings.read(1).unpack("C").first
-              @names << strings.read(length)
-            end
+          strings = StringIO.new(io.read(offset + length - io.pos))
+          until strings.eof?
+            length = strings.read(1).unpack("C").first
+            @names << strings.read(length)
           end
+        end
       end
     end
   end

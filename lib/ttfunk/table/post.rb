@@ -24,15 +24,15 @@ module TTFunk
         @fixed_pitch != 0
       end
 
-      def glyph_for(code)
+      def glyph_for(_code)
         ".notdef"
       end
 
       def recode(mapping)
         return raw if format == 0x00030000
 
-        table = raw[0,32]
-        table[0,4] = [0x00020000].pack("N")
+        table = raw[0, 32]
+        table[0, 4] = [0x00020000].pack("N")
 
         index = []
         strings = []
@@ -53,38 +53,38 @@ module TTFunk
           table << [string.length, string].pack("CA*")
         end
 
-        return table
+        table
       end
 
       private
 
-        def parse!
-          @format, @italic_angle, @underline_position, @underline_thickness,
-            @fixed_pitch, @min_mem_type42, @max_mem_type42,
-            @min_mem_type1, @max_mem_type1 = read(32, "N2n2N*")
+      def parse!
+        @format, @italic_angle, @underline_position, @underline_thickness,
+          @fixed_pitch, @min_mem_type42, @max_mem_type42,
+          @min_mem_type1, @max_mem_type1 = read(32, "N2n2N*")
 
-          @subtable = case @format
-            when 0x00010000 
-              extend(Post::Format10)
-            when 0x00020000
-              extend(Post::Format20)
-            when 0x00025000
-              raise NotImplementedError, 
-                    "Post format 2.5 is not supported by TTFunk"
-            when 0x00030000 
-              extend(Post::Format30)
-            when 0x00040000 
-              extend(Post::Format40)
-            end
+        @subtable =
+          case @format
+          when 0x00010000
+            extend(Post::Format10)
+          when 0x00020000
+            extend(Post::Format20)
+          when 0x00025000
+            raise NotImplementedError,
+                  "Post format 2.5 is not supported by TTFunk"
+          when 0x00030000
+            extend(Post::Format30)
+          when 0x00040000
+            extend(Post::Format40)
+          end
 
-          parse_format!
-        end
+        parse_format!
+      end
 
-        def parse_format!
-          warn "postscript table format 0x%08X is not supported" % @format
-        end
+      def parse_format!
+        warn format("postscript table format 0x%08X is not supported", @format)
+      end
     end
-
   end
 end
 

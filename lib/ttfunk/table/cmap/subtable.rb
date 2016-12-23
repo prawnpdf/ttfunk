@@ -11,11 +11,12 @@ module TTFunk
         attr_reader :format
 
         ENCODING_MAPPINGS = {
-          :mac_roman    => { :platform_id => 1, :encoding_id => 0 },
-          # use microsoft unicode, instead of generic unicode, for optimal windows support
-          :unicode      => { :platform_id => 3, :encoding_id => 1 },
-          :unicode_ucs4 => { :platform_id => 3, :encoding_id => 10 }
-        }
+          mac_roman: { platform_id: 1, encoding_id: 0 }.freeze,
+          # Use microsoft unicode, instead of generic unicode, for optimal
+          # Windows support
+          unicode: { platform_id: 3, encoding_id: 1 }.freeze,
+          unicode_ucs4: { platform_id: 3, encoding_id: 10 }.freeze
+        }.freeze
 
         def self.encode(charmap, encoding)
           case encoding
@@ -26,16 +27,21 @@ module TTFunk
           when :unicode_ucs4
             result = Format12.encode(charmap)
           else
-            raise NotImplementedError, "encoding #{encoding.inspect} is not supported"
+            raise NotImplementedError,
+                  "encoding #{encoding.inspect} is not supported"
           end
 
           mapping = ENCODING_MAPPINGS[encoding]
 
           # platform-id, encoding-id, offset
-          result[:subtable] = [mapping[:platform_id], mapping[:encoding_id],
-            12, result[:subtable]].pack("nnNA*")
+          result[:subtable] = [
+            mapping[:platform_id],
+            mapping[:encoding_id],
+            12,
+            result[:subtable]
+          ].pack("nnNA*")
 
-          return result
+          result
         end
 
         def initialize(file, table_start)
@@ -59,23 +65,24 @@ module TTFunk
         end
 
         def unicode?
-          platform_id == 3 && (encoding_id == 1 || encoding_id == 10) && format != 0 ||
-          platform_id == 0 && format != 0
+          platform_id == 3 && (encoding_id == 1 || encoding_id == 10) &&
+            format != 0 ||
+            platform_id == 0 && format != 0
         end
 
         def supported?
           false
         end
 
-        def [](code)
+        def [](_code)
           raise NotImplementedError, "cmap format #{@format} is not supported"
         end
 
         private
 
-          def parse_cmap!
-            # do nothing...
-          end
+        def parse_cmap!
+          # do nothing...
+        end
       end
     end
   end

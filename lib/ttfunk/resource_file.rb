@@ -15,7 +15,8 @@ module TTFunk
       data_offset, map_offset, map_length = @io.read(16).unpack("NNx4N")
 
       @map = {}
-      @io.pos = map_offset + 24 # skip header copy, next map handle, file reference, and attrs
+      # skip header copy, next map handle, file reference, and attrs
+      @io.pos = map_offset + 24
       type_list_offset, name_list_offset = @io.read(4).unpack("n*")
 
       type_list_offset += map_offset
@@ -25,7 +26,7 @@ module TTFunk
       max_index = @io.read(2).unpack("n").first
       0.upto(max_index) do
         type, max_type_index, ref_list_offset = @io.read(8).unpack("A4nn")
-        @map[type] = { :list => [], :named => {} }
+        @map[type] = { list: [], named: {} }
 
         parse_from(type_list_offset + ref_list_offset) do
           0.upto(max_type_index) do
@@ -34,7 +35,12 @@ module TTFunk
             data_ofs = data_offset + [0, data_ofs].pack("CA*").unpack("N").first
             handle = @io.read(4).unpack("N").first
 
-            entry = { :id => id, :attributes => attr, :offset => data_ofs, :handle => handle }
+            entry = {
+              id: id,
+              attributes: attr,
+              offset: data_ofs,
+              handle: handle
+            }
 
             if name_list_offset + name_ofs < map_offset + map_length
               parse_from(name_ofs + name_list_offset) do
@@ -50,9 +56,9 @@ module TTFunk
       end
     end
 
-    def [](type, index=0)
+    def [](type, index = 0)
       if @map[type]
-        collection = index.is_a?(Fixnum) ? :list : :named
+        collection = index.is_a?(Integer) ? :list : :named
         if @map[type][collection][index]
           parse_from(@map[type][collection][index][:offset]) do
             length = @io.read(4).unpack("N").first
@@ -68,11 +74,12 @@ module TTFunk
 
     private
 
-      def parse_from(offset)
-        saved, @io.pos = @io.pos, offset
-        yield
-      ensure
-        @io.pos = saved
-      end
+    def parse_from(offset)
+      saved = @io.pos
+      @io.pos = offset
+      yield
+    ensure
+      @io.pos = saved
+    end
   end
 end

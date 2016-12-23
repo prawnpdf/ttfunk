@@ -11,8 +11,10 @@ module TTFunk
         def initialize(raw, number_of_contours, x_min, y_min, x_max, y_max)
           @raw = raw
           @number_of_contours = number_of_contours
-          @x_min, @y_min = x_min, y_min
-          @x_max, @y_max = x_max, y_max
+          @x_min = x_min
+          @y_min = y_min
+          @x_max = x_max
+          @y_max = y_max
 
           # Because TTFunk is, at this time, a library for simply pulling
           # metrics out of font files, or for writing font subsets, we don't
@@ -27,11 +29,10 @@ module TTFunk
           false
         end
 
-        def recode(mapping)
+        def recode(_mapping)
           raw
         end
       end
     end
   end
 end
-

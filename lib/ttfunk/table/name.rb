@@ -19,7 +19,7 @@ module TTFunk
         def strip_extended
           stripped = gsub(/[\x00-\x19\x80-\xff]/n, "")
           stripped = "[not-postscript]" if stripped.empty?
-          return stripped
+          stripped
         end
       end
 
@@ -47,7 +47,9 @@ module TTFunk
       def self.encode(names, key = "")
         tag = Digest::SHA1.hexdigest(key)[0, 6]
 
-        postscript_name = Name::String.new("#{tag}+#{names.postscript_name}", 1, 0, 0)
+        postscript_name = Name::String.new(
+          "#{tag}+#{names.postscript_name}", 1, 0, 0
+        )
 
         strings = names.strings.dup
         strings[6] = [postscript_name]
@@ -58,7 +60,10 @@ module TTFunk
 
         strings.each do |id, list|
           list.each do |string|
-            table << [string.platform_id, string.encoding_id, string.language_id, id, string.length, strtable.length].pack("n*")
+            table << [
+              string.platform_id, string.encoding_id, string.language_id, id,
+              string.length, strtable.length
+            ].pack("n*")
             strtable << string
           end
         end
@@ -73,51 +78,57 @@ module TTFunk
 
       private
 
-        def parse!
-          count, string_offset = read(6, "x2n*")
+      def parse!
+        count, string_offset = read(6, "x2n*")
 
-          entries = []
-          count.times do
-            platform, encoding, language, id, length, start_offset = read(12, "n*")
-            entries << {
-              :platform_id => platform,
-              :encoding_id => encoding,
-              :language_id => language,
-              :name_id => id,
-              :length => length,
-              :offset => offset + string_offset + start_offset
-            }
-          end
-
-          @strings = Hash.new { |h,k| h[k] = [] }
-
-          count.times do |i|
-            io.pos = entries[i][:offset]
-            text = io.read(entries[i][:length])
-            @strings[entries[i][:name_id]] << Name::String.new(text,
-              entries[i][:platform_id], entries[i][:encoding_id], entries[i][:language_id])
-          end
-
-          @copyright = @strings[0]
-          @font_family = @strings[1]
-          @font_subfamily = @strings[2]
-          @unique_subfamily = @strings[3]
-          @font_name = @strings[4]
-          @version = @strings[5]
-          @postscript_name = @strings[6].first.strip_extended # should only be ONE postscript name
-          @trademark = @strings[7]
-          @manufacturer = @strings[8]
-          @designer = @strings[9]
-          @description = @strings[10]
-          @vendor_url = @strings[11]
-          @designer_url = @strings[12]
-          @license = @strings[13]
-          @license_url = @strings[14]
-          @preferred_family = @strings[16]
-          @preferred_subfamily = @strings[17]
-          @compatible_full = @strings[18]
-          @sample_text = @strings[19]
+        entries = []
+        count.times do
+          platform, encoding, language, id, length, start_offset =
+            read(12, "n*")
+          entries << {
+            platform_id: platform,
+            encoding_id: encoding,
+            language_id: language,
+            name_id: id,
+            length: length,
+            offset: offset + string_offset + start_offset
+          }
         end
+
+        @strings = Hash.new { |h, k| h[k] = [] }
+
+        count.times do |i|
+          io.pos = entries[i][:offset]
+          text = io.read(entries[i][:length])
+          @strings[entries[i][:name_id]] << Name::String.new(
+            text,
+            entries[i][:platform_id],
+            entries[i][:encoding_id],
+            entries[i][:language_id]
+          )
+        end
+
+        @copyright = @strings[0]
+        @font_family = @strings[1]
+        @font_subfamily = @strings[2]
+        @unique_subfamily = @strings[3]
+        @font_name = @strings[4]
+        @version = @strings[5]
+        # should only be ONE postscript name
+        @postscript_name = @strings[6].first.strip_extended
+        @trademark = @strings[7]
+        @manufacturer = @strings[8]
+        @designer = @strings[9]
+        @description = @strings[10]
+        @vendor_url = @strings[11]
+        @designer_url = @strings[12]
+        @license = @strings[13]
+        @license_url = @strings[14]
+        @preferred_family = @strings[16]
+        @preferred_subfamily = @strings[17]
+        @compatible_full = @strings[18]
+        @sample_text = @strings[19]
+      end
     end
   end
 end

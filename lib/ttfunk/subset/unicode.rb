@@ -14,14 +14,14 @@ module TTFunk
       end
 
       def to_unicode_map
-        @subset.inject({}) { |map, code| map[code] = code; map }
+        @subset.each_with_object({}) { |code, map| map[code] = code }
       end
 
       def use(character)
         @subset << character
       end
 
-      def covers?(character)
+      def covers?(_character)
         true
       end
 
@@ -35,14 +35,16 @@ module TTFunk
 
       protected
 
-        def new_cmap_table(options)
-          mapping = @subset.inject({}) { |map, code| map[code] = unicode_cmap[code]; map }
-          TTFunk::Table::Cmap.encode(mapping, :unicode)
+      def new_cmap_table(_options)
+        mapping = @subset.each_with_object({}) do |code, map|
+          map[code] = unicode_cmap[code]
         end
+        TTFunk::Table::Cmap.encode(mapping, :unicode)
+      end
 
-        def original_glyph_ids
-          ([0] + @subset.map { |code| unicode_cmap[code] }).uniq.sort
-        end
+      def original_glyph_ids
+        ([0] + @subset.map { |code| unicode_cmap[code] }).uniq.sort
+      end
     end
   end
 end

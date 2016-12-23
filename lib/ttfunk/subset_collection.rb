@@ -15,15 +15,14 @@ module TTFunk
     def use(characters)
       characters.each do |char|
         covered = false
-        @subsets.each_with_index do |subset, i|
-          if subset.covers?(char)
-            subset.use(char)
-            covered = true
-            break
-          end
+        @subsets.each_with_index do |subset, _i|
+          next unless subset.covers?(char)
+          subset.use(char)
+          covered = true
+          break
         end
 
-        if !covered
+        unless covered
           @subsets << Subset.for(@original, :unicode_8bit)
           @subsets.last.use(char)
         end

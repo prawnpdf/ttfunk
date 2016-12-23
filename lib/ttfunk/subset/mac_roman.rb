@@ -34,18 +34,19 @@ module TTFunk
 
       protected
 
-        def new_cmap_table(options)
-          mapping = {}
-          @subset.each_with_index do |unicode, roman|
-            mapping[roman] = unicode_cmap[unicode] if roman
-          end
-
-          TTFunk::Table::Cmap.encode(mapping, :mac_roman)
+      def new_cmap_table(_options)
+        mapping = {}
+        @subset.each_with_index do |unicode, roman|
+          mapping[roman] = unicode_cmap[unicode] if roman
         end
 
-        def original_glyph_ids
-          ([0] + @subset.map { |unicode| unicode && unicode_cmap[unicode] }).compact.uniq.sort
-        end
+        TTFunk::Table::Cmap.encode(mapping, :mac_roman)
+      end
+
+      def original_glyph_ids
+        ([0] + @subset.map { |unicode| unicode && unicode_cmap[unicode] })
+          .compact.uniq.sort
+      end
     end
   end
 end

@@ -28,8 +28,6 @@ module TTFunk
     def raw
       if exists?
         parse_from(offset) { io.read(length) }
-      else
-        nil
       end
     end
 
@@ -39,8 +37,8 @@ module TTFunk
 
     private
 
-      def parse!
-        # do nothing, by default
-      end
+    def parse!
+      # do nothing, by default
+    end
   end
 end

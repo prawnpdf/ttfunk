@@ -14,9 +14,9 @@ module TTFunk
       # * :type  - the type of offset (to be encoded in the 'head' table)
       def self.encode(offsets)
         if offsets.any? { |ofs| ofs > 0xFFFF }
-          { :type => 1, :table => offsets.pack("N*") }
+          { type: 1, table: offsets.pack("N*") }
         else
-          { :type => 0, :table => offsets.map { |o| o/2 }.pack("n*") }
+          { type: 0, table: offsets.map { |o| o / 2 }.pack("n*") }
         end
       end
 
@@ -25,19 +25,19 @@ module TTFunk
       end
 
       def size_of(glyph_id)
-        @offsets[glyph_id+1] - @offsets[glyph_id]
+        @offsets[glyph_id + 1] - @offsets[glyph_id]
       end
 
       private
 
-        def parse!
-          type = file.header.index_to_loc_format == 0 ? "n" : "N"
-          @offsets = read(length, "#{type}*")
+      def parse!
+        type = file.header.index_to_loc_format == 0 ? "n" : "N"
+        @offsets = read(length, "#{type}*")
 
-          if file.header.index_to_loc_format == 0
-            @offsets.map! { |v| v * 2 }
-          end
+        if file.header.index_to_loc_format == 0
+          @offsets.map! { |v| v * 2 }
         end
+      end
     end
   end
 end

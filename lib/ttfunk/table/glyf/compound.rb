@@ -21,7 +21,10 @@ module TTFunk
 
         def initialize(raw, x_min, y_min, x_max, y_max)
           @raw = raw
-          @x_min, @y_min, @x_max, @y_max = x_min, y_min, x_max, y_max
+          @x_min = x_min
+          @y_min = y_min
+          @x_max = x_max
+          @y_max = y_max
 
           # Because TTFunk only cares about glyphs insofar as they (1) provide
           # a bounding box for each glyph, and (2) can be rewritten into a
@@ -44,11 +47,12 @@ module TTFunk
             break unless flags & MORE_COMPONENTS != 0
             offset += 4
 
-            if flags & ARG_1_AND_2_ARE_WORDS != 0
-              offset += 4
-            else
-              offset += 2
-            end
+            offset +=
+              if flags & ARG_1_AND_2_ARE_WORDS != 0
+                4
+              else
+                2
+              end
 
             if flags & WE_HAVE_A_TWO_BY_TWO != 0
               offset += 8
@@ -72,10 +76,9 @@ module TTFunk
             result[offset, 2] = [new_id].pack("n")
           end
 
-          return result
+          result
         end
       end
     end
   end
 end
-

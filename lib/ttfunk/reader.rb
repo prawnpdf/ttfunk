@@ -11,28 +11,29 @@ module TTFunk
       end
 
       def read_signed(count)
-        read(count*2, "n*").map { |i| to_signed(i) }
+        read(count * 2, "n*").map { |i| to_signed(i) }
       end
 
       def to_signed(n)
-        (n>=0x8000) ? -((n ^ 0xFFFF) + 1) : n
+        n >= 0x8000 ? -((n ^ 0xFFFF) + 1) : n
       end
 
       def parse_from(position)
-        saved, io.pos = io.pos, position
+        saved = io.pos
+        io.pos = position
         result = yield position
         io.pos = saved
-        return result
+        result
       end
 
       # For debugging purposes
       def hexdump(string)
         bytes = string.unpack("C*")
         bytes.each_with_index do |c, i|
-          print "%02X" % c
-          if (i+1) % 16 == 0
+          printf("%02X", c)
+          if (i + 1) % 16 == 0
             puts
-          elsif (i+1) % 8 == 0
+          elsif (i + 1) % 8 == 0
             print "  "
           else
             print " "

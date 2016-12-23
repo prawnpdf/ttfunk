@@ -1,104 +1,3 @@
-# Temporarily disabled warnings while we bring the code up to standard
-# without breaking the build.
-UselessAssignment:
-  Enabled: false
-EndAlignment:
-  Enabled: false
-
-# Temporarily disabled style checks while we bring the code up to standard
-# without breaking the build.
-Encoding:
-  Enabled: false
-DotPosition:
-  Enabled: false
-EmptyLinesAroundAccessModifier:
-  Enabled: false
-IndentationConsistency:
-  Enabled: false
-TrailingWhitespace:
-  Enabled: false
-EmptyLines:
-  Enabled: false
-IndentationWidth:
-  Enabled: false
-TrailingBlankLines:
-  Enabled: false
-IndentArray:
-  Enabled: false
-NegatedWhile:
-  Enabled: false
-NegatedIf:
-  Enabled: false
-BracesAroundHashParameters:
-  Enabled: false
-Semicolon:
-  Enabled: false
-SingleLineBlockParams:
-  Enabled: false
-CollectionMethods:
-  Enabled: false
-NonNilCheck:
-  Enabled: false
-SpaceInsideBlockBraces:
-  Enabled: false
-CyclomaticComplexity:
-  Enabled: false
-Documentation:
-  Enabled: false
-LineLength:
-  Enabled: false
-SpaceAroundEqualsInParameterDefault:
-  Enabled: false
-SpaceAroundOperators:
-  Enabled: false
-SpaceAfterComma:
-  Enabled: false
-AlignParameters:
-  Enabled: false
-MethodLength:
-  Enabled: false
-ClassVars:
-  Enabled: false
-AlignHash:
-  Enabled: false
-RedundantReturn:
-  Enabled: false
-ParameterLists:
-  Enabled: false
-SpaceBeforeBlockBraces:
-  Enabled: false
-FormatString:
-  Enabled: false
-AlignArray:
-  Enabled: false
-EmptyLinesAroundBlockBody:
-  Enabled: false
-EmptyLinesAroundClassBody:
-  Enabled: false
-UnusedMethodArgument:
-  Enabled: false
-EmptyElse:
-  Enabled: false
-GuardClause:
-  Enabled: false
-AbcSize:
-  Enabled: false
-SymbolProc:
-  Enabled: false
-ElseAlignment:
-  Enabled: false
-PerceivedComplexity:
-  Enabled: false
-EachWithObject:
-  Enabled: false
-MultilineOperationIndentation:
-  Enabled: false
-EmptyLinesAroundModuleBody:
-  Enabled: false
-Next:
-  Enabled: false
-UnusedBlockArgument:
-  Enabled: false
 
 # Possibly won't remove due to intentional style decisions
 SignalException:
@@ -110,6 +9,30 @@ IfUnlessModifier:
 StringLiterals:
   Enabled: false
 
-# Won't remove while supporting ruby 1.8
-HashSyntax:
+
+Metrics/AbcSize:
   Enabled: false
+Metrics/BlockLength:
+  Enabled: false
+Metrics/ClassLength:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/ParameterLists:
+  Max: 6
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+
+Style/Documentation:
+  Enabled: false
+Style/GuardClause:
+  Enabled: false
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
+Style/NumericPredicate:
+  EnforcedStyle: comparison

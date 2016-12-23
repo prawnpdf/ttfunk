@@ -27,11 +27,14 @@ module TTFunk
         {}
       end
 
-      def encode(options={})
+      def encode(options = {})
         cmap_table = new_cmap_table(options)
         glyphs = collect_glyphs(original_glyph_ids)
 
-        old2new_glyph = cmap_table[:charmap].inject({ 0 => 0 }) { |map, (_, ids)| map[ids[:old]] = ids[:new]; map }
+        old2new_glyph = cmap_table[:charmap]
+          .each_with_object(0 => 0) do |(_, ids), map|
+            map[ids[:old]] = ids[:new]
+          end
         next_glyph_id = cmap_table[:max_glyph_id]
 
         glyphs.keys.each do |old_id|
@@ -45,18 +48,32 @@ module TTFunk
 
         # "mandatory" tables. Every font should ("should") have these, including
         # the cmap table (encoded above).
-        glyf_table = TTFunk::Table::Glyf.encode(glyphs, new2old_glyph, old2new_glyph)
+        glyf_table = TTFunk::Table::Glyf.encode(
+          glyphs, new2old_glyph, old2new_glyph
+        )
         loca_table = TTFunk::Table::Loca.encode(glyf_table[:offsets])
-        hmtx_table = TTFunk::Table::Hmtx.encode(original.horizontal_metrics, new2old_glyph)
-        hhea_table = TTFunk::Table::Hhea.encode(original.horizontal_header, hmtx_table)
-        maxp_table = TTFunk::Table::Maxp.encode(original.maximum_profile, old2new_glyph)
-        post_table = TTFunk::Table::Post.encode(original.postscript, new2old_glyph)
-        name_table = TTFunk::Table::Name.encode(original.name, glyf_table[:table])
-        head_table = TTFunk::Table::Head.encode(original.header, loca_table)
+        hmtx_table = TTFunk::Table::Hmtx.encode(
+          original.horizontal_metrics, new2old_glyph
+        )
+        hhea_table = TTFunk::Table::Hhea.encode(
+          original.horizontal_header, hmtx_table
+        )
+        maxp_table = TTFunk::Table::Maxp.encode(
+          original.maximum_profile, old2new_glyph
+        )
+        post_table = TTFunk::Table::Post.encode(
+          original.postscript, new2old_glyph
+        )
+        name_table = TTFunk::Table::Name.encode(
+          original.name, glyf_table[:table]
+        )
+        head_table = TTFunk::Table::Head.encode(
+          original.header, loca_table
+        )
 
-        # "optional" tables. Fonts may omit these if they do not need them. Because they
-        # apply globally, we can simply copy them over, without modification, if they
-        # exist.
+        # "optional" tables. Fonts may omit these if they do not need them.
+        # Because they apply globally, we can simply copy them over, without
+        # modification, if they exist.
         os2_table  = original.os2.raw
         cvt_table  = TTFunk::Table::Simple.new(original, "cvt ").raw
         fpgm_table = TTFunk::Table::Simple.new(original, "fpgm").raw
@@ -64,10 +81,12 @@ module TTFunk
 
         # for PDF's, the kerning info is all included in the PDF as the text is
         # drawn. Thus, the PDF readers do not actually use the kerning info in
-        # embedded fonts. If the library is used for something else, the generated
-        # subfont may need a kerning table... in that case, you need to opt into it.
+        # embedded fonts. If the library is used for something else, the
+        # generated subfont may need a kerning table... in that case, you need
+        # to opt into it.
         if options[:kerning]
-          kern_table = TTFunk::Table::Kern.encode(original.kerning, old2new_glyph)
+          kern_table =
+            TTFunk::Table::Kern.encode(original.kerning, old2new_glyph)
         end
 
         tables = { 'cmap' => cmap_table[:table],
@@ -85,13 +104,19 @@ module TTFunk
                    'fpgm' => fpgm_table,
                    'cvt ' => cvt_table }
 
-        tables.delete_if { |tag, table| table.nil? }
+        tables.delete_if { |_tag, table| table.nil? }
 
         search_range = (Math.log(tables.length) / Math.log(2)).to_i * 16
         entry_selector = (Math.log(search_range) / Math.log(2)).to_i
         range_shift = tables.length * 16 - search_range
 
-        newfont = [original.directory.scaler_type, tables.length, search_range, entry_selector, range_shift].pack("Nn*")
+        newfont = [
+          original.directory.scaler_type,
+          tables.length,
+          search_range,
+          entry_selector,
+          range_shift
+        ].pack("Nn*")
 
         directory_size = tables.length * 16
         offset = newfont.length + directory_size
@@ -112,30 +137,33 @@ module TTFunk
         newfont << table_data
         sum = checksum(newfont)
         adjustment = 0xB1B0AFBA - sum
-        newfont[head_offset+8,4] = [adjustment].pack("N")
+        newfont[head_offset + 8, 4] = [adjustment].pack("N")
 
-        return newfont
+        newfont
       end
 
       private
 
-        def unicode_cmap
-          @unicode_cmap ||= @original.cmap.unicode.first
+      def unicode_cmap
+        @unicode_cmap ||= @original.cmap.unicode.first
+      end
+
+      def checksum(data)
+        data += "\0" * (4 - data.length % 4) unless data.length % 4 == 0
+        data.unpack("N*").reduce(:+) & 0xFFFF_FFFF
+      end
+
+      def collect_glyphs(glyph_ids)
+        glyphs = glyph_ids.each_with_object({}) do |id, h|
+          h[id] = original.glyph_outlines.for(id)
         end
+        additional_ids = glyphs.values.select { |g| g && g.compound? }
+          .map(&:glyph_ids).flatten
 
-        def checksum(data)
-          data += "\0" * (4 - data.length % 4) unless data.length % 4 == 0
-          data.unpack("N*").inject(0) { |sum, dword| sum + dword } & 0xFFFF_FFFF
-        end
+        glyphs.update(collect_glyphs(additional_ids)) if additional_ids.any?
 
-        def collect_glyphs(glyph_ids)
-          glyphs = glyph_ids.inject({}) { |h, id| h[id] = original.glyph_outlines.for(id); h }
-          additional_ids = glyphs.values.select { |g| g && g.compound? }.map { |g| g.glyph_ids }.flatten
-
-          glyphs.update(collect_glyphs(additional_ids)) if additional_ids.any?
-
-          return glyphs
-        end
+        glyphs
+      end
     end
   end
 end

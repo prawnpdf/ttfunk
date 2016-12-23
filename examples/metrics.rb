@@ -11,20 +11,23 @@ def character_lookup(file, character)
   puts "glyph id      : #{glyph_id}"
 
   glyph = file.glyph_outlines.for(glyph_id)
-  puts "glyph type    : %s" % glyph.class.name.split(/::/).last.downcase
-  puts "glyph size    : %db" % glyph.raw.length
-  puts "glyph bbox    : (%d,%d)-(%d,%d)" % [glyph.x_min, glyph.y_min, glyph.x_max, glyph.y_max]
+  puts format("glyph type    : %s", glyph.class.name.split(/::/).last.downcase)
+  puts format("glyph size    : %db", glyph.raw.length)
+  puts format("glyph bbox    : (%d,%d)-(%d,%d)",
+              glyph.x_min, glyph.y_min, glyph.x_max, glyph.y_max)
 
   if glyph.compound?
-    puts "components    : %d %s" % [glyph.glyph_ids.length, glyph.glyph_ids.inspect]
+    puts format("components    : %d %s",
+                glyph.glyph_ids.length, glyph.glyph_ids.inspect)
   end
 end
 
-file = TTFunk::File.open(ARGV.first || "#{File.dirname(__FILE__)}/../data/fonts/DejaVuSans.ttf")
+file_name = ARGV.first || File.join(__dir__, "../data/fonts/DejaVuSans.ttf")
+file = TTFunk::File.open(file_name)
 
 puts "-- FONT ------------------------------------"
 
-puts "revision  : %08x" % file.header.font_revision
+puts format("revision  : %08x", file.header.font_revision)
 puts "name      : #{file.name.font_name.join(', ')}"
 puts "family    : #{file.name.font_family.join(', ')}"
 puts "subfamily : #{file.name.font_subfamily.join(', ')}"
@@ -36,7 +39,7 @@ puts "units/em  : #{file.header.units_per_em}"
 puts "ascent    : #{file.ascent}"
 puts "descent   : #{file.descent}"
 puts "line gap  : #{file.line_gap}"
-puts "bbox      : (%d,%d)-(%d,%d)" % file.bbox
+puts format("bbox      : (%d,%d)-(%d,%d)", *file.bbox)
 
 puts "-- SIMPLE CHARACTER -> GLYPH LOOKUP --------"
 character_lookup(file, "\xE2\x98\x9C")
