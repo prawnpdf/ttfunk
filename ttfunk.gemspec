@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir.glob("{lib,data,examples}/**/*") +
     ['CHANGELOG', 'README.rdoc', 'COPYING', 'LICENSE', 'GPLv2', 'GPLv3']
-  spec.required_ruby_version = '>= 1.9.3'
+  spec.required_ruby_version = '~> 2.1'
   spec.add_development_dependency('rdoc')
   spec.add_development_dependency('rspec')
   spec.add_development_dependency('rake')
