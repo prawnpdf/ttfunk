@@ -1,5 +1,0 @@
-v1.0.2 (8 August 2011)
-* Fix Ruby 1.9.2 segmentation fault on Enumerable#zip(range) [Lucas Florio]
-
-v1.0.0 (XX February 2011)
-* initial release as a standalone gem
