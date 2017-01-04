@@ -5,8 +5,8 @@ Gem::Specification.new do |spec|
   spec.summary = "TrueType Font Metrics Parser"
   spec.description = "Font Metrics Parser for the Prawn PDF generator"
 
-  spec.files = Dir.glob("{lib,data,examples}/**/*") +
-    ['CHANGELOG', 'README.rdoc', 'COPYING', 'LICENSE', 'GPLv2', 'GPLv3']
+  spec.files = Dir.glob("lib/**/*") +
+    ['CHANGELOG.md', 'README.md', 'COPYING', 'LICENSE', 'GPLv2', 'GPLv3']
   spec.required_ruby_version = '~> 2.1'
   spec.add_development_dependency('rdoc')
   spec.add_development_dependency('rspec')
