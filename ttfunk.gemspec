@@ -13,6 +13,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('rubocop', '~> 0.46')
   spec.add_development_dependency('yard')
 
+  spec.cert_chain = ['certs/pointlessone.pem']
+  if $PROGRAM_NAME.end_with? 'gem'
+    spec.signing_key = File.expand_path("~/.ssh/gem-private_key.pem")
+  end
+
   spec.authors = [
     "Gregory Brown",
     "Brad Ediger",
