@@ -11,7 +11,7 @@ module TTFunk
       end
 
       def read_signed(count)
-        read(count * 2, "n*").map { |i| to_signed(i) }
+        read(count * 2, 'n*').map { |i| to_signed(i) }
       end
 
       def to_signed(n)
@@ -28,15 +28,15 @@ module TTFunk
 
       # For debugging purposes
       def hexdump(string)
-        bytes = string.unpack("C*")
+        bytes = string.unpack('C*')
         bytes.each_with_index do |c, i|
-          printf("%02X", c)
+          printf('%02X', c)
           if (i + 1) % 16 == 0
             puts
           elsif (i + 1) % 8 == 0
-            print "  "
+            print '  '
           else
-            print " "
+            print ' '
           end
         end
         puts unless bytes.length % 16 == 0

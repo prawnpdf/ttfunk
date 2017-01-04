@@ -2,7 +2,7 @@ module TTFunk
   class Table
     class Post
       module Format10
-        POSTSCRIPT_GLYPHS = %w(
+        POSTSCRIPT_GLYPHS = %w[
           .notdef .null nonmarkingreturn space exclam quotedbl numbersign dollar
           percent ampersand quotesingle parenleft parenright asterisk plus comma
           hyphen period slash zero one two three four five six seven eight nine
@@ -32,10 +32,10 @@ module TTFunk
           thorn minus multiply onesuperior twosuperior threesuperior onehalf
           onequarter threequarters franc Gbreve gbreve Idotaccent Scedilla
           scedilla Cacute cacute Ccaron ccaron dcroat
-        ).freeze
+        ].freeze
 
         def glyph_for(code)
-          POSTSCRIPT_GLYPHS[code] || ".notdef"
+          POSTSCRIPT_GLYPHS[code] || '.notdef'
         end
 
         private

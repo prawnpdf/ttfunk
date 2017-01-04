@@ -18,23 +18,23 @@ module TTFunk
 
       def self.encode(hhea, hmtx)
         raw = hhea.raw
-        raw[-2, 2] = [hmtx[:number_of_metrics]].pack("n")
+        raw[-2, 2] = [hmtx[:number_of_metrics]].pack('n')
         raw
       end
 
       private
 
       def parse!
-        @version = read(4, "N").first
+        @version = read(4, 'N').first
         @ascent, @descent, @line_gap = read_signed(3)
-        @advance_width_max = read(2, "n").first
+        @advance_width_max = read(2, 'n').first
 
         @min_left_side_bearing, @min_right_side_bearing, @x_max_extent,
           @carot_slope_rise, @carot_slope_run, @caret_offset,
           _reserved, _reserved, _reserved, _reserved,
           @metric_data_format = read_signed(11)
 
-        @number_of_metrics = read(2, "n").first
+        @number_of_metrics = read(2, 'n').first
       end
     end
   end

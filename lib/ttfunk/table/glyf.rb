@@ -12,7 +12,7 @@ module TTFunk
       #   the given glyphs.
       # * :offsets - an array of offsets for each glyph
       def self.encode(glyphs, new2old, old2new)
-        result = { table: "", offsets: [] }
+        result = { table: '', offsets: [] }
 
         new2old.keys.sort.each do |new_id|
           glyph = glyphs[new2old[new_id]]
@@ -40,7 +40,7 @@ module TTFunk
         parse_from(offset + index) do
           raw = io.read(size)
           number_of_contours, x_min, y_min, x_max, y_max =
-            raw.unpack("n5").map { |i| to_signed(i) }
+            raw.unpack('n5').map { |i| to_signed(i) }
 
           @cache[glyph_id] =
             if number_of_contours == -1

@@ -1,9 +1,9 @@
-require "spec_helper"
-require "ttfunk/subset"
+require 'spec_helper'
+require 'ttfunk/subset'
 
-describe "subsetting" do
-  it "consistently names font for same subsets" do
-    font = TTFunk::File.open test_font("DejaVuSans")
+describe 'subsetting' do
+  it 'consistently names font for same subsets' do
+    font = TTFunk::File.open test_font('DejaVuSans')
 
     subset1 = TTFunk::Subset.for(font, :unicode)
     subset1.use(97)
@@ -16,8 +16,8 @@ describe "subsetting" do
     expect(name1).to eq name2
   end
 
-  it "changes font names for different subsets" do
-    font = TTFunk::File.open test_font("DejaVuSans")
+  it 'changes font names for different subsets' do
+    font = TTFunk::File.open test_font('DejaVuSans')
 
     subset1 = TTFunk::Subset.for(font, :unicode)
     subset1.use(97)

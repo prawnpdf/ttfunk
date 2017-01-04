@@ -3,7 +3,7 @@ module TTFunk
     class Post
       module Format30
         def glyph_for(_code)
-          ".notdef"
+          '.notdef'
         end
 
         private

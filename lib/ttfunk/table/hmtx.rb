@@ -15,7 +15,7 @@ module TTFunk
 
         {
           number_of_metrics: metrics.length,
-          table: metrics.flatten.pack("n*")
+          table: metrics.flatten.pack('n*')
         }
       end
 
@@ -35,7 +35,7 @@ module TTFunk
         @metrics = []
 
         file.horizontal_header.number_of_metrics.times do
-          advance = read(2, "n").first
+          advance = read(2, 'n').first
           lsb     = read_signed(1).first
           @metrics.push HorizontalMetric.new(advance, lsb)
         end

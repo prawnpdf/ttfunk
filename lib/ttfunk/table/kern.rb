@@ -11,18 +11,18 @@ module TTFunk
         tables = kerning.tables.map { |table| table.recode(mapping) }.compact
         return nil if tables.empty?
 
-        [0, tables.length, tables.join].pack("nnA*")
+        [0, tables.length, tables.join].pack('nnA*')
       end
 
       private
 
       def parse!
-        @version, num_tables = read(4, "n*")
+        @version, num_tables = read(4, 'n*')
         @tables = []
 
         if @version == 1 # Mac OS X fonts
           @version = (@version << 16) + num_tables
-          num_tables = read(4, "N").first
+          num_tables = read(4, 'N').first
           parse_version_1_tables(num_tables)
         else
           parse_version_0_tables(num_tables)
@@ -41,7 +41,7 @@ module TTFunk
         # but it's better than reading a truncated kerning table.
         #
         # And what's more, it appears to work. So.
-        version, length, coverage = read(6, "n*")
+        version, length, coverage = read(6, 'n*')
         format = coverage >> 8
 
         add_table(
@@ -59,7 +59,7 @@ module TTFunk
 
       def parse_version_1_tables(num_tables)
         num_tables.times do
-          length, coverage, tuple_index = read(8, "Nnn")
+          length, coverage, tuple_index = read(8, 'Nnn')
           format = coverage & 0x0FF
 
           add_table(

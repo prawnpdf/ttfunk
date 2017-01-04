@@ -56,7 +56,7 @@ module TTFunk
           if parts.empty? || parts.last[0] != current_subset
             encoded_char = char.chr
             if encoded_char.respond_to?(:force_encoding)
-              encoded_char.force_encoding("ASCII-8BIT")
+              encoded_char.force_encoding('ASCII-8BIT')
             end
             parts << [current_subset, encoded_char]
           else
