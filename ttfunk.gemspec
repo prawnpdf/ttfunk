@@ -8,10 +8,10 @@ Gem::Specification.new do |spec|
   spec.files = Dir.glob("lib/**/*") +
     ['CHANGELOG.md', 'README.md', 'COPYING', 'LICENSE', 'GPLv2', 'GPLv3']
   spec.required_ruby_version = '~> 2.1'
-  spec.add_development_dependency('rdoc')
-  spec.add_development_dependency('rspec')
   spec.add_development_dependency('rake')
+  spec.add_development_dependency('rspec')
   spec.add_development_dependency('rubocop', '~> 0.46')
+  spec.add_development_dependency('yard')
 
   spec.authors = [
     "Gregory Brown",
