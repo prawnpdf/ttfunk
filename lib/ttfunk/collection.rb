@@ -10,7 +10,7 @@ module TTFunk
 
     def initialize(io)
       tag = io.read(4)
-      raise 'not a TTC file' unless tag == 'ttcf'
+      raise ArgumentError, 'not a TTC file' unless tag == 'ttcf'
 
       _major, _minor = io.read(4).unpack('n*')
       count = io.read(4).unpack('N').first
