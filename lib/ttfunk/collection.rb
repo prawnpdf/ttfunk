@@ -2,6 +2,8 @@ require 'ttfunk'
 
 module TTFunk
   class Collection
+    include Enumerable
+
     def self.open(path)
       ::File.open(path, 'rb') do |io|
         yield new(io)
