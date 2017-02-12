@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+
+* Support for reading TTF fonts from TTC files
+
 ### Changed
 
 * Subset font naming is consistent now and depends on content
