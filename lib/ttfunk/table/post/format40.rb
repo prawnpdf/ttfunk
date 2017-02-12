@@ -9,7 +9,7 @@ module TTFunk
         private
 
         def parse_format!
-          @map = read(file.maximum_profile.num_glyphs * 2, "N*")
+          @map = read(file.maximum_profile.num_glyphs * 2, 'N*')
         end
       end
     end

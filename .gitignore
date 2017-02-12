@@ -1,3 +1,6 @@
 *.swp
 .rvmrc
+.yardoc
 Gemfile.lock
+doc
+*.gem

@@ -21,7 +21,7 @@ module TTFunk
           bytes = next_glyph_offset - glyph_offset
           if bytes > 0
             parse_from(offset + strike[:offset] + glyph_offset) do
-              x, y, type = read(8, "s2A4")
+              x, y, type = read(8, 's2A4')
               data = StringIO.new(io.read(bytes - 8))
               BitmapData.new(
                 x, y, type, data, strike[:ppem], strike[:resolution]
@@ -40,14 +40,14 @@ module TTFunk
       private
 
       def parse!
-        @version, @flags, @num_strikes = read(8, "n2N")
-        strike_offsets = Array.new(num_strikes) { read(4, "N").first }
+        @version, @flags, @num_strikes = read(8, 'n2N')
+        strike_offsets = Array.new(num_strikes) { read(4, 'N').first }
 
         @strikes = strike_offsets.map do |strike_offset|
           parse_from(offset + strike_offset) do
-            ppem, resolution = read(4, "n2")
+            ppem, resolution = read(4, 'n2')
             data_offsets = Array.new(file.maximum_profile.num_glyphs + 1) do
-              read(4, "N").first
+              read(4, 'N').first
             end
             {
               ppem: ppem,

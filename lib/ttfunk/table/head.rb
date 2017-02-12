@@ -24,7 +24,7 @@ module TTFunk
       def self.encode(head, loca)
         table = head.raw
         table[8, 4] = "\0\0\0\0" # set checksum adjustment to 0 initially
-        table[-4, 2] = [loca[:type]].pack("n") # set index_to_loc_format
+        table[-4, 2] = [loca[:type]].pack('n') # set index_to_loc_format
         table
       end
 
@@ -32,12 +32,12 @@ module TTFunk
 
       def parse!
         @version, @font_revision, @check_sum_adjustment, @magic_number,
-          @flags, @units_per_em, @created, @modified = read(36, "N4n2q2")
+          @flags, @units_per_em, @created, @modified = read(36, 'N4n2q2')
 
         @x_min, @y_min, @x_max, @y_max = read_signed(4)
 
         @mac_style, @lowest_rec_ppem, @font_direction_hint,
-          @index_to_loc_format, @glyph_data_format = read(10, "n*")
+          @index_to_loc_format, @glyph_data_format = read(10, 'n*')
       end
     end
   end

@@ -15,7 +15,7 @@ module TTFunk
     end
 
     def self.from_dfont(file, which = 0)
-      new(ResourceFile.open(file) { |dfont| dfont["sfnt", which] })
+      new(ResourceFile.open(file) { |dfont| dfont['sfnt', which] })
     end
 
     def self.from_ttc(file, which = 0)
@@ -119,15 +119,15 @@ module TTFunk
   end
 end
 
-require_relative "ttfunk/table/cmap"
-require_relative "ttfunk/table/glyf"
-require_relative "ttfunk/table/head"
-require_relative "ttfunk/table/hhea"
-require_relative "ttfunk/table/hmtx"
-require_relative "ttfunk/table/kern"
-require_relative "ttfunk/table/loca"
-require_relative "ttfunk/table/maxp"
-require_relative "ttfunk/table/name"
-require_relative "ttfunk/table/os2"
-require_relative "ttfunk/table/post"
-require_relative "ttfunk/table/sbix"
+require_relative 'ttfunk/table/cmap'
+require_relative 'ttfunk/table/glyf'
+require_relative 'ttfunk/table/head'
+require_relative 'ttfunk/table/hhea'
+require_relative 'ttfunk/table/hmtx'
+require_relative 'ttfunk/table/kern'
+require_relative 'ttfunk/table/loca'
+require_relative 'ttfunk/table/maxp'
+require_relative 'ttfunk/table/name'
+require_relative 'ttfunk/table/os2'
+require_relative 'ttfunk/table/post'
+require_relative 'ttfunk/table/sbix'

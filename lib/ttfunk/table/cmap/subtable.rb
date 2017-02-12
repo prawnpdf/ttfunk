@@ -28,7 +28,7 @@ module TTFunk
             result = Format12.encode(charmap)
           else
             raise NotImplementedError,
-                  "encoding #{encoding.inspect} is not supported"
+              "encoding #{encoding.inspect} is not supported"
           end
 
           mapping = ENCODING_MAPPINGS[encoding]
@@ -39,25 +39,25 @@ module TTFunk
             mapping[:encoding_id],
             12,
             result[:subtable]
-          ].pack("nnNA*")
+          ].pack('nnNA*')
 
           result
         end
 
         def initialize(file, table_start)
           @file = file
-          @platform_id, @encoding_id, @offset = read(8, "nnN")
+          @platform_id, @encoding_id, @offset = read(8, 'nnN')
           @offset += table_start
 
           parse_from(@offset) do
-            @format = read(2, "n").first
+            @format = read(2, 'n').first
 
             case @format
-              when 0  then extend(TTFunk::Table::Cmap::Format00)
-              when 4  then extend(TTFunk::Table::Cmap::Format04)
-              when 6  then extend(TTFunk::Table::Cmap::Format06)
-              when 10 then extend(TTFunk::Table::Cmap::Format10)
-              when 12 then extend(TTFunk::Table::Cmap::Format12)
+            when 0  then extend(TTFunk::Table::Cmap::Format00)
+            when 4  then extend(TTFunk::Table::Cmap::Format04)
+            when 6  then extend(TTFunk::Table::Cmap::Format06)
+            when 10 then extend(TTFunk::Table::Cmap::Format10)
+            when 12 then extend(TTFunk::Table::Cmap::Format12)
             end
 
             parse_cmap!

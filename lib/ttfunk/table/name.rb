@@ -17,8 +17,8 @@ module TTFunk
         end
 
         def strip_extended
-          stripped = gsub(/[\x00-\x19\x80-\xff]/n, "")
-          stripped = "[not-postscript]" if stripped.empty?
+          stripped = gsub(/[\x00-\x19\x80-\xff]/n, '')
+          stripped = '[not-postscript]' if stripped.empty?
           stripped
         end
       end
@@ -44,7 +44,7 @@ module TTFunk
       attr_reader :compatible_full
       attr_reader :sample_text
 
-      def self.encode(names, key = "")
+      def self.encode(names, key = '')
         tag = Digest::SHA1.hexdigest(key)[0, 6]
 
         postscript_name = Name::String.new(
@@ -55,15 +55,15 @@ module TTFunk
         strings[6] = [postscript_name]
         str_count = strings.inject(0) { |sum, (_, list)| sum + list.length }
 
-        table = [0, str_count, 6 + 12 * str_count].pack("n*")
-        strtable = ""
+        table = [0, str_count, 6 + 12 * str_count].pack('n*')
+        strtable = ''
 
         strings.each do |id, list|
           list.each do |string|
             table << [
               string.platform_id, string.encoding_id, string.language_id, id,
               string.length, strtable.length
-            ].pack("n*")
+            ].pack('n*')
             strtable << string
           end
         end
@@ -73,18 +73,18 @@ module TTFunk
 
       def postscript_name
         return @postscript_name if @postscript_name
-        font_family.first || "unnamed"
+        font_family.first || 'unnamed'
       end
 
       private
 
       def parse!
-        count, string_offset = read(6, "x2n*")
+        count, string_offset = read(6, 'x2n*')
 
         entries = []
         count.times do
           platform, encoding, language, id, length, start_offset =
-            read(12, "n*")
+            read(12, 'n*')
           entries << {
             platform_id: platform,
             encoding_id: encoding,

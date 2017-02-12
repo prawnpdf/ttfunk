@@ -32,9 +32,9 @@ module TTFunk
         glyphs = collect_glyphs(original_glyph_ids)
 
         old2new_glyph = cmap_table[:charmap]
-          .each_with_object(0 => 0) do |(_, ids), map|
-            map[ids[:old]] = ids[:new]
-          end
+                        .each_with_object(0 => 0) do |(_, ids), map|
+          map[ids[:old]] = ids[:new]
+        end
         next_glyph_id = cmap_table[:max_glyph_id]
 
         glyphs.keys.each do |old_id|
@@ -75,9 +75,9 @@ module TTFunk
         # Because they apply globally, we can simply copy them over, without
         # modification, if they exist.
         os2_table  = original.os2.raw
-        cvt_table  = TTFunk::Table::Simple.new(original, "cvt ").raw
-        fpgm_table = TTFunk::Table::Simple.new(original, "fpgm").raw
-        prep_table = TTFunk::Table::Simple.new(original, "prep").raw
+        cvt_table  = TTFunk::Table::Simple.new(original, 'cvt ').raw
+        fpgm_table = TTFunk::Table::Simple.new(original, 'fpgm').raw
+        prep_table = TTFunk::Table::Simple.new(original, 'prep').raw
 
         # for PDF's, the kerning info is all included in the PDF as the text is
         # drawn. Thus, the PDF readers do not actually use the kerning info in
@@ -116,15 +116,15 @@ module TTFunk
           search_range,
           entry_selector,
           range_shift
-        ].pack("Nn*")
+        ].pack('Nn*')
 
         directory_size = tables.length * 16
         offset = newfont.length + directory_size
 
-        table_data = ""
+        table_data = ''
         head_offset = nil
         tables.each do |tag, data|
-          newfont << [tag, checksum(data), offset, data.length].pack("A4N*")
+          newfont << [tag, checksum(data), offset, data.length].pack('A4N*')
           table_data << data
           head_offset = offset if tag == 'head'
           offset += data.length
@@ -137,7 +137,7 @@ module TTFunk
         newfont << table_data
         sum = checksum(newfont)
         adjustment = 0xB1B0AFBA - sum
-        newfont[head_offset + 8, 4] = [adjustment].pack("N")
+        newfont[head_offset + 8, 4] = [adjustment].pack('N')
 
         newfont
       end
@@ -150,7 +150,7 @@ module TTFunk
 
       def checksum(data)
         data += "\0" * (4 - data.length % 4) unless data.length % 4 == 0
-        data.unpack("N*").reduce(:+) & 0xFFFF_FFFF
+        data.unpack('N*').reduce(:+) & 0xFFFF_FFFF
       end
 
       def collect_glyphs(glyph_ids)
@@ -158,7 +158,7 @@ module TTFunk
           h[id] = original.glyph_outlines.for(id)
         end
         additional_ids = glyphs.values.select { |g| g && g.compound? }
-          .map(&:glyph_ids).flatten
+                               .map(&:glyph_ids).flatten
 
         glyphs.update(collect_glyphs(additional_ids)) if additional_ids.any?
 

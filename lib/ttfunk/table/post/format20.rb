@@ -12,7 +12,7 @@ module TTFunk
           if index <= 257
             POSTSCRIPT_GLYPHS[index]
           else
-            @names[index - 258] || ".notdef"
+            @names[index - 258] || '.notdef'
           end
         end
 
@@ -25,7 +25,7 @@ module TTFunk
 
           strings = StringIO.new(io.read(offset + length - io.pos))
           until strings.eof?
-            length = strings.read(1).unpack("C").first
+            length = strings.read(1).unpack('C').first
             @names << strings.read(length)
           end
         end

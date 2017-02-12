@@ -40,7 +40,7 @@ module TTFunk
           offset = 10 # 2 bytes for each of num-contours, min x/y, max x/y
 
           loop do
-            flags, glyph_id = @raw[offset, 4].unpack("n*")
+            flags, glyph_id = @raw[offset, 4].unpack('n*')
             @glyph_ids << glyph_id
             @glyph_id_offsets << offset + 2
 
@@ -73,7 +73,7 @@ module TTFunk
           new_ids = glyph_ids.map { |id| mapping[id] }
 
           new_ids.zip(@glyph_id_offsets).each do |new_id, offset|
-            result[offset, 2] = [new_id].pack("n")
+            result[offset, 2] = [new_id].pack('n')
           end
 
           result

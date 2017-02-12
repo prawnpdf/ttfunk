@@ -67,18 +67,18 @@ module TTFunk
           # format, length, language
           subtable = [
             4, 16 + 8 * segcount + 2 * glyph_indices.length, 0
-          ].pack("nnn")
+          ].pack('nnn')
 
           search_range = 2 * 2**(Math.log(segcount) / Math.log(2)).to_i
           entry_selector = (Math.log(search_range / 2) / Math.log(2)).to_i
           range_shift = (2 * segcount) - search_range
           subtable << [
             segcount * 2, search_range, entry_selector, range_shift
-          ].pack("nnnn")
+          ].pack('nnnn')
 
-          subtable << end_codes.pack("n*") << "\0\0" << start_codes.pack("n*")
-          subtable << deltas.pack("n*") << range_offsets.pack("n*")
-          subtable << glyph_indices.pack("n*")
+          subtable << end_codes.pack('n*') << "\0\0" << start_codes.pack('n*')
+          subtable << deltas.pack('n*') << range_offsets.pack('n*')
+          subtable << glyph_indices.pack('n*')
 
           { charmap: new_map, subtable: subtable, max_glyph_id: next_id + 1 }
         end
@@ -94,18 +94,18 @@ module TTFunk
         private
 
         def parse_cmap!
-          length, @language, segcount_x2 = read(6, "nnn")
+          length, @language, segcount_x2 = read(6, 'nnn')
           segcount = segcount_x2 / 2
 
           io.read(6) # skip searching hints
 
-          end_code = read(segcount_x2, "n*")
+          end_code = read(segcount_x2, 'n*')
           io.read(2) # skip reserved value
-          start_code = read(segcount_x2, "n*")
+          start_code = read(segcount_x2, 'n*')
           id_delta = read_signed(segcount)
-          id_range_offset = read(segcount_x2, "n*")
+          id_range_offset = read(segcount_x2, 'n*')
 
-          glyph_ids = read(length - io.pos + @offset, "n*")
+          glyph_ids = read(length - io.pos + @offset, 'n*')
 
           @code_map = {}
 

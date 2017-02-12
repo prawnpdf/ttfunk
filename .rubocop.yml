@@ -1,38 +1,64 @@
-
-# Possibly won't remove due to intentional style decisions
-SignalException:
-  Enabled: false
-CaseIndentation:
-  Enabled: false
-IfUnlessModifier:
-  Enabled: false
-StringLiterals:
-  Enabled: false
-
+AllCops:
+  Include:
+    - '**/Rakefile'
+    - '*.gemspec'
+  Exclude:
+    - 'pkg/**/*'
 
 Metrics/AbcSize:
   Enabled: false
+
 Metrics/BlockLength:
   Enabled: false
+
 Metrics/ClassLength:
   Enabled: false
+
 Metrics/CyclomaticComplexity:
   Enabled: false
+
 Metrics/MethodLength:
   Enabled: false
+
 Metrics/ParameterLists:
   Max: 6
+
 Metrics/PerceivedComplexity:
   Enabled: false
 
 
+Style/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
 Style/Documentation:
   Enabled: false
+
 Style/GuardClause:
   Enabled: false
-Style/MultilineMethodCallIndentation:
-  EnforcedStyle: indented
+
+# We don't always prefer modified if statements even if they do fit on
+# a line.
+Style/IfUnlessModifier:
+  Enabled: false
+
 Style/MultilineOperationIndentation:
   EnforcedStyle: indented
+
 Style/NumericPredicate:
   EnforcedStyle: comparison
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    '%': '()'
+    '%i': '[]'
+    '%I': '[]'
+    '%q': '()'
+    '%Q': '()'
+    '%r': '{}'
+    '%s': '()'
+    '%w': '[]'
+    '%W': '[]'
+    '%x': '()'
+
+Style/WhileUntilModifier:
+  Enabled: false
