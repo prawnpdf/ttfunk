@@ -5,7 +5,7 @@ module TTFunk
 
     def initialize(io, offset = 0)
       io.seek(offset)
-      @scaler_type, table_count = io.read(12).unpack("Nn")
+      @scaler_type, table_count = io.read(12).unpack('Nn')
 
       @tables = {}
       table_count.times do

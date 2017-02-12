@@ -3,7 +3,7 @@ require 'ttfunk'
 module TTFunk
   class Collection
     def self.open(path)
-      ::File.open(path, "rb") do |io|
+      ::File.open(path, 'rb') do |io|
         yield new(io)
       end
     end
