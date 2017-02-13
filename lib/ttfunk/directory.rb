@@ -3,7 +3,8 @@ module TTFunk
     attr_reader :tables
     attr_reader :scaler_type
 
-    def initialize(io)
+    def initialize(io, offset = 0)
+      io.seek(offset)
       @scaler_type, table_count = io.read(12).unpack('Nn')
 
       @tables = {}

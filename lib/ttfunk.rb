@@ -3,6 +3,7 @@ require 'pathname'
 
 require_relative 'ttfunk/directory'
 require_relative 'ttfunk/resource_file'
+require_relative 'ttfunk/collection'
 
 module TTFunk
   class File
@@ -15,6 +16,10 @@ module TTFunk
 
     def self.from_dfont(file, which = 0)
       new(ResourceFile.open(file) { |dfont| dfont['sfnt', which] })
+    end
+
+    def self.from_ttc(file, which = 0)
+      Collection.open(file) { |ttc| ttc[which] }
     end
 
     def self.verify_and_open(io_or_path)
@@ -36,9 +41,9 @@ module TTFunk
       io
     end
 
-    def initialize(contents)
+    def initialize(contents, offset = 0)
       @contents = StringIO.new(contents)
-      @directory = Directory.new(@contents)
+      @directory = Directory.new(@contents, offset)
     end
 
     def ascent
