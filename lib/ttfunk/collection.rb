@@ -1,5 +1,3 @@
-require 'ttfunk'
-
 module TTFunk
   class Collection
     include Enumerable
