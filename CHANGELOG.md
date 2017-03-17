@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+
+* Use `require` instead of `require_relative` to avoid dual loading files
+
 ## [1.5.0] - 2017-02-13
 
 ### Added

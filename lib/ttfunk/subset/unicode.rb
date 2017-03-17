@@ -1,5 +1,4 @@
 require 'set'
-require_relative 'base'
 
 module TTFunk
   module Subset

@@ -1,5 +1,3 @@
-require_relative '../table'
-
 module TTFunk
   class Table
     class Kern < Table
@@ -84,5 +82,3 @@ module TTFunk
     end
   end
 end
-
-require_relative 'kern/format0'

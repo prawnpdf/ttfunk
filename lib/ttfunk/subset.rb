@@ -1,8 +1,3 @@
-require_relative 'subset/unicode'
-require_relative 'subset/unicode_8bit'
-require_relative 'subset/mac_roman'
-require_relative 'subset/windows_1252'
-
 module TTFunk
   module Subset
     def self.for(original, encoding)
