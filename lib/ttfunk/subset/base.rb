@@ -1,15 +1,3 @@
-require_relative '../table/cmap'
-require_relative '../table/glyf'
-require_relative '../table/head'
-require_relative '../table/hhea'
-require_relative '../table/hmtx'
-require_relative '../table/kern'
-require_relative '../table/loca'
-require_relative '../table/maxp'
-require_relative '../table/name'
-require_relative '../table/post'
-require_relative '../table/simple'
-
 module TTFunk
   module Subset
     class Base
