@@ -1,4 +1,3 @@
-require_relative '../table'
 require 'digest/sha1'
 
 module TTFunk

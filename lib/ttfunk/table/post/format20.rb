@@ -1,4 +1,3 @@
-require_relative 'format10'
 require 'stringio'
 
 module TTFunk

@@ -1,5 +1,3 @@
-require_relative 'subset'
-
 module TTFunk
   class SubsetCollection
     def initialize(original)
