@@ -149,7 +149,11 @@ module TTFunk
       end
 
       def checksum(data)
-        data += "\0" * (4 - data.length % 4) unless data.length % 4 == 0
+        len = data.length
+        if len == 0
+          return len
+        end
+        data += "\0" * (4 - len % 4) unless len % 4 == 0
         data.unpack('N*').reduce(:+) & 0xFFFF_FFFF
       end
 

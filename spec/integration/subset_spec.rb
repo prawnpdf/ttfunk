@@ -30,4 +30,10 @@ describe 'subsetting' do
 
     expect(name1).to_not eq name2
   end
+
+  it 'calculates checksum correctly for empty table data' do
+    font = TTFunk::File.open test_font('Mplus1p')
+    subset1 = TTFunk::Subset.for(font, :unicode)
+    expect { subset1.encode }.to_not raise_error
+  end
 end
