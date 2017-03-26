@@ -150,7 +150,7 @@ module TTFunk
 
       def checksum(data)
         data += "\0" * (4 - data.length % 4) unless data.length % 4 == 0
-        data.unpack('N*').reduce(:+) & 0xFFFF_FFFF
+        data.unpack('N*').reduce(0, :+) & 0xFFFF_FFFF
       end
 
       def collect_glyphs(glyph_ids)

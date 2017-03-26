@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 * loca table corruption during subsetting. The loca table serialization code
   didn't properly detect suitable table format.
 
+* Fixed checksum calculation for empty tables.
+
 ## [1.5.0] - 2017-02-13
 
 ### Added
