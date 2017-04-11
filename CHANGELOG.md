@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+
+* loca table corruption during subsetting. The loca table serialization code
+  didn't properly detect suitable table format.
+
 ## [1.5.0] - 2017-02-13
 
 ### Added

@@ -13,7 +13,12 @@ module TTFunk
       # * :table - the string representing the table's contents
       # * :type  - the type of offset (to be encoded in the 'head' table)
       def self.encode(offsets)
-        if offsets.any? { |ofs| ofs > 0xFFFF }
+        long_offsets = offsets.any? do |offset|
+          short_offset = offset / 2
+          short_offset * 2 != offset || short_offset > 0xffff
+        end
+
+        if long_offsets
           { type: 1, table: offsets.pack('N*') }
         else
           { type: 0, table: offsets.map { |o| o / 2 }.pack('n*') }
