@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.5.1]
+
 ### Fixed
 
 * loca table corruption during subsetting. The loca table serialization code
@@ -109,7 +111,8 @@ Initial release as a standalone gem
 
 
 
-[Unreleased]: https://github.com/prawnpdf/ttfunk/compare/1.5.0...HEAD
+[Unreleased]: https://github.com/prawnpdf/ttfunk/compare/1.5.1...HEAD
+[1.5.1]: https://github.com/prawnpdf/ttfunk/compare/1.5.0...1.5.1
 [1.5.0]: https://github.com/prawnpdf/ttfunk/compare/1.4.0...1.5.0
 [1.4.0]: https://github.com/prawnpdf/ttfunk/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/prawnpdf/ttfunk/compare/1.2.2...1.3.0
