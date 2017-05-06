@@ -10,6 +10,8 @@ module TTFunk
 
     def initialize(file)
       @file = file
+      @offset = nil
+      @length = nil
 
       info = file.directory_info(tag)
 
