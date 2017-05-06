@@ -5,7 +5,7 @@ require 'rake'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
-task default: [:rubocop, :spec]
+task default: %i[rubocop spec]
 
 desc 'Run all rspec files'
 RSpec::Core::RakeTask.new('spec')
