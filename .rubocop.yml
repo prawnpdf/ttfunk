@@ -62,3 +62,6 @@ Style/PercentLiteralDelimiters:
 
 Style/WhileUntilModifier:
   Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
