@@ -1,5 +1,6 @@
 *.swp
 .rvmrc
+.ruby-version
 .yardoc
 Gemfile.lock
 doc
