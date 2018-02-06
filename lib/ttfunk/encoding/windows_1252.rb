@@ -1,7 +1,7 @@
 module TTFunk
   module Encoding
     class Windows1252
-      # rubocop: disable Style/ExtraSpacing
+      # rubocop: disable Layout/ExtraSpacing
 
       TO_UNICODE =
         Hash[*(0..255).zip((0..255)).flatten]
@@ -22,7 +22,7 @@ module TTFunk
       # array is a string, it is a postscript glyph that is not in the standard
       # list, and which should be emitted specially in the TTF postscript table
       # ('post', see format 2).
-      # rubocop: disable Metrics/LineLength,Style/AlignArray,Style/IndentArray
+      # rubocop: disable Metrics/LineLength,Layout/AlignArray,Layout/IndentArray
       POSTSCRIPT_GLYPH_MAPPING = [
           0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
           0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
@@ -42,7 +42,7 @@ module TTFunk
         234, 120, 122, 121, 123, 125, 124, 184, 161, 127, 126, 128, 129, 236, 238, 186
       ].freeze
 
-      # rubocop: enable Style/AlignArray,Metrics/LineLength,Style/ExtraSpacing,Style/IndentArray
+      # rubocop: enable Layout/AlignArray,Metrics/LineLength,Layout/ExtraSpacing,Layout/IndentArray
 
       def self.covers?(character)
         !FROM_UNICODE[character].nil?
