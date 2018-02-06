@@ -1,7 +1,7 @@
 module TTFunk
   module Encoding
     class MacRoman
-      # rubocop: disable Style/ExtraSpacing
+      # rubocop: disable Layout/ExtraSpacing
 
       TO_UNICODE =
         Hash[*(0..255).zip(0..255).flatten]
@@ -46,7 +46,7 @@ module TTFunk
       # a string, it is a postscript glyph that is not in the standard list, and
       # which should be emitted specially in the TTF postscript table ('post',
       # see format 2).
-      # rubocop: disable Metrics/LineLength,Style/AlignArray,Style/IndentArray
+      # rubocop: disable Metrics/LineLength,Layout/AlignArray,Layout/IndentArray
       POSTSCRIPT_GLYPH_MAPPING = [
           0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, # 0x0F
           0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, # 0x1F
@@ -66,7 +66,7 @@ module TTFunk
         210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225  # 0xFF
       ].freeze
 
-      # rubocop: enable Style/AlignArray,Metrics/LineLength,Style/ExtraSpacing,Style/IndentArray
+      # rubocop: enable Layout/AlignArray,Metrics/LineLength,Layout/ExtraSpacing,Layout/IndentArray
 
       def self.covers?(character)
         !FROM_UNICODE[character].nil?
