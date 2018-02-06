@@ -90,4 +90,18 @@ describe 'subsetting' do
       expect(subset.includes?(97)).to be_truthy
     end
   end
+
+  it 'maps final code 0xFFFF to glyph 0 in generated type 4 cmap' do
+    font = TTFunk::File.open test_font('DejaVuSans')
+
+    subset = TTFunk::Subset.for(font, :unicode)
+    subset.use(97)
+    cmap = TTFunk::File.new(subset.encode).cmap
+
+    # Unicode subsets only contain a single format 4 cmap subtable.
+    expect(cmap.tables.size).to eq(1)
+    format04 = cmap.tables.first
+    expect(format04.format).to eq(4)
+    expect(format04.code_map[0xFFFF]).to eq(0)
+  end
 end
