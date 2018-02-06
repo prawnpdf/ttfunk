@@ -38,6 +38,19 @@ describe 'subsetting' do
     expect { subset1.encode }.to_not raise_error
   end
 
+  it 'generates font directory with tables in ascending order' do
+    font = TTFunk::File.open test_font('DejaVuSans')
+
+    subset = TTFunk::Subset.for(font, :unicode)
+    subset.use(97)
+
+    directory = TTFunk::File.new(subset.encode).directory
+    table_tags = directory.tables.keys
+
+    expect(table_tags.sort).to eq(table_tags)
+    expect(table_tags.first).to be < table_tags.last
+  end
+
   it 'calculates correct search_range, entry_selector and range_shift values' do
     font = TTFunk::File.open test_font('DejaVuSans')
 
