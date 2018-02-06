@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require_relative '../lib/ttfunk'
 
 def character_lookup(file, character)

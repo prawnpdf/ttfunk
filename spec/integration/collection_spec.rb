@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require 'spec_helper'
 
 describe TTFunk::Collection, '::open' do
