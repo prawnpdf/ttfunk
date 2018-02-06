@@ -104,4 +104,24 @@ describe 'subsetting' do
     expect(format04.format).to eq(4)
     expect(format04.code_map[0xFFFF]).to eq(0)
   end
+
+  it 'sorts records in the name table correctly' do
+    font = TTFunk::File.open test_font('DejaVuSans')
+
+    subset = TTFunk::Subset.for(font, :unicode)
+    subset.use(97)
+    name = TTFunk::File.new(subset.encode).name
+
+    records = []
+    name.entries.each do |entry|
+      records << [
+        entry[:platform_id],
+        entry[:encoding_id],
+        entry[:language_id],
+        entry[:name_id]
+      ]
+    end
+
+    expect(records).to eq(records.sort)
+  end
 end
