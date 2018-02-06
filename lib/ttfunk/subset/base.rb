@@ -37,7 +37,7 @@ module TTFunk
         end
         next_glyph_id = cmap_table[:max_glyph_id]
 
-        glyphs.keys.each do |old_id|
+        glyphs.each_key do |old_id|
           unless old2new_glyph.key?(old_id)
             old2new_glyph[old_id] = next_glyph_id
             next_glyph_id += 1
