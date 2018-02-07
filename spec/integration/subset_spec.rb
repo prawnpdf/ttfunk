@@ -63,4 +63,18 @@ describe 'subsetting' do
     expect(entry_selector).to eq(expected_entry_selector)
     expect(range_shift).to eq(expected_range_shift)
   end
+
+  it 'knows which characters it includes' do
+    font = TTFunk::File.open test_font('DejaVuSans')
+    unicode = TTFunk::Subset.for(font, :unicode)
+    unicode_8bit = TTFunk::Subset.for(font, :unicode_8bit)
+    mac_roman = TTFunk::Subset.for(font, :mac_roman)
+    windows1252 = TTFunk::Subset.for(font, :windows_1252)
+
+    [unicode, unicode_8bit, mac_roman, windows1252].each do |subset|
+      expect(subset.includes?(97)).to be_falsey
+      subset.use(97)
+      expect(subset.includes?(97)).to be_truthy
+    end
+  end
 end
