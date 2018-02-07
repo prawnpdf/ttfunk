@@ -47,7 +47,11 @@ module TTFunk
           offset = 0
           start_codes.zip(end_codes).each_with_index do |(a, b), segment|
             if a == 0xFFFF
-              deltas << 0
+              # We want the final 0xFFFF code to map to glyph 0.
+              # The glyph index is calculated as glyph = charcode + delta,
+              # which means that delta must be -0xFFFF to map character code
+              # 0xFFFF to glyph 0.
+              deltas << -0xFFFF
               range_offsets << 0
               break
             end
