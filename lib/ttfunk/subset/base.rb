@@ -124,7 +124,9 @@ module TTFunk
 
         table_data = ''
         head_offset = nil
-        tables.each do |tag, data|
+        table_tags = tables.keys.sort
+        table_tags.each do |tag|
+          data = tables[tag]
           newfont << [tag, checksum(data), offset, data.length].pack('A4N*')
           table_data << data
           head_offset = offset if tag == 'head'
