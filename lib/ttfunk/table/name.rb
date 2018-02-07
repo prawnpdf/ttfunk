@@ -23,6 +23,7 @@ module TTFunk
         end
       end
 
+      attr_reader :entries
       attr_reader :strings
 
       attr_reader :copyright
@@ -58,14 +59,21 @@ module TTFunk
         table = [0, str_count, 6 + 12 * str_count].pack('n*')
         strtable = ''
 
+        items = []
         strings.each do |id, list|
           list.each do |string|
-            table << [
-              string.platform_id, string.encoding_id, string.language_id, id,
-              string.length, strtable.length
-            ].pack('n*')
-            strtable << string
+            items << [id, string]
           end
+        end
+        items = items.sort_by do |id, string|
+          [string.platform_id, string.encoding_id, string.language_id, id]
+        end
+        items.each do |id, string|
+          table << [
+            string.platform_id, string.encoding_id, string.language_id, id,
+            string.length, strtable.length
+          ].pack('n*')
+          strtable << string
         end
 
         table << strtable
@@ -81,30 +89,31 @@ module TTFunk
       def parse!
         count, string_offset = read(6, 'x2n*')
 
-        entries = []
+        @entries = []
         count.times do
           platform, encoding, language, id, length, start_offset =
             read(12, 'n*')
-          entries << {
+          @entries << {
             platform_id: platform,
             encoding_id: encoding,
             language_id: language,
             name_id: id,
             length: length,
-            offset: offset + string_offset + start_offset
+            offset: offset + string_offset + start_offset,
+            text: nil
           }
         end
 
         @strings = Hash.new { |h, k| h[k] = [] }
 
         count.times do |i|
-          io.pos = entries[i][:offset]
-          text = io.read(entries[i][:length])
-          @strings[entries[i][:name_id]] << Name::String.new(
-            text,
-            entries[i][:platform_id],
-            entries[i][:encoding_id],
-            entries[i][:language_id]
+          io.pos = @entries[i][:offset]
+          @entries[i][:text] = io.read(@entries[i][:length])
+          @strings[@entries[i][:name_id]] << Name::String.new(
+            @entries[i][:text],
+            @entries[i][:platform_id],
+            @entries[i][:encoding_id],
+            @entries[i][:language_id]
           )
         end
 
