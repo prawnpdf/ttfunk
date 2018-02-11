@@ -1,8 +1,5 @@
 require 'set'
 
-require_relative 'base'
-require_relative '../encoding/mac_roman'
-
 module TTFunk
   module Subset
     class MacRoman < Base

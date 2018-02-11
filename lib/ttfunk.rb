@@ -1,9 +1,9 @@
 require 'stringio'
 require 'pathname'
 
-require_relative 'ttfunk/directory'
-require_relative 'ttfunk/resource_file'
-require_relative 'ttfunk/collection'
+require 'ttfunk/directory'
+require 'ttfunk/resource_file'
+require 'ttfunk/collection'
 
 module TTFunk
   class File
@@ -119,15 +119,49 @@ module TTFunk
   end
 end
 
-require_relative 'ttfunk/table/cmap'
-require_relative 'ttfunk/table/glyf'
-require_relative 'ttfunk/table/head'
-require_relative 'ttfunk/table/hhea'
-require_relative 'ttfunk/table/hmtx'
-require_relative 'ttfunk/table/kern'
-require_relative 'ttfunk/table/loca'
-require_relative 'ttfunk/table/maxp'
-require_relative 'ttfunk/table/name'
-require_relative 'ttfunk/table/os2'
-require_relative 'ttfunk/table/post'
-require_relative 'ttfunk/table/sbix'
+require 'ttfunk/reader'
+require 'ttfunk/table'
+
+require 'ttfunk/table/cmap'
+require 'ttfunk/table/cmap/format00'
+require 'ttfunk/table/cmap/format04'
+require 'ttfunk/table/cmap/format06'
+require 'ttfunk/table/cmap/format10'
+require 'ttfunk/table/cmap/format12'
+require 'ttfunk/table/cmap/subtable'
+
+require 'ttfunk/table/glyf'
+require 'ttfunk/table/glyf/compound'
+require 'ttfunk/table/glyf/simple'
+
+require 'ttfunk/table/head'
+require 'ttfunk/table/hhea'
+require 'ttfunk/table/hmtx'
+
+require 'ttfunk/table/kern'
+require 'ttfunk/table/kern/format0'
+
+require 'ttfunk/table/loca'
+require 'ttfunk/table/maxp'
+require 'ttfunk/table/name'
+require 'ttfunk/table/os2'
+
+require 'ttfunk/table/post'
+require 'ttfunk/table/post/format10'
+require 'ttfunk/table/post/format20'
+require 'ttfunk/table/post/format30'
+require 'ttfunk/table/post/format40'
+
+require 'ttfunk/table/simple'
+require 'ttfunk/table/sbix'
+
+require 'ttfunk/encoding/mac_roman'
+require 'ttfunk/encoding/windows_1252'
+
+require 'ttfunk/subset'
+require 'ttfunk/subset/base'
+require 'ttfunk/subset/unicode'
+require 'ttfunk/subset/unicode_8bit'
+require 'ttfunk/subset/windows_1252'
+require 'ttfunk/subset/mac_roman'
+

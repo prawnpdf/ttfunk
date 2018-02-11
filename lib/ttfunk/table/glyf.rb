@@ -1,5 +1,3 @@
-require_relative '../table'
-
 module TTFunk
   class Table
     class Glyf < Table
@@ -61,6 +59,3 @@ module TTFunk
     end
   end
 end
-
-require_relative 'glyf/compound'
-require_relative 'glyf/simple'

@@ -1,5 +1,3 @@
-require_relative '../table'
-
 module TTFunk
   class Table
     class Simple < Table

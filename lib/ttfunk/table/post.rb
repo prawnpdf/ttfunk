@@ -1,5 +1,3 @@
-require_relative '../table'
-
 module TTFunk
   class Table
     class Post < Table
@@ -87,8 +85,3 @@ module TTFunk
     end
   end
 end
-
-require_relative 'post/format10'
-require_relative 'post/format20'
-require_relative 'post/format30'
-require_relative 'post/format40'

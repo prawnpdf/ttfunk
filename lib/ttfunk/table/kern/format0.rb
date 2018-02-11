@@ -1,5 +1,3 @@
-require_relative '../../reader'
-
 module TTFunk
   class Table
     class Kern

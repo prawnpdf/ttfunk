@@ -1,8 +1,5 @@
 require 'set'
 
-require_relative 'base'
-require_relative '../encoding/windows_1252'
-
 module TTFunk
   module Subset
     class Windows1252 < Base

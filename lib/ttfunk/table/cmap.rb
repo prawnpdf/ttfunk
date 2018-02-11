@@ -33,5 +33,3 @@ module TTFunk
     end
   end
 end
-
-require_relative 'cmap/subtable'

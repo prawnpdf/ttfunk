@@ -1,5 +1,3 @@
-require_relative '../../reader'
-
 module TTFunk
   class Table
     class Cmap
@@ -87,9 +85,3 @@ module TTFunk
     end
   end
 end
-
-require_relative 'format00'
-require_relative 'format04'
-require_relative 'format06'
-require_relative 'format10'
-require_relative 'format12'
