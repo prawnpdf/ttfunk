@@ -4,7 +4,7 @@ require 'digest/sha1'
 module TTFunk
   class Table
     class Name < Table
-      class String < ::String
+      class NameString < ::String
         attr_reader :platform_id
         attr_reader :encoding_id
         attr_reader :language_id
@@ -45,10 +45,30 @@ module TTFunk
       attr_reader :compatible_full
       attr_reader :sample_text
 
+      COPYRIGHT_NAME_ID = 0
+      FONT_FAMILY_NAME_ID = 1
+      FONT_SUBFAMILY_NAME_ID = 2
+      UNIQUE_SUBFAMILY_NAME_ID = 3
+      FONT_NAME_NAME_ID = 4
+      VERSION_NAME_ID = 5
+      POSTSCRIPT_NAME_NAME_ID = 6
+      TRADEMARK_NAME_ID = 7
+      MANUFACTURER_NAME_ID = 8
+      DESIGNER_NAME_ID = 9
+      DESCRIPTION_NAME_ID = 10
+      VENDOR_URL_NAME_ID = 11
+      DESIGNER_URL_NAME_ID = 12
+      LICENSE_NAME_ID = 13
+      LICENSE_URL_NAME_ID = 14
+      PREFERRED_FAMILY_NAME_ID = 16
+      PREFERRED_SUBFAMILY_NAME_ID = 17
+      COMPATIBLE_FULL_NAME_ID = 18
+      SAMPLE_TEXT_NAME_ID = 19
+
       def self.encode(names, key = '')
         tag = Digest::SHA1.hexdigest(key)[0, 6]
 
-        postscript_name = Name::String.new(
+        postscript_name = NameString.new(
           "#{tag}+#{names.postscript_name}", 1, 0, 0
         )
 
@@ -109,7 +129,7 @@ module TTFunk
         count.times do |i|
           io.pos = @entries[i][:offset]
           @entries[i][:text] = io.read(@entries[i][:length])
-          @strings[@entries[i][:name_id]] << Name::String.new(
+          @strings[@entries[i][:name_id]] << NameString.new(
             @entries[i][:text],
             @entries[i][:platform_id],
             @entries[i][:encoding_id],
@@ -117,26 +137,28 @@ module TTFunk
           )
         end
 
-        @copyright = @strings[0]
-        @font_family = @strings[1]
-        @font_subfamily = @strings[2]
-        @unique_subfamily = @strings[3]
-        @font_name = @strings[4]
-        @version = @strings[5]
         # should only be ONE postscript name
-        @postscript_name = @strings[6].first.strip_extended
-        @trademark = @strings[7]
-        @manufacturer = @strings[8]
-        @designer = @strings[9]
-        @description = @strings[10]
-        @vendor_url = @strings[11]
-        @designer_url = @strings[12]
-        @license = @strings[13]
-        @license_url = @strings[14]
-        @preferred_family = @strings[16]
-        @preferred_subfamily = @strings[17]
-        @compatible_full = @strings[18]
-        @sample_text = @strings[19]
+
+        @copyright = @strings[COPYRIGHT_NAME_ID]
+        @font_family = @strings[FONT_FAMILY_NAME_ID]
+        @font_subfamily = @strings[FONT_SUBFAMILY_NAME_ID]
+        @unique_subfamily = @strings[UNIQUE_SUBFAMILY_NAME_ID]
+        @font_name = @strings[FONT_NAME_NAME_ID]
+        @version = @strings[VERSION_NAME_ID]
+        @postscript_name = @strings[POSTSCRIPT_NAME_NAME_ID]
+                           .first.strip_extended
+        @trademark = @strings[TRADEMARK_NAME_ID]
+        @manufacturer = @strings[MANUFACTURER_NAME_ID]
+        @designer = @strings[DESIGNER_NAME_ID]
+        @description = @strings[DESCRIPTION_NAME_ID]
+        @vendor_url = @strings[VENDOR_URL_NAME_ID]
+        @designer_url = @strings[DESIGNER_URL_NAME_ID]
+        @license = @strings[LICENSE_NAME_ID]
+        @license_url = @strings[LICENSE_URL_NAME_ID]
+        @preferred_family = @strings[PREFERRED_FAMILY_NAME_ID]
+        @preferred_subfamily = @strings[PREFERRED_SUBFAMILY_NAME_ID]
+        @compatible_full = @strings[COMPATIBLE_FULL_NAME_ID]
+        @sample_text = @strings[SAMPLE_TEXT_NAME_ID]
       end
     end
   end
