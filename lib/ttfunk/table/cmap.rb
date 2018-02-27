@@ -26,10 +26,8 @@ module TTFunk
 
       def parse!
         @version, table_count = read(4, 'nn')
-        @tables = []
-
-        table_count.times do
-          @tables << Cmap::Subtable.new(file, offset)
+        @tables = Array.new(table_count) do
+          Cmap::Subtable.new(file, offset)
         end
       end
     end
