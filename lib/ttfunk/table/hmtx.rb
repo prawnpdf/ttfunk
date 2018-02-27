@@ -25,13 +25,18 @@ module TTFunk
 
       def for(glyph_id)
         @metrics[glyph_id] ||
-          HorizontalMetric.new(
-            @metrics.last.advance_width,
-            @left_side_bearings[glyph_id - @metrics.length]
-          )
+          metrics_cache[glyph_id] ||=
+            HorizontalMetric.new(
+              @metrics.last.advance_width,
+              @left_side_bearings[glyph_id - @metrics.length]
+            )
       end
 
       private
+
+      def metrics_cache
+        @metrics_cache ||= {}
+      end
 
       def parse!
         @metrics = []
