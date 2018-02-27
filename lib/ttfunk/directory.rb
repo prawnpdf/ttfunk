@@ -7,6 +7,10 @@ module TTFunk
 
     def initialize(io, offset = 0)
       io.seek(offset)
+
+      # https://www.microsoft.com/typography/otspec/otff.htm#offsetTable
+      # We're ignoring searchRange, entrySelector, and rangeShift here, but
+      # skipping past them to get to the table information.
       @scaler_type, table_count = io.read(12).unpack('Nn')
 
       @tables = {}
