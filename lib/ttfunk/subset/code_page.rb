@@ -73,8 +73,6 @@ module TTFunk
         end
       end
 
-      private
-
       def original_glyph_ids
         ([0] + @subset.map { |unicode| unicode && unicode_cmap[unicode] })
           .compact.uniq.sort

@@ -105,7 +105,8 @@ RSpec.describe TTFunk::Table::OS2 do
     let(:code_page_range) do
       TTFunk::BitField.new(
         TTFunk::BinUtils.stitch_int(
-          encoded[code_page_range_field_indices].unpack('N*'), bit_width: 32
+          encoded[code_page_range_field_indices].unpack('N*'),
+          bit_width: 32
         )
       )
     end
