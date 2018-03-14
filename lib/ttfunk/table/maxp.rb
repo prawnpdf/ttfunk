@@ -20,10 +20,19 @@ module TTFunk
       attr_reader :max_component_depth
 
       def self.encode(maxp, mapping)
-        num_glyphs = mapping.length
-        raw = maxp.raw
-        raw[4, 2] = [num_glyphs].pack('n')
-        raw
+        ''.tap do |table|
+          num_glyphs = mapping.length
+          table <<
+            [maxp.version].pack('N') <<
+            [
+              num_glyphs, maxp.max_points, maxp.max_contours,
+              maxp.max_component_points, maxp.max_component_contours,
+              maxp.max_zones, maxp.max_twilight_points, maxp.max_storage,
+              maxp.max_function_defs, maxp.max_instruction_defs,
+              maxp.max_stack_elements, maxp.max_size_of_instructions,
+              maxp.max_component_elements, maxp.max_component_depth
+            ].pack('n*')
+        end
       end
 
       private

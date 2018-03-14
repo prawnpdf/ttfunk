@@ -22,10 +22,19 @@ module TTFunk
       attr_reader :glyph_data_format
 
       def self.encode(head, loca)
-        table = head.raw
-        table[8, 4] = "\0\0\0\0" # set checksum adjustment to 0 initially
-        table[-4, 2] = [loca[:type]].pack('n') # set index_to_loc_format
-        table
+        EncodedString.new do |table|
+          table <<
+            [head.version, head.font_revision].pack('N2') <<
+            Placeholder.new(:checksum, length: 4) <<
+            [
+              head.magic_number,
+              head.flags, head.units_per_em,
+              head.created, head.modified,
+              head.x_min, head.y_min, head.x_max, head.y_max,
+              head.mac_style, head.lowest_rec_ppem, head.font_direction_hint,
+              loca[:type], head.glyph_data_format
+            ].pack('Nn2q2n*')
+        end
       end
 
       private

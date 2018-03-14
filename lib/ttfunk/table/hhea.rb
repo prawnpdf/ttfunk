@@ -13,13 +13,21 @@ module TTFunk
       attr_reader :x_max_extent
       attr_reader :carot_slope_rise
       attr_reader :carot_slope_run
+      attr_reader :caret_offset
       attr_reader :metric_data_format
       attr_reader :number_of_metrics
 
       def self.encode(hhea, hmtx)
-        raw = hhea.raw
-        raw[-2, 2] = [hmtx[:number_of_metrics]].pack('n')
-        raw
+        ''.tap do |table|
+          table << [hhea.version].pack('N')
+          table << [
+            hhea.ascent, hhea.descent, hhea.line_gap, hhea.advance_width_max,
+            hhea.min_left_side_bearing, hhea.min_right_side_bearing,
+            hhea.x_max_extent, hhea.carot_slope_rise, hhea.carot_slope_run,
+            hhea.caret_offset, 0, 0, 0, 0, hhea.metric_data_format,
+            hmtx[:number_of_metrics]
+          ].pack('n*')
+        end
       end
 
       private
