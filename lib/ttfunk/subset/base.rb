@@ -30,7 +30,7 @@ module TTFunk
       end
 
       def encode(options = {})
-        cmap_table = new_cmap_table(options)
+        cmap_table = new_cmap_table
         glyphs = collect_glyphs(original_glyph_ids)
 
         old2new_glyph = cmap_table[:charmap]
@@ -72,11 +72,13 @@ module TTFunk
         head_table = TTFunk::Table::Head.encode(
           original.header, loca_table
         )
+        os2_table = TTFunk::Table::OS2.encode(
+          original.os2, self
+        )
 
         # "optional" tables. Fonts may omit these if they do not need them.
         # Because they apply globally, we can simply copy them over, without
         # modification, if they exist.
-        os2_table  = original.os2.raw
         cvt_table  = TTFunk::Table::Simple.new(original, 'cvt ').raw
         fpgm_table = TTFunk::Table::Simple.new(original, 'fpgm').raw
         prep_table = TTFunk::Table::Simple.new(original, 'prep').raw
