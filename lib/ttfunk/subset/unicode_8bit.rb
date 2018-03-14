@@ -39,21 +39,23 @@ module TTFunk
         @unicodes[character]
       end
 
-      protected
+      def new_cmap_table
+        @new_cmap_table ||= begin
+          mapping = @subset.each_with_object({}) do |(code, unicode), map|
+            map[code] = unicode_cmap[unicode]
+            map
+          end
 
-      def new_cmap_table(_options)
-        mapping = @subset.each_with_object({}) do |(code, unicode), map|
-          map[code] = unicode_cmap[unicode]
-          map
+          # since we're mapping a subset of the unicode glyphs into an
+          # arbitrary 256-character space, the actual encoding we're
+          # using is irrelevant. We choose MacRoman because it's a 256-character
+          # encoding that happens to be well-supported in both TTF and
+          # PDF formats.
+          TTFunk::Table::Cmap.encode(mapping, :mac_roman)
         end
-
-        # since we're mapping a subset of the unicode glyphs into an
-        # arbitrary 256-character space, the actual encoding we're
-        # using is irrelevant. We choose MacRoman because it's a 256-character
-        # encoding that happens to be well-supported in both TTF and
-        # PDF formats.
-        TTFunk::Table::Cmap.encode(mapping, :mac_roman)
       end
+
+      private
 
       def original_glyph_ids
         ([0] + @unicodes.keys.map { |unicode| unicode_cmap[unicode] }).uniq.sort
