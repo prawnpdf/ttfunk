@@ -124,6 +124,13 @@ module TTFunk
     def sbix
       @sbix ||= TTFunk::Table::Sbix.new(self)
     end
+
+    def vertical_origins
+      @vertical_origins ||=
+        if directory.tables.include?(TTFunk::Table::Vorg::TAG)
+          TTFunk::Table::Vorg.new(self)
+        end
+    end
   end
 end
 
@@ -139,3 +146,4 @@ require_relative 'ttfunk/table/name'
 require_relative 'ttfunk/table/os2'
 require_relative 'ttfunk/table/post'
 require_relative 'ttfunk/table/sbix'
+require_relative 'ttfunk/table/vorg'
