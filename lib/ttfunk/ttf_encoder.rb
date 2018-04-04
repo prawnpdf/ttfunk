@@ -147,6 +147,12 @@ module TTFunk
       end
     end
 
+    def vorg_table
+      @vorg_table ||= TTFunk::Table::Vorg.encode(
+        original.vertical_origins
+      )
+    end
+
     def tables
       @tables ||= {
         'cmap' => cmap_table[:table],
@@ -162,7 +168,8 @@ module TTFunk
         'head' => head_table,
         'prep' => prep_table,
         'fpgm' => fpgm_table,
-        'cvt ' => cvt_table
+        'cvt ' => cvt_table,
+        'VORG' => vorg_table
       }.reject { |_tag, table| table.nil? }
     end
 
