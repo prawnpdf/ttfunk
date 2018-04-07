@@ -128,10 +128,18 @@ module TTFunk
           TTFunk::Table::Vorg.new(self)
         end
     end
+
+    def digital_signature
+      @digital_signature ||=
+        if directory.tables.include?(TTFunk::Table::Dsig::TAG)
+          TTFunk::Table::Dsig.new(self)
+        end
+    end
   end
 end
 
 require_relative 'ttfunk/table/cmap'
+require_relative 'ttfunk/table/dsig'
 require_relative 'ttfunk/table/glyf'
 require_relative 'ttfunk/table/head'
 require_relative 'ttfunk/table/hhea'
