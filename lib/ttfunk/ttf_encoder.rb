@@ -153,6 +153,12 @@ module TTFunk
       )
     end
 
+    def dsig_table
+      @dsig_table ||= TTFunk::Table::Dsig.encode(
+        original.digital_signature
+      )
+    end
+
     def tables
       @tables ||= {
         'cmap' => cmap_table[:table],
@@ -169,7 +175,8 @@ module TTFunk
         'prep' => prep_table,
         'fpgm' => fpgm_table,
         'cvt ' => cvt_table,
-        'VORG' => vorg_table
+        'VORG' => vorg_table,
+        'DSIG' => dsig_table
       }.reject { |_tag, table| table.nil? }
     end
 
