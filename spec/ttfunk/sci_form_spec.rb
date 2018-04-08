@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'ttfunk/sci'
+require 'ttfunk/sci_form'
 
-RSpec.describe TTFunk::Sci do
+RSpec.describe TTFunk::SciForm do
   let(:sci) { described_class.new(6.123, 5) }
 
   describe '#to_f' do
