@@ -19,6 +19,18 @@ module TTFunk
         (value >> bit_width * i) & mask
       end
     end
+
+    def twos_comp_to_int(num, bit_width:)
+      if num >> (bit_width - 1) == 1
+        # we want all ones
+        mask = (2**bit_width) - 1
+
+        # find 2's complement, i.e. flip bits (xor with mask) and add 1
+        -((num ^ mask) + 1)
+      else
+        num
+      end
+    end
   end
 
   BinUtils.extend(BinUtils)
