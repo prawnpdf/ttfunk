@@ -23,4 +23,18 @@ RSpec.describe TTFunk::BinUtils do
       expect(result).to eq([0b01001100, 0b11010001])
     end
   end
+
+  describe '.twos_comp_to_int' do
+    it "converts a two's complement number to an integer" do
+      expect(described_class.twos_comp_to_int(0b10101001, bit_width: 8)).to(
+        eq(-0b01010111)
+      )
+    end
+
+    it "returns the original number if the number isn't negative" do
+      expect(described_class.twos_comp_to_int(0b01101001, bit_width: 8)).to(
+        eq(0b01101001)
+      )
+    end
+  end
 end
