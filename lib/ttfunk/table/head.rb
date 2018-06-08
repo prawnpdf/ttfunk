@@ -34,7 +34,7 @@ module TTFunk
               head.created, head.modified,
               head.x_min, head.y_min, head.x_max, head.y_max,
               head.mac_style, head.lowest_rec_ppem, head.font_direction_hint,
-              loca[:type], head.glyph_data_format
+              loca[:type] || 0, head.glyph_data_format
             ].pack('Nn2q2n*')
         end
       end
