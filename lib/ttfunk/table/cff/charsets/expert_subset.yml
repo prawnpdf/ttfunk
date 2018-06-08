@@ -1,0 +1,346 @@
+---
+- space
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+- comma
+- hyphen
+- period
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+- colon
+- semicolon
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+- fraction
+-
+-
+-
+-
+-
+-
+-
+-
+-
+- fi
+- fl
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+- onesuperior
+-
+-
+-
+-
+- onehalf
+-
+-
+- onequarter
+-
+-
+-
+-
+- threequarters
+- twosuperior
+-
+-
+-
+-
+- threesuperior
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+- dollaroldstyle
+- dollarsuperior
+-
+-
+- parenleftsuperior
+- parenrightsuperior
+- twodotenleader
+- onedotenleader
+- zerooldstyle
+- oneoldstyle
+- twooldstyle
+- threeoldstyle
+- fouroldstyle
+- fiveoldstyle
+- sixoldstyle
+- sevenoldstyle
+- eightoldstyle
+- nineoldstyle
+- commasuperior
+- threequartersemdash
+- periodsuperior
+-
+- asuperior
+- bsuperior
+- centsuperior
+- dsuperior
+- esuperior
+- isuperior
+- lsuperior
+- msuperior
+- nsuperior
+- osuperior
+- rsuperior
+- ssuperior
+- tsuperior
+- ff
+- ffi
+- ffl
+- parenleftinferior
+- parenrightinferior
+-
+- hyphensuperior
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+- colonmonetary
+- onefitted
+- rupiah
+-
+-
+- centoldstyle
+-
+-
+-
+-
+-
+-
+-
+-
+- figuredash
+- hypheninferior
+-
+-
+-
+-
+- oneeighth
+- threeeighths
+- fiveeighths
+- seveneighths
+- onethird
+- twothirds
+- zerosuperior
+- foursuperior
+- fivesuperior
+- sixsuperior
+- sevensuperior
+- eightsuperior
+- ninesuperior
+- zeroinferior
+- oneinferior
+- twoinferior
+- threeinferior
+- fourinferior
+- fiveinferior
+- sixinferior
+- seveninferior
+- eightinferior
+- nineinferior
+- centinferior
+- dollarinferior
+- periodinferior
