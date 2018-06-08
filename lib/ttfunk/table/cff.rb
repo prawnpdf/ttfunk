@@ -6,9 +6,13 @@ module TTFunk
       autoload :CharstringsIndex, 'ttfunk/table/cff/charstrings_index'
       autoload :Dict,             'ttfunk/table/cff/dict'
       autoload :Encoding,         'ttfunk/table/cff/encoding'
+      autoload :FdSelector,       'ttfunk/table/cff/fd_selector'
+      autoload :FontDict,         'ttfunk/table/cff/font_dict'
+      autoload :FontIndex,        'ttfunk/table/cff/font_index'
       autoload :Header,           'ttfunk/table/cff/header'
       autoload :Index,            'ttfunk/table/cff/index'
       autoload :Path,             'ttfunk/table/cff/path'
+      autoload :PrivateDict,      'ttfunk/table/cff/private_dict'
 
       TAG = 'CFF '.freeze # the extra space is important
 
