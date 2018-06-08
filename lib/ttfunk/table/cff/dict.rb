@@ -145,7 +145,7 @@ module TTFunk
               @dict[operator] = operands
               operands = []
             when OPERATOR_BZERO
-              @dict[b_zero] = operands
+              @dict[b_zero] = operands unless operands.empty?
               operands = []
             when *OPERAND_BZERO
               operands << decode_operand(b_zero)

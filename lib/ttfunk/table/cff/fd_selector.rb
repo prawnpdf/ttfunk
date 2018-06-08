@@ -20,17 +20,22 @@ module TTFunk
             entries[glyph_id]
 
           when :range_format
-            entry = entries.bsearch do |range, _|
-              if range.include?(glyph_id)
+            if (entry = range_cache[glyph_id])
+              return entry
+            end
+
+            range, entry = entries.bsearch do |rng, _|
+              if rng.cover?(glyph_id)
                 0
-              elsif glyph_id < range.first
+              elsif glyph_id < rng.first
                 -1
               else
                 1
               end
             end
 
-            entry.last # fd index is the last element
+            range.each { |i| range_cache[i] = entry }
+            entry
           end
         end
 
@@ -65,6 +70,10 @@ module TTFunk
         end
 
         private
+
+        def range_cache
+          @range_cache ||= {}
+        end
 
         def rangify(values)
           start = values.first

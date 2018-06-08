@@ -245,7 +245,7 @@ module TTFunk
           Hash.new { |h, k| h[k] = [] }.tap do |result|
             os2.file.cmap.unicode.first.code_map.each_key do |code_point|
               # find corresponding bit
-              range = UNICODE_RANGES.find { |r| r.include?(code_point) }
+              range = UNICODE_RANGES.find { |r| r.cover?(code_point) }
 
               if (bit = UNICODE_BLOCKS[range])
                 result[bit] << code_point

@@ -14,17 +14,31 @@ module TTFunk
       autoload :Path,             'ttfunk/table/cff/path'
       autoload :PrivateDict,      'ttfunk/table/cff/private_dict'
       autoload :SubrIndex,        'ttfunk/table/cff/subr_index'
+      autoload :TopDict,          'ttfunk/table/cff/top_dict'
+      autoload :TopIndex,         'ttfunk/table/cff/top_index'
 
       TAG = 'CFF '.freeze # the extra space is important
 
-      attr_reader :header, :name_index
+      attr_reader :header, :name_index, :top_index, :string_index
+      attr_reader :global_subr_index
 
       def tag
         TAG
       end
 
-      def encode(_mapping)
-        [header.encode, name_index.encode].join
+      def encode(mapping)
+        EncodedString.new do |result|
+          sub_tables = [
+            header.encode,
+            name_index.encode,
+            top_index.encode { |top_dict| top_dict.encode(mapping) },
+            string_index.encode,
+            global_subr_index.encode
+          ]
+
+          sub_tables.each { |tb| result << tb }
+          top_index[0].finalize(result, mapping)
+        end
       end
 
       private
@@ -32,6 +46,18 @@ module TTFunk
       def parse!
         @header = Header.new(file, offset)
         @name_index = Index.new(file, @header.table_offset + @header.length)
+
+        @top_index = TopIndex.new(
+          file, @name_index.table_offset + @name_index.length
+        )
+
+        @string_index = Index.new(
+          file, @top_index.table_offset + @top_index.length
+        )
+
+        @global_subr_index = SubrIndex.new(
+          file, @string_index.table_offset + @string_index.length
+        )
       end
     end
   end

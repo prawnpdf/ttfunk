@@ -10,8 +10,13 @@ module TTFunk
         # offset array element size
         attr_reader :offset_size
 
+        attr_reader :raw_offset_length, :offsets, :raw_data
+        attr_reader :data_start_pos
+
         def [](index)
-          @data[index]
+          entry_cache[index] ||= raw_data[
+            offsets[index]...offsets[index + 1]
+          ]
         end
 
         def each
@@ -20,7 +25,7 @@ module TTFunk
         end
 
         def encode
-          result = []
+          result = EncodedString.new
 
           entries = each_with_object([]).with_index do |(entry, ret), index|
             new_entry = block_given? ? yield(entry, index) : entry
@@ -31,28 +36,39 @@ module TTFunk
           # no additional fields. Thus, the total size of an empty INDEX is 2
           # bytes."
           result << [entries.size].pack('n')
-          return result.join if entries.empty?
+          return result if entries.empty?
 
           offset_size = (Math.log2(entries.size) / 8.0).round + 1
           result << [offset_size].pack('C')
           data_offset = 1
 
-          data = []
+          data = EncodedString.new
 
           entries.each do |entry|
             result << encode_offset(data_offset, offset_size)
             data << entry
-            data_offset += entry.bytesize
+            data_offset += entry.length
           end
 
           unless entries.empty?
             result << encode_offset(data_offset, offset_size)
           end
 
-          result.join + data.join
+          result << data
         end
 
         private
+
+        def entry_cache
+          @entry_cache ||= {}
+        end
+
+        def absolute_offsets_for(index)
+          [
+            table_offset + offsets[index] + data_start_pos,
+            table_offset + offsets[index + 1] + data_start_pos
+          ]
+        end
 
         def encode_offset(offset, offset_size)
           case offset_size
@@ -76,23 +92,24 @@ module TTFunk
             return
           end
 
-          # read an extra byte to get rid of the first offset,
-          # which is always 1
-          @offset_size, = read(2, 'C')
-          raw_offsets = io.read(count * offset_size)
+          @offset_size = read(1, 'C').first
 
-          offsets = [0] + Array.new(count) do |idx|
+          # read an extra offset_size bytes to get rid of the first offset,
+          # which is always 1
+          io.read(offset_size)
+
+          @raw_offset_length = count * offset_size
+          raw_offsets = io.read(raw_offset_length)
+
+          @offsets = [0] + Array.new(count) do |idx|
             start = offset_size * idx
             finish = offset_size * (idx + 1)
             unpack_offset(raw_offsets[start...finish]) - 1
           end
 
-          raw_data = io.read(offsets.last)
-          @data = offsets.each_cons(2).map do |start_offset, next_start_offset|
-            raw_data[start_offset...next_start_offset]
-          end
-
-          @length = 4 + raw_offsets.size + raw_data.size
+          @raw_data = io.read(offsets.last)
+          @data_start_pos = 3 + offset_size + raw_offset_length
+          @length = data_start_pos + raw_data.size
         end
 
         def unpack_offset(offset_data)
