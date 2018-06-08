@@ -100,34 +100,31 @@ module TTFunk
 
         def parse!
           until @index >= @data.size
-            code = read_byte
+            code = @data[@index]
+            @index += 1
 
-            if code == 11
-              # return from callgsubr - do nothing since we inline subrs
-            elsif code >= 32 && code <= 246
-              @stack.push(code - 139)
-            elsif code >= 247 && code <= 250
-              b0 = code
-              b1 = read_byte
-              @stack.push((b0 - 247) * 256 + b1 + 108)
-            elsif code >= 251 && code <= 254
-              b0 = code
-              b1 = read_byte
-              @stack.push(-(b0 - 251) * 256 - b1 - 108)
+            # return from callgsubr - do nothing since we inline subrs
+            next if code == 11
+
+            if code >= 32 && code <= 246
+              @stack << code - 139
             elsif (m = CODE_MAP[code])
               send(m)
-            else
+            elsif code >= 247 && code <= 250
               b0 = code
+              b1 = @data[@index]
+              @index += 1
+              @stack << (b0 - 247) * 256 + b1 + 108
+            elsif code >= 251 && code <= 254
+              b0 = code
+              b1 = @data[@index]
+              @index += 1
+              @stack << -(b0 - 251) * 256 - b1 - 108
+            else
               b1, b2, b3, b4 = read_bytes(4)
-              @stack.push(((b1 << 24) | (b2 << 16) | (b3 << 8) | b4) / 65_536)
+              @stack << ((b1 << 24) | (b2 << 16) | (b3 << 8) | b4) / 65_536
             end
           end
-        end
-
-        def read_byte
-          byte = @data[@index]
-          @index += 1
-          byte
         end
 
         def read_bytes(length)
@@ -144,10 +141,11 @@ module TTFunk
           stem
         end
 
+        # rubocop:disable Style/EvenOdd
         def stem
           # The number of stem operators on the stack is always even.
           # If the value is uneven, that means a width is specified.
-          has_width_arg = @stack.size.odd?
+          has_width_arg = @stack.size % 2 == 1
 
           if has_width_arg && !@have_width
             @width = @stack.shift + @nominal_width_x
@@ -157,6 +155,7 @@ module TTFunk
           @stack.clear
           @have_width = true
         end
+        # rubocop:enable Style/EvenOdd
 
         def vmoveto
           if @stack.size > 1 && !@have_width
@@ -225,12 +224,13 @@ module TTFunk
 
         def callsubr
           code_index = @stack.pop + @subrs_bias
-          subr_codes = @subrs[code_index].bytes
-          @data.insert(@index, *subr_codes) if subr_codes
+          subr_code = @subrs[code_index].bytes
+          @data[@index, 0] = subr_code
         end
 
         def flex_select
-          flex_code = read_byte
+          flex_code = @data[@index]
+          @index += 1
           send(FLEX_CODE_MAP[flex_code])
         end
 
@@ -254,7 +254,7 @@ module TTFunk
         end
 
         def hflex
-          c1x = @x + @stack.shift # dx1
+          c1x = @x + @stack.shift     # dx1
           c1y = @y                    # dy1
           c2x = c1x + @stack.shift    # dx2
           c2y = c1y + @stack.shift    # dy2
@@ -395,8 +395,9 @@ module TTFunk
           @path.curve_to(c1x, c1y, c2x, c2y, @x, @y)
         end
 
+        # rubocop:disable Style/EvenOdd
         def vvcurveto
-          if @stack.size.odd?
+          if @stack.size % 2 == 1
             @x += @stack.shift
           end
 
@@ -412,7 +413,7 @@ module TTFunk
         end
 
         def hhcurveto
-          if @stack.size.odd?
+          if @stack.size % 2 == 1
             @y += @stack.shift
           end
 
@@ -426,16 +427,17 @@ module TTFunk
             @path.curve_to(c1x, c1y, c2x, c2y, @x, @y)
           end
         end
+        # rubocop:enable Style/EvenOdd
 
         def shortint
           b1, b2 = read_bytes(2)
-          @stack.push(((b1 << 24) | (b2 << 16)) >> 16)
+          @stack << (((b1 << 24) | (b2 << 16)) >> 16)
         end
 
         def callgsubr
           code_index = @stack.pop + @gsubrs_bias
           subr_code = @gsubrs[code_index].bytes
-          @data.insert(@index, *subr_code) if subr_code
+          @data[@index, 0] = subr_code
         end
 
         def vhcurveto
