@@ -1,10 +1,11 @@
 module TTFunk
   class Table
     class Cff < TTFunk::Table
-      autoload :Dict,   'ttfunk/table/cff/dict'
-      autoload :Header, 'ttfunk/table/cff/header'
-      autoload :Index,  'ttfunk/table/cff/index'
       autoload :Charset,          'ttfunk/table/cff/charset'
+      autoload :Dict,             'ttfunk/table/cff/dict'
+      autoload :Encoding,         'ttfunk/table/cff/encoding'
+      autoload :Header,           'ttfunk/table/cff/header'
+      autoload :Index,            'ttfunk/table/cff/index'
 
       TAG = 'CFF '.freeze # the extra space is important
 
