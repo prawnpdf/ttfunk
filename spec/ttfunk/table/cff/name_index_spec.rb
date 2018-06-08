@@ -14,7 +14,7 @@ RSpec.describe TTFunk::Table::Cff do
     it 'encodes the index correctly' do
       encoded = name_index.encode
       reconstituted = described_class::Index.new(
-        TestFile.new(StringIO.new(encoded)), 0
+        TestFile.new(StringIO.new(encoded.string)), 0
       )
 
       expect(reconstituted.to_a).to eq(['NotoSansCJKsc-Thin'])
