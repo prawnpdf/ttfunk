@@ -4,6 +4,7 @@ module TTFunk
       autoload :Dict,   'ttfunk/table/cff/dict'
       autoload :Header, 'ttfunk/table/cff/header'
       autoload :Index,  'ttfunk/table/cff/index'
+      autoload :Charset,          'ttfunk/table/cff/charset'
 
       TAG = 'CFF '.freeze # the extra space is important
 

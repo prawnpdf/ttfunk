@@ -31,6 +31,22 @@ module TTFunk
         num
       end
     end
+
+    # turns a sequence of values into a series of ruby ranges
+    def rangify(values)
+      start = values.first
+
+      [].tap do |ranges|
+        values.each_cons(2) do |first, second|
+          if second - first != 1
+            ranges << [start, first - start]
+            start = second
+          end
+        end
+
+        ranges << [start, values.last - start]
+      end
+    end
   end
 
   BinUtils.extend(BinUtils)
