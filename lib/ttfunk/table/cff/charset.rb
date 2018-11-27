@@ -1,45 +1,30 @@
-require 'yaml'
-
 module TTFunk
   class Table
     class Cff < TTFunk::Table
       class Charset < TTFunk::SubTable
         include Enumerable
 
-        DEFAULT_CHARSET_ID = 0
         FIRST_GLYPH_STRING = '.notdef'.freeze
         ISO_ADOBE_CHARSET_ID = 0
         EXPERT_CHARSET_ID = 1
         EXPERT_SUBSET_CHARSET_ID = 2
 
-        CHARSET_FILES = {
-          ISO_ADOBE_CHARSET_ID => 'iso_adobe.yml',
-          EXPERT_CHARSET_ID => 'expert.yml',
-          EXPERT_SUBSET_CHARSET_ID => 'expert_subset.yml'
-        }.freeze
+        DEFAULT_CHARSET_ID = ISO_ADOBE_CHARSET_ID
 
         class << self
           def standard_strings
-            @standard_strings ||= YAML.load_file(
-              ::File.expand_path(
-                ::File.join(%w[. charsets standard_strings.yml]), __dir__
-              )
-            ).freeze
+            Charsets::STANDARD_STRINGS
           end
 
           def strings_for_charset_id(charset_id)
-            string_cache[charset_id] ||= YAML.load_file(
-              ::File.expand_path(
-                ::File.join('.', 'charsets', CHARSET_FILES.fetch(charset_id)),
-                __dir__
-              )
-            ).freeze
-          end
-
-          private
-
-          def string_cache
-            @string_cache ||= {}
+            case charset_id
+            when ISO_ADOBE_CHARSET_ID
+              Charsets::ISO_ADOBE
+            when EXPERT_CHARSET_ID
+              Charsets::EXPERT
+            when EXPERT_SUBSET_CHARSET_ID
+              Charsets::EXPERT_SUBSET
+            end
           end
         end
 

@@ -4,31 +4,19 @@ module TTFunk
       class Encoding < TTFunk::SubTable
         include Enumerable
 
-        DEFAULT_ENCODING_ID = 0
         STANDARD_ENCODING_ID = 0
         EXPERT_ENCODING_ID = 1
 
-        ENCODING_FILES = {
-          STANDARD_ENCODING_ID => 'standard.yml',
-          EXPERT_ENCODING_ID => 'expert.yml'
-        }.freeze
+        DEFAULT_ENCODING_ID = STANDARD_ENCODING_ID
 
         class << self
           def codes_for_encoding_id(encoding_id)
-            code_cache[encoding_id] ||= YAML.load_file(
-              ::File.expand_path(
-                ::File.join(
-                  '.', 'encodings', ENCODING_FILES.fetch(encoding_id)
-                ),
-                __dir__
-              )
-            ).freeze
-          end
-
-          private
-
-          def code_cache
-            @code_cache ||= {}
+            case encoding_id
+            when STANDARD_ENCODING_ID
+              Encodings::STANDARD
+            when EXPERT_ENCODING_ID
+              Encodings::EXPERT
+            end
           end
         end
 
