@@ -32,20 +32,12 @@ module TTFunk
       end
     end
 
-    # turns a sequence of values into a series of ruby ranges
+    # turns a (sorted) sequence of values into a series of two-element arrays
+    # where the first element is the start and the second is the length
     def rangify(values)
-      start = values.first
-
-      [].tap do |ranges|
-        values.each_cons(2) do |first, second|
-          if second - first != 1
-            ranges << [start, first - start]
-            start = second
-          end
-        end
-
-        ranges << [start, values.last - start]
-      end
+      values
+        .slice_when { |a, b| b - a > 1 }
+        .map { |span| [span.first, span.length - 1] }
     end
   end
 
