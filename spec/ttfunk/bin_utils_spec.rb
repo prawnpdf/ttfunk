@@ -37,4 +37,20 @@ RSpec.describe TTFunk::BinUtils do
       )
     end
   end
+
+  describe '.rangify' do
+    subject { described_class.rangify(values) }
+
+    context 'with a simple run of sequential values' do
+      let(:values) { [1, 2, 3, 4] }
+
+      it { is_expected.to eq([[1, 3]]) }
+    end
+
+    context 'with multiple runs' do
+      let(:values) { [1, 2, 3, 4, 6, 8, 9, 10] }
+
+      it { is_expected.to eq([[1, 3], [6, 0], [8, 2]]) }
+    end
+  end
 end
