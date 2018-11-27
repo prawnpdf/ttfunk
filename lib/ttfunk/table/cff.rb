@@ -2,10 +2,12 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       autoload :Charset,          'ttfunk/table/cff/charset'
+      autoload :Charsets,         'ttfunk/table/cff/charsets'
       autoload :Charstring,       'ttfunk/table/cff/charstring'
       autoload :CharstringsIndex, 'ttfunk/table/cff/charstrings_index'
       autoload :Dict,             'ttfunk/table/cff/dict'
       autoload :Encoding,         'ttfunk/table/cff/encoding'
+      autoload :Encodings,        'ttfunk/table/cff/encodings'
       autoload :FdSelector,       'ttfunk/table/cff/fd_selector'
       autoload :FontDict,         'ttfunk/table/cff/font_dict'
       autoload :FontIndex,        'ttfunk/table/cff/font_index'
