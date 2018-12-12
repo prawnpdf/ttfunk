@@ -11,7 +11,10 @@ module TTFunk
     attr_reader :directory
 
     def self.open(io_or_path)
-      new verify_and_open(io_or_path).read
+      io = verify_and_open(io_or_path)
+      new(io.read)
+    ensure
+      io.close if io != io_or_path
     end
 
     def self.from_dfont(file, which = 0)
