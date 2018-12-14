@@ -11,10 +11,7 @@ module TTFunk
     attr_reader :directory
 
     def self.open(io_or_path)
-      io = verify_and_open(io_or_path)
-      new(io.read)
-    ensure
-      io.close if io != io_or_path
+      new(verify_and_read(io_or_path))
     end
 
     def self.from_dfont(file, which = 0)
@@ -25,7 +22,7 @@ module TTFunk
       Collection.open(file) { |ttc| ttc[which] }
     end
 
-    def self.verify_and_open(io_or_path)
+    def self.verify_and_read(io_or_path)
       # File or IO
       if io_or_path.respond_to?(:rewind)
         io = io_or_path
@@ -35,13 +32,12 @@ module TTFunk
         # read the file as binary so the size is calculated correctly
         # guard binmode because some objects acting io-like don't implement it
         io.binmode if io.respond_to?(:binmode)
-        return io
+        return io.read
       end
       # String or Pathname
       io_or_path = Pathname.new(io_or_path)
       raise ArgumentError, "#{io_or_path} not found" unless io_or_path.file?
-      io = io_or_path.open('rb')
-      io
+      io_or_path.binread
     end
 
     def initialize(contents, offset = 0)
