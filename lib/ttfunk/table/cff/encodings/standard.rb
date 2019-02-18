@@ -2,7 +2,7 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       module Encodings
-        STANDARD = [
+        STANDARD = OneBasedArray.new([
           0,
           0,
           0,
@@ -258,7 +258,7 @@ module TTFunk
           0,
           0,
           0
-        ].freeze
+        ]).freeze
       end
     end
   end
