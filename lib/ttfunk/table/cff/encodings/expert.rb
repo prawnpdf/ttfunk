@@ -2,7 +2,7 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       module Encodings
-        EXPERT = [
+        EXPERT = OneBasedArray.new([
           0,
           0,
           0,
@@ -258,7 +258,7 @@ module TTFunk
           376,
           377,
           378
-        ].freeze
+        ]).freeze
       end
     end
   end
