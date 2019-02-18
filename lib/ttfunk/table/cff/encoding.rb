@@ -42,7 +42,7 @@ module TTFunk
         def [](glyph_id)
           return 0 if glyph_id == 0
           return code_for(glyph_id) if offset
-          self.class.codes_for_encoding_id(offset_or_id)[glyph_id - 1]
+          self.class.codes_for_encoding_id(offset_or_id)[glyph_id]
         end
 
         def offset
@@ -75,21 +75,14 @@ module TTFunk
 
           total_array_size = codes.size * element_width(:array_format)
 
-          [].tap do |result|
-            if total_array_size <= total_range_size
-              fmt = element_format(:array_format)
-              result << [format_int(:array_format), codes.size].pack('CC')
-              result << codes.pack("#{fmt}*")
-            else
-              fmt = element_format(:range_format)
-              result << [format_int(:range_format), ranges.size].pack('CC')
-
-              ranges.each do |range|
-                code, num_left = range
-                result << [code, num_left].pack(fmt)
-              end
-            end
-          end.join
+          if total_array_size <= total_range_size
+            ([format_int(:array_format), codes.size] + codes).pack('C*')
+          else
+            element_fmt = element_format(:range_format)
+            result = [format_int(:range_format), ranges.size].pack('CC')
+            ranges.each { |range| result << range.pack(element_format) }
+            result
+          end
         end
 
         private
@@ -103,8 +96,7 @@ module TTFunk
 
           case format_sym
           when :array_format
-            # zero is always .notdef, so adjust with - 1
-            @entries[glyph_id - 1]
+            @entries[glyph_id]
 
           when :range_format
             remaining = glyph_id
@@ -128,7 +120,7 @@ module TTFunk
           case format_sym
           when :array_format
             @count = entry_count
-            @entries = read(length, 'C*')
+            @entries = OneBasedArray.new(read(length, 'C*'))
 
           when :range_format
             @entries = []
