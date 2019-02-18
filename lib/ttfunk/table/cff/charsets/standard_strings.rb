@@ -2,7 +2,7 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       module Charsets
-        STANDARD_STRINGS = [
+        STANDARD_STRINGS = OneBasedArray.new([
           'space',
           'exclam',
           'quotedbl',
@@ -393,7 +393,7 @@ module TTFunk
           'Regular',
           'Roman',
           'Semibold'
-        ].freeze
+        ]).freeze
       end
     end
   end
