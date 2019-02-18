@@ -4,6 +4,9 @@ module TTFunk
       class FdSelector < TTFunk::SubTable
         include Enumerable
 
+        ARRAY_FORMAT = 0
+        RANGE_FORMAT = 3
+
         RANGE_ENTRY_SIZE = 3
         ARRAY_ENTRY_SIZE = 1
 
@@ -54,10 +57,10 @@ module TTFunk
 
           [].tap do |result|
             if total_array_size <= total_range_size
-              result << [format_int(:array_format)].pack('C')
+              result << [ARRAY_FORMAT].pack('C')
               result << old_gids.map { |old_gid| self[old_gid] }.pack('C*')
             else
-              result << [format_int(:range_format), ranges.size].pack('Cn')
+              result << [RANGE_FORMAT, ranges.size].pack('Cn')
               ranges.each { |range| result << range.pack('nC') }
 
               # "A sentinel GID follows the last range element and serves to
@@ -127,19 +130,10 @@ module TTFunk
 
         def format_sym
           case @format
-          when 0 then :array_format
-          when 3 then :range_format
+          when ARRAY_FORMAT then :array_format
+          when RANGE_FORMAT then :range_format
           else
             raise "unsupported fd select format '#{@format}'"
-          end
-        end
-
-        def format_int(format_sym)
-          case format_sym
-          when :array_format then 0
-          when :range_format then 3
-          else
-            raise "unsupported fd select format '#{format_sym}'"
           end
         end
       end

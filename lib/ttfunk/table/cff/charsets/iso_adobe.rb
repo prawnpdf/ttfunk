@@ -2,7 +2,7 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       module Charsets
-        ISO_ADOBE = [
+        ISO_ADOBE = OneBasedArray.new([
           'space',
           'exclam',
           'quotedbl',
@@ -230,7 +230,7 @@ module TTFunk
           'yacute',
           'ydieresis',
           'zcaron'
-        ].freeze
+        ]).freeze
       end
     end
   end

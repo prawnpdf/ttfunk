@@ -2,7 +2,7 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       module Charsets
-        EXPERT_SUBSET = [
+        EXPERT_SUBSET = OneBasedArray.new([
           'space',
           nil,
           nil,
@@ -348,7 +348,7 @@ module TTFunk
           'centinferior',
           'dollarinferior',
           'periodinferior'
-        ].freeze
+        ]).freeze
       end
     end
   end
