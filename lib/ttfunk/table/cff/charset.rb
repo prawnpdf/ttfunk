@@ -5,6 +5,10 @@ module TTFunk
         include Enumerable
 
         FIRST_GLYPH_STRING = '.notdef'.freeze
+        ARRAY_FORMAT = 0
+        RANGE_FORMAT_8 = 1
+        RANGE_FORMAT_16 = 2
+
         ISO_ADOBE_CHARSET_ID = 0
         EXPERT_CHARSET_ID = 1
         EXPERT_SUBSET_CHARSET_ID = 2
@@ -28,6 +32,7 @@ module TTFunk
           end
         end
 
+        attr_reader :entries, :length
         attr_reader :top_dict, :format, :count, :offset_or_id
 
         def initialize(top_dict, file, offset_or_id = nil, length = nil)
@@ -87,21 +92,15 @@ module TTFunk
           total_range_size = (2 * ranges.size) + (range_bytes * ranges.size)
           total_array_size = sids.size * element_width(:array_format)
 
-          [].tap do |result|
-            if total_array_size <= total_range_size
-              result << [format_int(:array_format)].pack('C')
-              result << sids.pack('n*')
-            else
-              fmt = range_bytes == 1 ? :range_format_8 : :range_format_16
-              element_fmt = element_format(fmt)
-              result << [format_int(fmt)].pack('C')
-
-              ranges.each do |range|
-                sid, num_left = range
-                result << [sid, num_left].pack(element_fmt)
-              end
-            end
-          end.join
+          if total_array_size <= total_range_size
+            ([format_int(:array_format)] + sids).pack('Cn*')
+          else
+            fmt = range_bytes == 1 ? :range_format_8 : :range_format_16
+            element_fmt = element_format(fmt)
+            result = [format_int(fmt)].pack('C')
+            ranges.each { |range| result << range.pack(element_fmt) }
+            result
+          end
         end
 
         private
@@ -115,35 +114,30 @@ module TTFunk
 
           case format_sym
           when :array_format
-            # zero is always .notdef, so adjust with - 1
-            @entries[glyph_id - 1]
+            entries[glyph_id]
 
           when :range_format_8, :range_format_16
-            remaining = glyph_id
-
-            @entries.each do |range|
+            entries.inject(glyph_id) do |remaining, range|
               if range.size >= remaining
-                return (range.first + remaining) - 1
+                break (range.first + remaining) - 1
               end
 
-              remaining -= range.size
+              remaining - range.size
             end
-
-            0
           end
         end
 
         def find_string(sid)
           if offset
-            return self.class.standard_strings[sid - 1] if sid <= 390
+            return self.class.standard_strings[sid] if sid <= 390
 
             idx = sid - 390
 
             if idx < file.cff.string_index.count
-              file.cff.string_index[idx - 1]
+              file.cff.string_index[idx]
             end
           else
-            self.class.strings_for_charset_id(offset_or_id)[sid - 1]
+            self.class.strings_for_charset_id(offset_or_id)[sid]
           end
         end
 
@@ -154,8 +148,8 @@ module TTFunk
           case format_sym
           when :array_format
             @count = top_dict.charstrings_index.count - 1
-            @length = @count * element_width
-            @entries = read(length, 'n*')
+            @length = count * element_width
+            @entries = OneBasedArray.new(read(length, 'n*'))
 
           when :range_format_8, :range_format_16
             # The number of ranges is not explicitly specified in the font.
@@ -165,10 +159,10 @@ module TTFunk
             @entries = []
             @length = 0
 
-            until @count >= top_dict.charstrings_index.count - 1
+            until count >= top_dict.charstrings_index.count - 1
               @length += 1 + element_width
               sid, num_left = read(element_width, element_format)
-              @entries << (sid..(sid + num_left))
+              entries << (sid..(sid + num_left))
               @count += num_left + 1
             end
           end
@@ -190,11 +184,11 @@ module TTFunk
           end
         end
 
-        def format_sym(fmt = @format)
-          case fmt
-          when 0 then :array_format
-          when 1 then :range_format_8
-          when 2 then :range_format_16
+        def format_sym
+          case @format
+          when ARRAY_FORMAT then :array_format
+          when RANGE_FORMAT_8 then :range_format_8
+          when RANGE_FORMAT_16 then :range_format_16
           else
             raise "unsupported charset format '#{fmt}'"
           end
@@ -202,11 +196,9 @@ module TTFunk
 
         def format_int(sym = format_sym)
           case sym
-          when :array_format then 0
-          when :range_format_8 then 1
-          when :range_format_16 then 2
-          else
-            raise "unsupported charset format '#{sym}'"
+          when :array_format then ARRAY_FORMAT
+          when :range_format_8 then RANGE_FORMAT_8
+          when :range_format_16 then RANGE_FORMAT_16
           end
         end
       end

@@ -2,7 +2,7 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       module Charsets
-        EXPERT = [
+        EXPERT = OneBasedArray.new([
           'space',
           nil,
           nil,
@@ -380,7 +380,7 @@ module TTFunk
           'Udieresissmall',
           'Yacutesmall',
           'Thornsmall'
-        ].freeze
+        ]).freeze
       end
     end
   end

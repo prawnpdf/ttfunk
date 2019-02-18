@@ -13,6 +13,7 @@ module TTFunk
       autoload :FontIndex,        'ttfunk/table/cff/font_index'
       autoload :Header,           'ttfunk/table/cff/header'
       autoload :Index,            'ttfunk/table/cff/index'
+      autoload :OneBasedIndex,    'ttfunk/table/cff/one_based_index'
       autoload :Path,             'ttfunk/table/cff/path'
       autoload :PrivateDict,      'ttfunk/table/cff/private_dict'
       autoload :SubrIndex,        'ttfunk/table/cff/subr_index'
@@ -53,7 +54,7 @@ module TTFunk
           file, @name_index.table_offset + @name_index.length
         )
 
-        @string_index = Index.new(
+        @string_index = OneBasedIndex.new(
           file, @top_index.table_offset + @top_index.length
         )
 

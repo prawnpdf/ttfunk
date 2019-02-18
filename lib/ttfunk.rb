@@ -11,6 +11,7 @@ require_relative 'ttfunk/sci_form'
 require_relative 'ttfunk/bit_field'
 require_relative 'ttfunk/bin_utils'
 require_relative 'ttfunk/sub_table'
+require_relative 'ttfunk/one_based_array'
 
 module TTFunk
   class File
