@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../encoding/mac_roman'
 require_relative '../../encoding/windows_1252'
 

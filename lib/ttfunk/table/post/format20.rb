@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'format10'
 require 'stringio'
 
@@ -25,7 +27,7 @@ module TTFunk
 
           strings = StringIO.new(io.read(offset + length - io.pos))
           until strings.eof?
-            length = strings.read(1).unpack('C').first
+            length = strings.read(1).unpack1('C')
             @names << strings.read(length)
           end
         end

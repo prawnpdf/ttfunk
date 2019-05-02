@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PathHelpers
   def test_font(name, ext = :ttf)
     base_path = File.expand_path(File.dirname(__FILE__) + '/../fonts')

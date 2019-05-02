@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'subset/unicode'
 require_relative 'subset/unicode_8bit'
 require_relative 'subset/mac_roman'

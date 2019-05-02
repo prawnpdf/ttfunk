@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../table/cmap'
 require_relative '../table/glyf'
 require_relative '../table/head'
@@ -122,7 +124,7 @@ module TTFunk
         directory_size = tables.length * 16
         offset = newfont.length + directory_size
 
-        table_data = ''
+        table_data = +''
         head_offset = nil
         table_tags = tables.keys.sort
         table_tags.each do |tag|

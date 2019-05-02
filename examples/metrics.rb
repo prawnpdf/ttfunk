@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require_relative '../lib/ttfunk'
 
 def character_lookup(file, character)
   puts "character     : #{character}"
 
-  character_code = character.unpack('U*').first
+  character_code = character.unpack1('U*')
   puts "character code: #{character_code}"
 
   glyph_id = file.cmap.unicode.first[character_code]

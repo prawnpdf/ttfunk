@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   module Encoding
     class Windows1252

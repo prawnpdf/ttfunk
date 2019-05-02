@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../table'
 
 module TTFunk
@@ -12,7 +14,7 @@ module TTFunk
       #   the given glyphs.
       # * :offsets - an array of offsets for each glyph
       def self.encode(glyphs, new2old, old2new)
-        result = { table: '', offsets: [] }
+        result = { table: +'', offsets: [] }
 
         new2old.keys.sort.each do |new_id|
           glyph = glyphs[new2old[new_id]]

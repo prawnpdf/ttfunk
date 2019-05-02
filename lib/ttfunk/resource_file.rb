@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   class ResourceFile
     attr_reader :map
@@ -23,7 +25,7 @@ module TTFunk
       name_list_offset += map_offset
 
       @io.pos = type_list_offset
-      max_index = @io.read(2).unpack('n').first
+      max_index = @io.read(2).unpack1('n')
       0.upto(max_index) do
         type, max_type_index, ref_list_offset = @io.read(8).unpack('A4nn')
         @map[type] = { list: [], named: {} }
@@ -32,8 +34,8 @@ module TTFunk
           0.upto(max_type_index) do
             id, name_ofs, attr = @io.read(5).unpack('nnC')
             data_ofs = @io.read(3)
-            data_ofs = data_offset + [0, data_ofs].pack('CA*').unpack('N').first
-            handle = @io.read(4).unpack('N').first
+            data_ofs = data_offset + [0, data_ofs].pack('CA*').unpack1('N')
+            handle = @io.read(4).unpack1('N')
 
             entry = {
               id: id,
@@ -44,7 +46,7 @@ module TTFunk
 
             if name_list_offset + name_ofs < map_offset + map_length
               parse_from(name_ofs + name_list_offset) do
-                len = @io.read(1).unpack('C').first
+                len = @io.read(1).unpack1('C')
                 entry[:name] = @io.read(len)
               end
             end
@@ -61,7 +63,7 @@ module TTFunk
         collection = index.is_a?(Integer) ? :list : :named
         if @map[type][collection][index]
           parse_from(@map[type][collection][index][:offset]) do
-            length = @io.read(4).unpack('N').first
+            length = @io.read(4).unpack1('N')
             return @io.read(length)
           end
         end
