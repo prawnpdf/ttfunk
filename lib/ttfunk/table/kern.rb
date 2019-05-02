@@ -8,6 +8,7 @@ module TTFunk
 
       def self.encode(kerning, mapping)
         return nil unless kerning.exists? && kerning.tables.any?
+
         tables = kerning.tables.map { |table| table.recode(mapping) }.compact
         return nil if tables.empty?
 

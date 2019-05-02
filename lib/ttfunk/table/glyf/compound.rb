@@ -45,6 +45,7 @@ module TTFunk
             @glyph_id_offsets << offset + 2
 
             break unless flags & MORE_COMPONENTS != 0
+
             offset += 4
 
             offset +=

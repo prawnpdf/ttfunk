@@ -22,9 +22,9 @@ module TTFunk
       # array is a string, it is a postscript glyph that is not in the standard
       # list, and which should be emitted specially in the TTF postscript table
       # ('post', see format 2).
-      # rubocop: disable Metrics/LineLength,Layout/AlignArray,Layout/IndentArray
+      # rubocop: disable Metrics/LineLength,Layout/AlignArray
       POSTSCRIPT_GLYPH_MAPPING = [
-          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+        0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
           0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
           3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15,  16,  17,  18,
          19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,  32,  33,  34,
@@ -42,7 +42,7 @@ module TTFunk
         234, 120, 122, 121, 123, 125, 124, 184, 161, 127, 126, 128, 129, 236, 238, 186
       ].freeze
 
-      # rubocop: enable Layout/AlignArray,Metrics/LineLength,Layout/ExtraSpacing,Layout/IndentArray
+      # rubocop: enable Layout/AlignArray,Metrics/LineLength,Layout/ExtraSpacing
 
       def self.covers?(character)
         !FROM_UNICODE[character].nil?

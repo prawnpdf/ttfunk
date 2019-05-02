@@ -28,7 +28,7 @@ module TTFunk
             result = Format12.encode(charmap)
           else
             raise NotImplementedError,
-              "encoding #{encoding.inspect} is not supported"
+                  "encoding #{encoding.inspect} is not supported"
           end
 
           mapping = ENCODING_MAPPINGS[encoding]

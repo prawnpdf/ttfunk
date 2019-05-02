@@ -81,6 +81,7 @@ module TTFunk
 
       def postscript_name
         return @postscript_name if @postscript_name
+
         font_family.first || 'unnamed'
       end
 
