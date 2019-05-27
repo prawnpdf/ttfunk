@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   class Table
     class Dsig < Table
@@ -14,7 +16,7 @@ module TTFunk
 
       attr_reader :version, :flags, :signatures
 
-      TAG = 'DSIG'.freeze
+      TAG = 'DSIG'
 
       def self.encode(dsig)
         return nil unless dsig

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../reader'
 
 module TTFunk
@@ -45,6 +47,7 @@ module TTFunk
             @glyph_id_offsets << offset + 2
 
             break unless flags & MORE_COMPONENTS != 0
+
             offset += 4
 
             offset +=

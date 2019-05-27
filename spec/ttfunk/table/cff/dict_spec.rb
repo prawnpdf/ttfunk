@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'ttfunk/table/cff/dict'
 
@@ -39,7 +41,7 @@ RSpec.describe TTFunk::Table::Cff::Dict do
 
   test_cases.each_with_index do |(bytes, decoded_values), idx|
     context "test case #{idx}" do
-      subject do
+      subject(:dict) do
         io = StringIO.new(bytes.pack('C*'))
         described_class.new(
           TestFile.new(io), 0, bytes.length
@@ -48,12 +50,12 @@ RSpec.describe TTFunk::Table::Cff::Dict do
 
       it 'parses correctly' do
         decoded_values.each do |operand, operators|
-          expect(subject[operand]).to eq(operators)
+          expect(dict[operand]).to eq(operators)
         end
       end
 
       it 'encodes correctly' do
-        expect(subject.encode.bytes).to eq(bytes)
+        expect(dict.encode.bytes).to eq(bytes)
       end
     end
   end

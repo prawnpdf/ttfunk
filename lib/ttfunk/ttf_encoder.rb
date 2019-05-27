@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   class TTFEncoder
     OPTIMAL_TABLE_ORDER = %w[
@@ -40,6 +42,7 @@ module TTFunk
 
       optimal_table_order.each do |optimal_tag|
         next unless tables.include?(optimal_tag)
+
         newfont.resolve_placeholder(optimal_tag, [newfont.length].pack('N'))
         newfont << tables[optimal_tag]
         newfont.align!(4)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'subset'
 
 module TTFunk
@@ -17,6 +19,7 @@ module TTFunk
         covered = false
         @subsets.each_with_index do |subset, _i|
           next unless subset.covers?(char)
+
           subset.use(char)
           covered = true
           break
@@ -65,6 +68,7 @@ module TTFunk
 
           current_char += 1
           return parts if current_char >= characters.length
+
           char = characters[current_char]
         end
 

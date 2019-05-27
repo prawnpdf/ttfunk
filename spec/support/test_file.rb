@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TestFile
   attr_reader :io
   alias contents io

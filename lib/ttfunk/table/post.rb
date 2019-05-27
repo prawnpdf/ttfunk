@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../table'
 
 module TTFunk
@@ -17,6 +19,7 @@ module TTFunk
 
       def self.encode(post, mapping)
         return nil unless post.exists?
+
         post.recode(mapping)
       end
 
@@ -71,7 +74,7 @@ module TTFunk
             extend(Post::Format20)
           when 0x00025000
             raise NotImplementedError,
-              'Post format 2.5 is not supported by TTFunk'
+                  'Post format 2.5 is not supported by TTFunk'
           when 0x00030000
             extend(Post::Format30)
           when 0x00040000

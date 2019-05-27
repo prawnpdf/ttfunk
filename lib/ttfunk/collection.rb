@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   class Collection
     include Enumerable
@@ -13,7 +15,7 @@ module TTFunk
       raise ArgumentError, 'not a TTC file' unless tag == 'ttcf'
 
       _major, _minor = io.read(4).unpack('n*')
-      count = io.read(4).unpack('N').first
+      count = io.read(4).unpack1('N')
       @offsets = io.read(count * 4).unpack('N*')
 
       io.rewind

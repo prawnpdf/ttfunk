@@ -4,11 +4,13 @@ before_install:
   - gem install bundler
   - bundle --version
 rvm:
-  - 2.2.0-p0
-  - 2.2.6
   - 2.3.0
-  - 2.3.3
+  - 2.3.8
   - 2.4.0
-  - 2.4.3
+  - 2.4.5
   - 2.5.0
-  - jruby-9.1.7.0
+  - 2.5.3
+  - 2.6.0
+  - 2.6.1
+  - jruby-9.1.13.0
+  - jruby-9.1.17.0

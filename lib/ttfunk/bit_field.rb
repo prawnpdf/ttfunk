@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   class BitField
     attr_reader :value

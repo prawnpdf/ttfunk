@@ -1,11 +1,22 @@
+require:
+  - rubocop-performance
+  - rubocop-rspec
+
 AllCops:
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.4
   Include:
+    - '**/*.rb'
     - '**/Rakefile'
     - '**/Gemfile'
     - '*.gemspec'
   Exclude:
     - 'pkg/**/*'
+
+Layout/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
 
 Metrics/AbcSize:
   Enabled: false
@@ -28,13 +39,16 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
-Layout/AlignParameters:
-  EnforcedStyle: with_fixed_indentation
-
-Layout/MultilineOperationIndentation:
-  EnforcedStyle: indented
+RSpec/ExampleLength:
+  Enabled: false
 
 Style/Documentation:
+  Enabled: false
+
+RSpec/FilePath:
+  Enabled: false
+
+RSpec/MultipleExpectations:
   Enabled: false
 
 Style/GuardClause:

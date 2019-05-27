@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../table/cmap'
 require_relative '../table/glyf'
 require_relative '../table/head'

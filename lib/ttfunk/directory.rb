@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   class Directory
     attr_reader :tables

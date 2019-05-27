@@ -1,5 +1,6 @@
-require 'set'
+# frozen_string_literal: true
 
+require 'set'
 require_relative 'base'
 
 module TTFunk

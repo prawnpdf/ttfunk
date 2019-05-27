@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   class Table
     class Cff < TTFunk::Table
@@ -16,6 +18,7 @@ module TTFunk
 
         def each
           return to_enum(__method__) unless block_given?
+
           count.times { |i| yield self[i] }
         end
 
@@ -97,7 +100,7 @@ module TTFunk
 
         def unpack_offset(offset_data)
           padding = "\x00" * (4 - offset_size)
-          (padding + offset_data).unpack('N').first
+          (padding + offset_data).unpack1('N')
         end
       end
     end

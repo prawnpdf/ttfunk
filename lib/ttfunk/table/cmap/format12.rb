@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   class Table
     class Cmap
@@ -56,7 +58,7 @@ module TTFunk
           fractional_version, @language, groupcount = read(14, 'nx4NN')
           if fractional_version != 0
             raise NotImplementedError,
-              "cmap version 12.#{fractional_version} is not supported"
+                  "cmap version 12.#{fractional_version} is not supported"
           end
           @code_map = {}
           (1..groupcount).each do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TextHelpers
   def strip_leading_spaces(str)
     # isolate leading spaces for all lines then choose the shortest, i.e. the

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../table'
 require 'set'
 
@@ -41,6 +43,7 @@ module TTFunk
       attr_reader :break_char
       attr_reader :max_context
 
+      # rubocop:disable Layout/AlignHash
       CODE_PAGE_BITS = {
         1252   => 0,  1250 => 1,  1251 => 2,  1253 => 3,  1254 => 4,
         1255   => 5,  1256 => 6,  1257 => 7,  1258 => 8,  874  => 16,
@@ -138,6 +141,7 @@ module TTFunk
         (0x10920..0x1093F) => 121, (0x1F030..0x1F09F) => 122,
         (0x1F000..0x1F02F) => 122
       }.freeze
+      # rubocop:enable Layout/AlignHash
 
       UNICODE_MAX = 0xFFFF
       UNICODE_RANGES = UNICODE_BLOCKS.keys.freeze
@@ -148,7 +152,7 @@ module TTFunk
 
       class << self
         def encode(os2, subset)
-          ''.tap do |result|
+          ''.b.tap do |result|
             result << [
               os2.version, os2.ave_char_width, os2.weight_class,
               os2.width_class, os2.type, os2.y_subscript_x_size,
@@ -227,6 +231,7 @@ module TTFunk
         def unicode_blocks_for(os2, original_field, subset)
           field = BitField.new(0)
           return field unless subset.unicode?
+
           subset_code_points = Set.new(subset.new_cmap_table[:charmap].keys)
           original_code_point_groups = group_original_code_points_by_bit(os2)
 

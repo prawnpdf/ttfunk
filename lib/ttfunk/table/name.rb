@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../table'
 require 'digest/sha1'
 
@@ -77,7 +79,7 @@ module TTFunk
         str_count = strings.inject(0) { |sum, (_, list)| sum + list.length }
 
         table = [0, str_count, 6 + 12 * str_count].pack('n*')
-        strtable = ''
+        strtable = +''
 
         items = []
         strings.each do |id, list|
@@ -101,6 +103,7 @@ module TTFunk
 
       def postscript_name
         return @postscript_name if @postscript_name
+
         font_family.first || 'unnamed'
       end
 
