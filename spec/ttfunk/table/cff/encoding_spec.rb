@@ -12,7 +12,7 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
 
       it 'includes all the entries from the standard encoding' do
         expect(encoding.to_a).to eq(
-          [0] + described_class.codes_for_encoding_id(encoding_id)
+          [0] + described_class.codes_for_encoding_id(encoding_id).to_a
         )
       end
     end
