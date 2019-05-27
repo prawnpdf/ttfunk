@@ -1,12 +1,34 @@
 module TTFunk
-  class OneBasedArray < Array
+  class OneBasedArray
+    include Enumerable
+
+    def initialize(size = 0)
+      @entries = Array.new(size)
+    end
+
     def [](idx)
       if idx == 0
         raise IndexError,
           "index #{idx} was outside the bounds of the array"
       end
 
-      super(idx - 1)
+      entries[idx - 1]
     end
+
+    def size
+      entries.size
+    end
+
+    def to_a
+      entries
+    end
+
+    def each(&block)
+      entries.each(&block)
+    end
+
+    private
+
+    attr_reader :entries
   end
 end
