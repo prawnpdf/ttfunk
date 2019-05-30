@@ -19,7 +19,7 @@ module TTFunk
       entries.size
     end
 
-    def to_a
+    def to_ary
       entries
     end
 
