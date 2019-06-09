@@ -32,13 +32,13 @@ describe TTFunk do
       subset2.use(98)
       name2 = TTFunk::File.new(subset2.encode).name.strings[6]
 
-      expect(name1).not_to eq name2
+      expect(name1).to_not eq name2
     end
 
     it 'calculates checksum correctly for empty table data' do
       font = TTFunk::File.open test_font('Mplus1p')
       subset1 = TTFunk::Subset.for(font, :unicode)
-      expect { subset1.encode }.not_to raise_error
+      expect { subset1.encode }.to_not raise_error
     end
 
     it 'generates font directory with tables in ascending order' do
@@ -89,7 +89,7 @@ describe TTFunk do
       windows1252 = TTFunk::Subset.for(font, :windows_1252)
 
       [unicode, unicode_8bit, mac_roman, windows1252].each do |subset|
-        expect(subset).not_to be_includes(97)
+        expect(subset).to_not be_includes(97)
         subset.use(97)
         expect(subset).to be_includes(97)
       end

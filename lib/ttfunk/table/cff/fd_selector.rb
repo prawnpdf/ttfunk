@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   class Table
     class Cff < TTFunk::Table
@@ -44,6 +46,7 @@ module TTFunk
 
         def each
           return to_enum(__method__) unless block_given?
+
           count.times { |i| yield self[i] }
         end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'ttfunk/table/cff'
 
@@ -17,7 +19,9 @@ RSpec.describe TTFunk::Table::Cff::FontDict do
   end
 
   describe '#encode' do
-    let(:top_dict) { double(:top_dict, cff_offset: 0) }
+    let(:top_dict) do
+      instance_double(TTFunk::Table::Cff::TopDict, :top_dict, cff_offset: 0)
+    end
 
     it 'produces an encoded dict that can be re-parsed successfully' do
       result = font_dict.encode({})

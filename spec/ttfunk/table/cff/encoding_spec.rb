@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'ttfunk/table/cff'
 
@@ -58,6 +60,7 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
       # unfortunately I haven't been able to find an example font that defines
       # an array-based encoding, so this is the closest we can get to testing
       # that the parsing logic works for arrays
+      # rubocop: disable RSpec/AnyInstance
       it 're-parses successfully' do
         file = TestFile.new(StringIO.new(encoded))
         fake_offset = 100
@@ -82,6 +85,7 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
 
         expect(new_encoding.to_a).to eq([0, 26, 29, 35, 39, 40, 46])
       end
+      # rubocop: enable RSpec/AnyInstance
     end
 
     context 'when the subset contains sequential codes' do

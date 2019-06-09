@@ -12,6 +12,9 @@ AllCops:
   Exclude:
     - 'pkg/**/*'
 
+Layout/AlignArguments:
+  EnforcedStyle: with_fixed_indentation
+
 Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
@@ -25,6 +28,9 @@ Metrics/BlockLength:
   Enabled: false
 
 Metrics/ClassLength:
+  Enabled: false
+
+Metrics/ModuleLength:
   Enabled: false
 
 Metrics/CyclomaticComplexity:
@@ -50,6 +56,9 @@ RSpec/FilePath:
 
 RSpec/MultipleExpectations:
   Enabled: false
+
+RSpec/NotToNot:
+  EnforcedStyle: to_not
 
 Style/GuardClause:
   Enabled: false

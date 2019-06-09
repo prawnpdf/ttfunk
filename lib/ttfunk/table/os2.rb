@@ -44,13 +44,13 @@ module TTFunk
       attr_reader :max_context
 
       CODE_PAGE_BITS = {
-        1252   => 0,  1250 => 1,  1251 => 2,  1253 => 3,  1254 => 4,
-        1255   => 5,  1256 => 6,  1257 => 7,  1258 => 8,  874  => 16,
-        932    => 17, 936  => 18, 949  => 19, 950  => 20, 1361 => 21,
-        10_000 => 29, 869  => 48, 866  => 49, 865  => 50, 864  => 51,
-        863    => 52, 862  => 53, 861  => 54, 860  => 55, 857  => 56,
-        855    => 57, 852  => 58, 775  => 59, 737  => 60, 708  => 61,
-        850    => 62, 437  => 63
+        1252 => 0,  1250 => 1,  1251 => 2,  1253 => 3,  1254 => 4,
+        1255 => 5,  1256 => 6,  1257 => 7,  1258 => 8,  874  => 16,
+        932 => 17, 936 => 18, 949 => 19, 950 => 20, 1361 => 21,
+        10_000 => 29, 869 => 48, 866 => 49, 865 => 50, 864 => 51,
+        863 => 52, 862  => 53, 861  => 54, 860  => 55, 857  => 56,
+        855 => 57, 852  => 58, 775  => 59, 737  => 60, 708  => 61,
+        850 => 62, 437  => 63
       }.freeze
 
       UNICODE_BLOCKS = {
@@ -150,7 +150,7 @@ module TTFunk
 
       class << self
         def encode(os2, subset)
-          ''.tap do |result|
+          [].tap do |result|
             result << [
               os2.version, os2.ave_char_width, os2.weight_class,
               os2.width_class, os2.type, os2.y_subscript_x_size,
@@ -213,7 +213,7 @@ module TTFunk
                 ].pack('n*')
               end
             end
-          end
+          end.join('')
         end
 
         private
@@ -229,6 +229,7 @@ module TTFunk
         def unicode_blocks_for(os2, original_field, subset)
           field = BitField.new(0)
           return field unless subset.unicode?
+
           subset_code_points = Set.new(subset.new_cmap_table[:charmap].keys)
           original_code_point_groups = group_original_code_points_by_bit(os2)
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   class SciForm
     attr_reader :significand, :exponent

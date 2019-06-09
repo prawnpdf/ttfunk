@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'ttfunk/table/cff'
 
@@ -32,7 +34,7 @@ RSpec.describe TTFunk::Table::Cff::TopDict do
       placeholders.each do |name, placeholder|
         start = placeholder.position + 1
         finish = placeholder.position + placeholder.length
-        offset = encoded.string[start...finish].unpack('N').first
+        offset = encoded.string[start...finish].unpack1('N')
         operator = described_class::POINTER_OPERATORS[name]
         top_dict_hash[operator][-1] = offset
       end
@@ -42,8 +44,9 @@ RSpec.describe TTFunk::Table::Cff::TopDict do
   end
 
   context 'with a non CID-keyed font' do
-    let(:font_path) { test_font('Exo-Regular', :otf) }
     subject { top_dict.is_cid_font? }
+
+    let(:font_path) { test_font('Exo-Regular', :otf) }
 
     describe '#is_cid_font?' do
       it { is_expected.to be(false) }

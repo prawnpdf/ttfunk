@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require_relative '../table'
 
 module TTFunk
   class Table
     class Vorg < Table
-      TAG = 'VORG'.freeze
+      TAG = 'VORG'
 
       attr_reader :major_version, :minor_version
       attr_reader :default_vert_origin_y, :count
@@ -11,7 +13,7 @@ module TTFunk
       def self.encode(vorg)
         return nil unless vorg
 
-        ''.tap do |table|
+        [].tap do |table|
           table << [
             vorg.major_version, vorg.minor_version,
             vorg.default_vert_origin_y, vorg.count
@@ -20,7 +22,7 @@ module TTFunk
           vorg.origins.each_pair do |glyph_id, vert_origin_y|
             table << [glyph_id, vert_origin_y].pack('n*')
           end
-        end
+        end.join('')
       end
 
       def for(glyph_id)

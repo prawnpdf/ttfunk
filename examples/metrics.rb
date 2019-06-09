@@ -15,11 +15,11 @@ def character_lookup(file, character)
   puts format('glyph type    : %s', glyph.class.name.split(/::/).last.downcase)
   puts format('glyph size    : %db', glyph.raw.length)
   puts format('glyph bbox    : (%d,%d)-(%d,%d)',
-              glyph.x_min, glyph.y_min, glyph.x_max, glyph.y_max)
+    glyph.x_min, glyph.y_min, glyph.x_max, glyph.y_max)
 
   if glyph.compound?
     puts format('components    : %d %s',
-                glyph.glyph_ids.length, glyph.glyph_ids.inspect)
+      glyph.glyph_ids.length, glyph.glyph_ids.inspect)
   end
 end
 

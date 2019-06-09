@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   class Table
     class Glyf
@@ -18,6 +20,7 @@ module TTFunk
           path.commands.each do |command|
             cmd, x, y = command
             next if cmd == :close
+
             @x_min = x if x < @x_min
             @x_max = x if x > @x_max
             @y_min = y if y < @y_min
