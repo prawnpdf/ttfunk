@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bigdecimal'
 
 module TTFunk
@@ -8,7 +10,7 @@ module TTFunk
         class TooManyOperandsError < StandardError; end
 
         # for regular single-byte operators
-        OPERATOR_BZERO = 0..21
+        OPERATOR_BZERO = (0..21).freeze
         OPERAND_BZERO = [28..30, 32..254].freeze
 
         # for operators that are two bytes wide
@@ -19,8 +21,8 @@ module TTFunk
         MAX_OPERANDS = 48
 
         # used to validate operands expressed in scientific notation
-        VALID_SCI_SIGNIFICAND_RE = /\A-?\d+(?:\.\d+)?\z/
-        VALID_SCI_EXPONENT_RE = /\A-?\d+\z/
+        VALID_SCI_SIGNIFICAND_RE = /\A-?\d+(?:\.\d+)?\z/.freeze
+        VALID_SCI_EXPONENT_RE = /\A-?\d+\z/.freeze
 
         include Enumerable
 
@@ -102,6 +104,7 @@ module TTFunk
 
         def encode_exponent(exp)
           return [] if exp == 0
+
           [exp > 0 ? 0xB : 0xC, *encode_significand(exp.abs)]
         end
 
@@ -174,8 +177,8 @@ module TTFunk
         end
 
         def decode_sci
-          significand = ''
-          exponent = ''
+          significand = []
+          exponent = []
 
           loop do
             current = read(1, 'C').first
@@ -203,6 +206,9 @@ module TTFunk
             break if low_nibble == 0xF
           end
 
+          significand = significand.join('')
+          exponent = exponent.join('')
+
           validate_sci!(significand, exponent)
 
           SciForm.new(significand.to_f, exponent.to_i)
@@ -224,6 +230,7 @@ module TTFunk
         def valid_exponent?(exponent)
           exponent = exponent.strip
           return true if exponent.empty?
+
           !(exponent.strip =~ VALID_SCI_EXPONENT_RE).nil?
         end
 

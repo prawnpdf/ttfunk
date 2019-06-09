@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'ttfunk/table/vorg'
 
@@ -11,7 +13,7 @@ RSpec.describe TTFunk::Table::Vorg do
   describe '#origins' do
     it 'includes origins for certain chars traditionally written vertically' do
       code_points = %w[〱 ０ １ ２ ３ ４ ５ ６ ７ ８ ９].map do |c|
-        c.unpack('U*').first
+        c.unpack1('U*')
       end
 
       glyph_ids = code_points.map { |cp| cmap[cp] }
@@ -21,7 +23,7 @@ RSpec.describe TTFunk::Table::Vorg do
 
   describe '#for' do
     it 'finds the vertical origin when explicitly available' do
-      glyph_id = cmap['〱'.unpack('U*').first]
+      glyph_id = cmap['〱'.unpack1('U*')]
       expect(vorg_table.origins).to include(glyph_id)
       expect(vorg_table.for(glyph_id)).to_not(
         eq(vorg_table.default_vert_origin_y)
@@ -29,7 +31,7 @@ RSpec.describe TTFunk::Table::Vorg do
     end
 
     it 'falls back to the default vertical origin' do
-      glyph_id = cmap['ろ'.unpack('U*').first]
+      glyph_id = cmap['ろ'.unpack1('U*')]
       expect(vorg_table.origins).to_not include(glyph_id)
       expect(vorg_table.for(glyph_id)).to(
         eq(vorg_table.default_vert_origin_y)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'ttfunk/table/cff/index'
 
@@ -34,7 +36,7 @@ RSpec.describe TTFunk::Table::Cff::Index do
 
   test_cases.each_with_index do |(bytes, decoded_values), idx|
     context "test case #{idx}" do
-      subject do
+      subject(:index) do
         io = StringIO.new(bytes.pack('C*'))
         described_class.new(
           TestFile.new(io), 0, bytes.size
@@ -42,15 +44,15 @@ RSpec.describe TTFunk::Table::Cff::Index do
       end
 
       it 'parses correctly' do
-        expect(subject.map(&:bytes)).to eq(decoded_values)
+        expect(index.map(&:bytes)).to eq(decoded_values)
       end
 
       it 'encodes correctly' do
-        expect(subject.encode.bytes).to eq(bytes)
+        expect(index.encode.bytes).to eq(bytes)
       end
 
       it 'calculates the length correctly' do
-        expect(subject.length).to eq(bytes.size)
+        expect(index.length).to eq(bytes.size)
       end
     end
   end

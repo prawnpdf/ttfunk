@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'ttfunk/table/cff'
 
@@ -11,8 +13,20 @@ RSpec.describe TTFunk::Table::Cff::FdSelector do
     let(:io) { StringIO.new(contents) }
     let(:contents) { "\x00\x01\x02\x03\x04\x05\x06" }
     let(:entry_count) { 6 }
-    let(:top_dict) { double(:top_dict, charstrings_index: charstrings_index) }
-    let(:charstrings_index) { double(:charstrings_index, count: entry_count) }
+    let(:top_dict) do
+      instance_double(
+        TTFunk::Table::Cff::TopDict,
+        :top_dict,
+        charstrings_index: charstrings_index
+      )
+    end
+    let(:charstrings_index) do
+      instance_double(
+        TTFunk::Table::Cff::CharstringsIndex,
+        :charstrings_index,
+        count: entry_count
+      )
+    end
     let(:fd_selector) do
       described_class.new(top_dict, TestFile.new(io), 0, io.length)
     end

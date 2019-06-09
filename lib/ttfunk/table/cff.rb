@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTFunk
   class Table
     class Cff < TTFunk::Table
@@ -20,7 +22,7 @@ module TTFunk
       autoload :TopDict,          'ttfunk/table/cff/top_dict'
       autoload :TopIndex,         'ttfunk/table/cff/top_index'
 
-      TAG = 'CFF '.freeze # the extra space is important
+      TAG = 'CFF ' # the extra space is important
 
       attr_reader :header, :name_index, :top_index, :string_index
       attr_reader :global_subr_index

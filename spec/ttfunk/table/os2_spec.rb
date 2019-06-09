@@ -1,8 +1,12 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'ttfunk/table/os2'
 require 'ttfunk/subset'
 
 RSpec.describe TTFunk::Table::OS2 do
+  subject(:os2) { font.os2 }
+
   let(:bits_to_blocks) do
     described_class::UNICODE_BLOCKS.each_with_object({}) do |(range, bit), ret|
       ret[bit] ||= []
@@ -26,8 +30,6 @@ RSpec.describe TTFunk::Table::OS2 do
 
   let(:font_path) { test_font('DejaVuSans') }
   let(:font) { TTFunk::File.open(font_path) }
-
-  subject { font.os2 }
 
   let(:expected_fields) do
     {
@@ -70,7 +72,7 @@ RSpec.describe TTFunk::Table::OS2 do
   end
 
   let(:error_message) do
-    <<-ERROR_MESSAGE.freeze
+    <<-ERROR_MESSAGE
          field: %{field}
       expected: %{expected_value}
            got: %{actual_value}
@@ -90,7 +92,7 @@ RSpec.describe TTFunk::Table::OS2 do
 
   it 'parses all fields correctly' do
     expected_fields.each do |field, expected_value|
-      actual_value = subject.public_send(field)
+      actual_value = os2.public_send(field)
       actual_value = actual_value.value if actual_value.respond_to?(:value)
       expect(actual_value).to(
         eq(expected_value),

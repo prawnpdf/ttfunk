@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './reader'
 
 module TTFunk
@@ -21,6 +23,7 @@ module TTFunk
       # if length isn't set yet there's no way to know if we're at the end of
       # the table or not
       return false unless length
+
       io.pos > table_offset + length
     end
 

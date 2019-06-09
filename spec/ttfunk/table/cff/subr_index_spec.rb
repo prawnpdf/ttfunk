@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'ttfunk/table/cff'
 
@@ -25,6 +27,7 @@ RSpec.describe TTFunk::Table::Cff::SubrIndex do
 
     describe '#bias' do
       subject { subr_index.bias }
+
       it { is_expected.to eq(107) }
     end
   end
@@ -34,6 +37,7 @@ RSpec.describe TTFunk::Table::Cff::SubrIndex do
 
     describe '#bias' do
       subject { subr_index.bias }
+
       it { is_expected.to eq(1131) }
     end
   end

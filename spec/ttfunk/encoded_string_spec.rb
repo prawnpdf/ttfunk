@@ -1,19 +1,21 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'ttfunk/encoded_string'
 
 RSpec.describe TTFunk::EncodedString do
-  subject { described_class.new }
+  subject(:encoded_string) { described_class.new }
 
   describe '#<<' do
     it 'writes the given string' do
-      subject << 'foo'
-      expect(subject.string).to eq('foo')
+      encoded_string << 'foo'
+      expect(encoded_string.string).to eq('foo')
     end
 
     it 'adds the given placeholder' do
-      subject << 'abc'
-      subject << TTFunk::Placeholder.new(:foo)
-      placeholder = subject.placeholders[:foo]
+      encoded_string << 'abc'
+      encoded_string << TTFunk::Placeholder.new(:foo)
+      placeholder = encoded_string.placeholders[:foo]
       expect(placeholder.position).to eq(3)
     end
 
@@ -25,44 +27,44 @@ RSpec.describe TTFunk::EncodedString do
 
       expect(other.placeholders[:foo].position).to eq(3)
 
-      subject << 'def'
-      subject << other
+      encoded_string << 'def'
+      encoded_string << other
 
       # carries over the placeholder and adjusts its position
-      expect(subject.placeholders[:foo].position).to eq(6)
+      expect(encoded_string.placeholders[:foo].position).to eq(6)
     end
 
     it 'does not allow adding two placeholders with the same name' do
-      subject << TTFunk::Placeholder.new(:foo)
-      expect { subject << TTFunk::Placeholder.new(:foo) }.to(
+      encoded_string << TTFunk::Placeholder.new(:foo)
+      expect { encoded_string << TTFunk::Placeholder.new(:foo) }.to(
         raise_error(TTFunk::DuplicatePlaceholderError)
       )
     end
 
     it 'adds padding bytes when adding a placeholder' do
-      subject << 'abc'
-      subject << TTFunk::Placeholder.new(:foo, length: 3)
-      expect(subject.send(:io).string).to eq("abc\0\0\0")
+      encoded_string << 'abc'
+      encoded_string << TTFunk::Placeholder.new(:foo, length: 3)
+      expect(encoded_string.send(:io).string).to eq("abc\0\0\0")
     end
   end
 
   describe '#length' do
     it 'retrieves the number of bytes written' do
-      subject << 'foo'
-      expect(subject.length).to eq(3)
+      encoded_string << 'foo'
+      expect(encoded_string.length).to eq(3)
     end
   end
 
   describe '#string' do
     it 'retrieves the encoded string value' do
-      subject << 'foo'
-      expect(subject.string).to eq('foo')
+      encoded_string << 'foo'
+      expect(encoded_string.string).to eq('foo')
     end
 
     it "raises an error if any placeholders haven't been resolved" do
-      subject << 'foo'
-      subject << TTFunk::Placeholder.new(:name)
-      expect { subject.string }.to(
+      encoded_string << 'foo'
+      encoded_string << TTFunk::Placeholder.new(:name)
+      expect { encoded_string.string }.to(
         raise_error(TTFunk::UnresolvedPlaceholderError)
       )
     end
@@ -70,18 +72,18 @@ RSpec.describe TTFunk::EncodedString do
 
   describe '#resolve_placeholder' do
     it 'replaces the placeholder bytes' do
-      subject << '123'
-      subject << TTFunk::Placeholder.new(:name, length: 3)
-      subject << '456def'
-      subject.resolve_placeholder(:name, 'ghi')
-      expect(subject.string).to eq('123ghi456def')
+      encoded_string << '123'
+      encoded_string << TTFunk::Placeholder.new(:name, length: 3)
+      encoded_string << '456def'
+      encoded_string.resolve_placeholder(:name, 'ghi')
+      expect(encoded_string.string).to eq('123ghi456def')
     end
   end
 
   describe '#align!' do
     it 'byte-aligns the string by padding it' do
-      subject << 'abc'
-      expect(subject.align!.string).to eq("abc\0")
+      encoded_string << 'abc'
+      expect(encoded_string.align!.string).to eq("abc\0")
     end
   end
 end

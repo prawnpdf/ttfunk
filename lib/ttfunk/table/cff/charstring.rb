@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 module TTFunk
   class Table
     class Cff < TTFunk::Table
       class Charstring
         CODE_MAP = {
-          1  => :hstem,
-          3  => :vstem,
-          4  => :vmoveto,
-          5  => :rlineto,
-          6  => :hlineto,
-          7  => :vlineto,
-          8  => :rrcurveto,
+          1 => :hstem,
+          3 => :vstem,
+          4 => :vmoveto,
+          5 => :rlineto,
+          6 => :hlineto,
+          7 => :vlineto,
+          8 => :rrcurveto,
           10 => :callsubr,
           12 => :flex_select,
           14 => :endchar,

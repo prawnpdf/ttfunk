@@ -46,7 +46,7 @@ module TTFunk
             read(18, 'nx4NNN')
           if fractional_version != 0
             raise NotImplementedError,
-                  "cmap version 10.#{fractional_version} is not supported"
+              "cmap version 10.#{fractional_version} is not supported"
           end
           @code_map = {}
           (firstcode...(firstcode + entrycount)).each do |code|
