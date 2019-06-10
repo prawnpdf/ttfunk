@@ -58,7 +58,7 @@ module TTFunk
           total_range_size = ranges.size * RANGE_ENTRY_SIZE
           total_array_size = old_gids.size * ARRAY_ENTRY_SIZE
 
-          [].tap do |result|
+          ''.b.tap do |result|
             if total_array_size <= total_range_size
               result << [ARRAY_FORMAT].pack('C')
               result << old_gids.map { |old_gid| self[old_gid] }.pack('C*')
@@ -72,7 +72,7 @@ module TTFunk
               # is 1 greater than the last GID in the font)."
               result << [old_gids.size].pack('n')
             end
-          end.join
+          end
         end
 
         private

@@ -22,7 +22,7 @@ module TTFunk
       attr_reader :max_component_depth
 
       def self.encode(maxp, mapping)
-        [].tap do |table|
+        ''.b.tap do |table|
           num_glyphs = mapping.length
           table << [maxp.version, num_glyphs].pack('Nn')
 
@@ -36,7 +36,7 @@ module TTFunk
               maxp.max_component_elements, maxp.max_component_depth
             ].pack('n*')
           end
-        end.join('')
+        end
       end
 
       private
