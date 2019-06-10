@@ -114,7 +114,49 @@ describe TTFunk::File do
     context 'with DejaVuSans' do
       let(:file) { described_class.open(test_font('DejaVuSans')) }
 
-      it 'should extract the correct value'
+      it 'extracts the head entry correctly' do
+        head = file.directory_info('head')
+        expect(head).to eq(
+          tag: 'head',
+          checksum: 0xF95F2039,
+          offset: 581_036,
+          length: 54
+        )
+      end
+
+      it 'extracts the hmtx entry correctly' do
+        hmtx = file.directory_info('hmtx')
+        expect(hmtx).to eq(
+          tag: 'hmtx',
+          checksum: 0xF7E35CB8,
+          offset: 581_128,
+          length: 23_712
+        )
+      end
+
+      it 'extracts the glyf entry correctly' do
+        glyf = file.directory_info('glyf')
+        expect(glyf).to eq(
+          tag: 'glyf',
+          checksum: 0x77CAC4E8,
+          offset: 51_644,
+          length: 529_392
+        )
+      end
+    end
+
+    context 'with NotoSans' do
+      let(:file) { described_class.open(test_font('NotoSansCJKsc-Thin', :otf)) }
+
+      it 'extracts the CFF entry correctly' do
+        cff = file.directory_info('CFF ')
+        expect(cff).to eq(
+          tag: 'CFF ',
+          checksum: 0xE3109AB9,
+          offset: 260_480,
+          length: 14_170_569
+        )
+      end
     end
   end
 
