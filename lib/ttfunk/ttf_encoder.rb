@@ -138,6 +138,10 @@ module TTFunk
       @prep_table ||= TTFunk::Table::Simple.new(original, 'prep').raw
     end
 
+    def gasp_table
+      @gasp_table ||= TTFunk::Table::Simple.new(original, 'gasp').raw
+    end
+
     def kern_table
       # for PDFs, the kerning info is all included in the PDF as the text is
       # drawn. Thus, the PDF readers do not actually use the kerning info in
@@ -180,7 +184,8 @@ module TTFunk
         'fpgm' => fpgm_table,
         'cvt ' => cvt_table,
         'VORG' => vorg_table,
-        'DSIG' => dsig_table
+        'DSIG' => dsig_table,
+        'gasp' => gasp_table
       }.reject { |_tag, table| table.nil? }
     end
 
