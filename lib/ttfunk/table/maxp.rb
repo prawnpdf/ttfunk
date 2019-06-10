@@ -5,6 +5,8 @@ require_relative '../table'
 module TTFunk
   class Table
     class Maxp < Table
+      DEFAULT_MAX_COMPONENT_DEPTH = 1
+
       attr_reader :version
       attr_reader :num_glyphs
       attr_reader :max_points
@@ -50,6 +52,10 @@ module TTFunk
             @max_storage, @max_function_defs, @max_instruction_defs,
             @max_stack_elements, @max_size_of_instructions,
             @max_component_elements, @max_component_depth = read(28, 'Nn*')
+
+          # a number of fonts omit these last two bytes for some reason,
+          # so we have to supply a default here to prevent nils
+          @max_component_depth ||= DEFAULT_MAX_COMPONENT_DEPTH
         end
       end
     end
