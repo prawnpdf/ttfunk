@@ -65,8 +65,8 @@ describe TTFunk do
       search_range, entry_selector, range_shift =
         subset_io.read(6).unpack('nnn')
 
-      # Subset fonts include 13 tables by default.
-      expected_table_count = 13
+      # Subset fonts include 14 tables by default.
+      expected_table_count = 14
       # Smallest power of two less than number of tables, times 16.
       expected_search_range = 8 * 16
       # Log2 of max power of two smaller than number of tables.
