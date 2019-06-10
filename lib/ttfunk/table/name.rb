@@ -133,7 +133,7 @@ module TTFunk
           io.pos = @entries[i][:offset]
           @entries[i][:text] = io.read(@entries[i][:length])
           @strings[@entries[i][:name_id]] << NameString.new(
-            @entries[i][:text],
+            @entries[i][:text] || '',
             @entries[i][:platform_id],
             @entries[i][:encoding_id],
             @entries[i][:language_id]
@@ -148,8 +148,12 @@ module TTFunk
         @unique_subfamily = @strings[UNIQUE_SUBFAMILY_NAME_ID]
         @font_name = @strings[FONT_NAME_NAME_ID]
         @version = @strings[VERSION_NAME_ID]
-        @postscript_name = @strings[POSTSCRIPT_NAME_NAME_ID]
-                           .first.strip_extended
+
+        unless @strings[POSTSCRIPT_NAME_NAME_ID].empty?
+          @postscript_name = @strings[POSTSCRIPT_NAME_NAME_ID]
+                             .first.strip_extended
+        end
+
         @trademark = @strings[TRADEMARK_NAME_ID]
         @manufacturer = @strings[MANUFACTURER_NAME_ID]
         @designer = @strings[DESIGNER_NAME_ID]

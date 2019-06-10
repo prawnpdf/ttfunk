@@ -98,18 +98,21 @@ module TTFunk
 
         def parse!
           @format = read(1, 'C').first
+          @length = 1
 
           case format_sym
           when :array_format
             @n_glyphs = top_dict.charstrings_index.count
             data = io.read(n_glyphs)
-            # +1 for format byte
-            @length = data.bytesize + 1
+            @length += data.bytesize
             @count = data.bytesize
             @entries = data.bytes
 
           when :range_format
+            # +2 for sentinel GID, +2 for num_ranges
             num_ranges = read(2, 'n').first
+            @length += (num_ranges * RANGE_ENTRY_SIZE) + 4
+
             ranges = Array.new(num_ranges) { read(RANGE_ENTRY_SIZE, 'nC') }
 
             @entries = ranges.each_cons(2).map do |first, second|
@@ -125,8 +128,6 @@ module TTFunk
             last_start_gid, last_fd_index = ranges.last
             @entries << [(last_start_gid...(n_glyphs + 1)), last_fd_index]
 
-            # +2 for sentinel GID, +2 for num_ranges, +1 for format byte
-            @length = (num_ranges * RANGE_ENTRY_SIZE) + 5
             @count = entries.inject(0) { |sum, entry| sum + entry.first.size }
           end
         end
