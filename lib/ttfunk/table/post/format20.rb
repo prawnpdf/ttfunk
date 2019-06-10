@@ -11,6 +11,8 @@ module TTFunk
 
         def glyph_for(code)
           index = @glyph_name_index[code]
+          return '.notdef' unless index
+
           if index <= 257
             POSTSCRIPT_GLYPHS[index]
           else
