@@ -6,7 +6,7 @@ module TTFunk
       class Path
         CLOSE_PATH_CMD = [:close].freeze
 
-        attr_reader :commands
+        attr_reader :commands, :number_of_contours
 
         def initialize
           @commands = []
@@ -28,6 +28,7 @@ module TTFunk
 
         def close_path
           @commands << CLOSE_PATH_CMD
+          @number_of_contours += 1
         end
 
         def to_svg
