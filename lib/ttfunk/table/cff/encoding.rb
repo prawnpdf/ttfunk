@@ -62,11 +62,13 @@ module TTFunk
           end
         end
 
-        # mapping is new -> old glyph ids
-        def encode(mapping)
+        def encode(new2_old, old2_new)
           # no offset means no encoding was specified (i.e. we're supposed to
           # use a predefined encoding) so there's nothing to encode
           return '' unless offset
+          codes = new2_old.keys.sort.map do |new_gid|
+            code_for(new2_old[new_gid])
+          end
 
           codes = mapping.keys.sort.map { |new_gid| code_for(mapping[new_gid]) }
           ranges = TTFunk::BinUtils.rangify(codes)

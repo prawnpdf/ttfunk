@@ -32,7 +32,7 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
 
   describe '#encode' do
     let(:font_path) { test_font('AlbertTextBold', :otf) }
-    let(:encoded) { encoding.encode(subset_mapping) }
+    let(:encoded) { encoding.encode(subset_mapping, subset_mapping.invert) }
 
     context 'when the subset contains non-sequential codes' do
       let(:subset_mapping) do
