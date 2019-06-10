@@ -20,7 +20,7 @@ module TTFunk
       attr_reader :number_of_metrics
 
       def self.encode(hhea, hmtx)
-        [].tap do |table|
+        ''.b.tap do |table|
           table << [hhea.version].pack('N')
           table << [
             hhea.ascent, hhea.descent, hhea.line_gap, hhea.advance_width_max,
@@ -29,7 +29,7 @@ module TTFunk
             hhea.caret_offset, 0, 0, 0, 0, hhea.metric_data_format,
             hmtx[:number_of_metrics]
           ].pack('n*')
-        end.join('')
+        end
       end
 
       private

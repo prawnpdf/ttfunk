@@ -177,8 +177,8 @@ module TTFunk
         end
 
         def decode_sci
-          significand = []
-          exponent = []
+          significand = ''.b
+          exponent = ''.b
 
           loop do
             current = read(1, 'C').first
@@ -205,9 +205,6 @@ module TTFunk
 
             break if low_nibble == 0xF
           end
-
-          significand = significand.join('')
-          exponent = exponent.join('')
 
           validate_sci!(significand, exponent)
 
