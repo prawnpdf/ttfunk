@@ -2,9 +2,10 @@
 
 module TTFunk
   class TTFEncoder
-    OPTIMAL_TABLE_ORDER = %w[
-      head hhea maxp OS/2 hmtx LTSH VDMX hdmx cmap fpgm
-      prep cvt loca glyf kern name post gasp PCLT
+    OPTIMAL_TABLE_ORDER = [
+      'head', 'hhea', 'maxp', 'OS/2', 'hmtx', 'LTSH', 'VDMX',
+      'hdmx', 'cmap', 'fpgm', 'prep', 'cvt ', 'loca', 'glyf',
+      'kern', 'name', 'post', 'gasp', 'PCLT'
     ].freeze
 
     attr_reader :original, :subset, :options
