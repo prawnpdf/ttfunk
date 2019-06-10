@@ -150,7 +150,7 @@ module TTFunk
 
       class << self
         def encode(os2, subset)
-          [].tap do |result|
+          ''.b.tap do |result|
             result << [
               os2.version, os2.ave_char_width, os2.weight_class,
               os2.width_class, os2.type, os2.y_subscript_x_size,
@@ -213,7 +213,7 @@ module TTFunk
                 ].pack('n*')
               end
             end
-          end.join('')
+          end
         end
 
         private

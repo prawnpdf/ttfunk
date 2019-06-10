@@ -13,7 +13,7 @@ module TTFunk
       def self.encode(vorg)
         return nil unless vorg
 
-        [].tap do |table|
+        ''.b.tap do |table|
           table << [
             vorg.major_version, vorg.minor_version,
             vorg.default_vert_origin_y, vorg.count
@@ -22,7 +22,7 @@ module TTFunk
           vorg.origins.each_pair do |glyph_id, vert_origin_y|
             table << [glyph_id, vert_origin_y].pack('n*')
           end
-        end.join('')
+        end
       end
 
       def for(glyph_id)
