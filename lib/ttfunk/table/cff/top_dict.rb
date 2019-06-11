@@ -28,7 +28,7 @@ module TTFunk
 
         OPERATOR_CODES = OPERATORS.invert
 
-        def encode
+        def encode(*)
           EncodedString.new do |result|
             each_with_index do |(operator, operands), _idx|
               if operator == OPERATORS[:private]
