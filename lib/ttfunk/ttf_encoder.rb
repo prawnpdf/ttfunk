@@ -209,6 +209,8 @@ module TTFunk
       end
     end
 
+    # derive this and pass it to Table#encode methods so each table
+    # doesn't have to do the same work
     def new_to_old_glyph
       @new_to_old_glyph ||= old_to_new_glyph.invert
     end
