@@ -52,16 +52,19 @@ module TTFunk
 
         # mapping is new -> old glyph ids
         def encode(mapping)
-          # get list of old GIDs in new GID order
-          old_gids = mapping.keys.sort.map { |new_gid| mapping[new_gid] }
-          ranges = rangify(old_gids)
+          # get list of [new_gid, fd_index] pairs
+          new_indices = mapping.keys.sort.map do |new_gid|
+            [new_gid, self[mapping[new_gid]]]
+          end
+
+          ranges = rangify_gids(new_indices)
           total_range_size = ranges.size * RANGE_ENTRY_SIZE
-          total_array_size = old_gids.size * ARRAY_ENTRY_SIZE
+          total_array_size = new_indices.size * ARRAY_ENTRY_SIZE
 
           ''.b.tap do |result|
             if total_array_size <= total_range_size
               result << [ARRAY_FORMAT].pack('C')
-              result << old_gids.map { |old_gid| self[old_gid] }.pack('C*')
+              result << new_indices.map(&:last).pack('C*')
             else
               result << [RANGE_FORMAT, ranges.size].pack('Cn')
               ranges.each { |range| result << range.pack('nC') }
@@ -70,7 +73,7 @@ module TTFunk
               # delimit the last range in the array. (The sentinel GID is set
               # equal to the number of glyphs in the font. That is, its value
               # is 1 greater than the last GID in the font)."
-              result << [old_gids.size].pack('n')
+              result << [new_indices.size].pack('n')
             end
           end
         end
@@ -81,18 +84,19 @@ module TTFunk
           @range_cache ||= {}
         end
 
-        def rangify(values)
-          start = values.first
+        # values is an array of [new_gid, fd_index] pairs
+        def rangify_gids(values)
+          start_gid = 0
 
           [].tap do |ranges|
-            values.each_cons(2) do |first, second|
-              if second - first != 1 || self[first] != self[second]
-                ranges << [start, self[first]]
-                start = second
+            values.each_cons(2) do |(_, first_idx), (sec_gid, sec_idx)|
+              if first_idx != sec_idx
+                ranges << [start_gid, first_idx]
+                start_gid = sec_gid
               end
             end
 
-            ranges << [start, self[values.last]]
+            ranges << [start_gid, values.last[1]]
           end
         end
 
