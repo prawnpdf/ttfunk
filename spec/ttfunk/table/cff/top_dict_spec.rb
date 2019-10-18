@@ -18,13 +18,13 @@ RSpec.describe TTFunk::Table::Cff::TopDict do
 
   describe '#encode' do
     it 'produces an encoded dict that can be re-parsed successfully' do
-      new2_old = font.cmap.unicode.first.code_map
-      old2_new = new2_old.invert
+      new_to_old = font.cmap.unicode.first.code_map
+      old_to_new = new_to_old.invert
       encoded = top_dict.encode
       top_dict_length = encoded.length
       top_dict_hash = top_dict.to_h
       placeholders = encoded.placeholders.dup
-      top_dict.finalize(encoded, new2_old, old2_new)
+      top_dict.finalize(encoded, new_to_old, old_to_new)
 
       file = TestFile.new(StringIO.new(encoded.string))
       new_top_dict = described_class.new(file, 0, top_dict_length)

@@ -13,13 +13,13 @@ module TTFunk
       # * :table - a string representing the encoded 'glyf' table containing
       #   the given glyphs.
       # * :offsets - an array of offsets for each glyph
-      def self.encode(glyphs, new2old, old2new)
+      def self.encode(glyphs, new_to_old, old_to_new)
         result = { table: +'', offsets: [] }
 
-        new2old.keys.sort.each do |new_id|
-          glyph = glyphs[new2old[new_id]]
+        new_to_old.keys.sort.each do |new_id|
+          glyph = glyphs[new_to_old[new_id]]
           result[:offsets] << result[:table].length
-          result[:table] << glyph.recode(old2new) if glyph
+          result[:table] << glyph.recode(old_to_new) if glyph
         end
 
         # include an offset at the end of the table, for use in computing the

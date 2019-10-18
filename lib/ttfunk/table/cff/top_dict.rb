@@ -47,16 +47,16 @@ module TTFunk
           end
         end
 
-        def finalize(new_cff_data, new2_old, old2_new)
+        def finalize(new_cff_data, new_to_old, old_to_new)
           if charset
             finalize_subtable(
-              new_cff_data, :charset, charset.encode(new2_old)
+              new_cff_data, :charset, charset.encode(new_to_old)
             )
           end
 
           if encoding
             finalize_subtable(
-              new_cff_data, :encoding, encoding.encode(new2_old, old2_new)
+              new_cff_data, :encoding, encoding.encode(new_to_old, old_to_new)
             )
           end
 
@@ -64,7 +64,7 @@ module TTFunk
             finalize_subtable(
               new_cff_data,
               :charstrings_index,
-              charstrings_index.encode(new2_old, &:encode)
+              charstrings_index.encode(new_to_old, &:encode)
             )
           end
 
@@ -73,23 +73,23 @@ module TTFunk
               new_cff_data,
               :font_index,
               font_index.encode do |font_dict|
-                font_dict.encode(new2_old)
+                font_dict.encode(new_to_old)
               end
             )
 
-            font_index.finalize(new_cff_data, new2_old)
+            font_index.finalize(new_cff_data, new_to_old)
           end
 
           if font_dict_selector
             finalize_subtable(
               new_cff_data,
               :font_dict_selector,
-              font_dict_selector.encode(new2_old)
+              font_dict_selector.encode(new_to_old)
             )
           end
 
           if private_dict
-            encoded_private_dict = private_dict.encode(new2_old)
+            encoded_private_dict = private_dict.encode(new_to_old)
             encoded_offset = encode_integer32(new_cff_data.length)
             encoded_length = encode_integer32(encoded_private_dict.length)
 

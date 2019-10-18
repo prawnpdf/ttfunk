@@ -27,7 +27,7 @@ module TTFunk
     end
 
     def cff_table
-      @cff_table ||= original.cff.encode(new2old_glyph, old2new_glyph)
+      @cff_table ||= original.cff.encode(new_to_old_glyph, old_to_new_glyph)
     end
 
     def vorg_table
