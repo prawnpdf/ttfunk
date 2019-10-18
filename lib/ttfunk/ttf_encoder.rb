@@ -72,7 +72,7 @@ module TTFunk
 
     def glyf_table
       @glyf_table ||= TTFunk::Table::Glyf.encode(
-        glyphs, new2old_glyph, old2new_glyph
+        glyphs, new_to_old_glyph, old_to_new_glyph
       )
     end
 
@@ -84,7 +84,7 @@ module TTFunk
 
     def hmtx_table
       @hmtx_table ||= TTFunk::Table::Hmtx.encode(
-        original.horizontal_metrics, new2old_glyph
+        original.horizontal_metrics, new_to_old_glyph
       )
     end
 
@@ -96,13 +96,13 @@ module TTFunk
 
     def maxp_table
       @maxp_table ||= TTFunk::Table::Maxp.encode(
-        original.maximum_profile, old2new_glyph
+        original.maximum_profile, old_to_new_glyph
       )
     end
 
     def post_table
       @post_table ||= TTFunk::Table::Post.encode(
-        original.postscript, new2old_glyph
+        original.postscript, new_to_old_glyph
       )
     end
 
@@ -150,7 +150,7 @@ module TTFunk
       # to opt into it.
       if options[:kerning]
         @kern_table ||= TTFunk::Table::Kern.encode(
-          original.kerning, old2new_glyph
+          original.kerning, old_to_new_glyph
         )
       end
     end
@@ -189,28 +189,28 @@ module TTFunk
       }.reject { |_tag, table| table.nil? }
     end
 
-    def old2new_glyph
-      @old2new_glyph ||= begin
+    def old_to_new_glyph
+      @old_to_new_glyph ||= begin
         charmap = cmap_table[:charmap]
-        old2new = charmap.each_with_object(0 => 0) do |(_, ids), map|
+        old_to_new = charmap.each_with_object(0 => 0) do |(_, ids), map|
           map[ids[:old]] = ids[:new]
         end
 
         next_glyph_id = cmap_table[:max_glyph_id]
 
         glyphs.keys.each do |old_id|
-          unless old2new.key?(old_id)
-            old2new[old_id] = next_glyph_id
+          unless old_to_new.key?(old_id)
+            old_to_new[old_id] = next_glyph_id
             next_glyph_id += 1
           end
         end
 
-        old2new
+        old_to_new
       end
     end
 
-    def new2old_glyph
-      @new2old_glyph ||= old2new_glyph.invert
+    def new_to_old_glyph
+      @new_to_old_glyph ||= old_to_new_glyph.invert
     end
 
     def glyphs

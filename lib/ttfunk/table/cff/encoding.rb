@@ -62,14 +62,14 @@ module TTFunk
           end
         end
 
-        def encode(new2_old, old2_new)
+        def encode(new_to_old, old_to_new)
           # no offset means no encoding was specified (i.e. we're supposed to
           # use a predefined encoding) so there's nothing to encode
           return '' unless offset
-          return encode_supplemental(new2_old, old2_new) if supplemental?
+          return encode_supplemental(new_to_old, old_to_new) if supplemental?
 
-          codes = new2_old.keys.sort.map do |new_gid|
-            code_for(new2_old[new_gid])
+          codes = new_to_old.keys.sort.map do |new_gid|
+            code_for(new_to_old[new_gid])
           end
 
           ranges = TTFunk::BinUtils.rangify(codes)
@@ -99,9 +99,9 @@ module TTFunk
 
         private
 
-        def encode_supplemental(_new2_old, old2_new)
+        def encode_supplemental(_new_to_old, old_to_new)
           new_entries = @entries.each_with_object({}) do |(code, old_gid), ret|
-            if (new_gid = old2_new[old_gid])
+            if (new_gid = old_to_new[old_gid])
               ret[code] = new_gid
             end
           end

@@ -51,7 +51,7 @@ module TTFunk
           "#{placeholders.size} unresolved placeholder(s)"
       end
 
-      io.string.force_encoding(Encoding::ASCII_8BIT)
+      io.string
     end
 
     def bytes
@@ -91,7 +91,7 @@ module TTFunk
     end
 
     def io
-      @io ||= StringIO.new.binmode
+      @io ||= StringIO.new(''.b).binmode
     end
   end
 end
