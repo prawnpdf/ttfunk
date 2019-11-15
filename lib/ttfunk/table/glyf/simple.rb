@@ -6,25 +6,25 @@ module TTFunk
   class Table
     class Glyf
       class Simple
-        attr_reader :raw
+        attr_reader :id, :raw
         attr_reader :number_of_contours
         attr_reader :x_min, :y_min, :x_max, :y_max
+        attr_reader :end_points_of_contours
+        attr_reader :instruction_length, :instructions
 
-        def initialize(raw, number_of_contours, x_min, y_min, x_max, y_max)
+        def initialize(id, raw)
+          @id = id
           @raw = raw
-          @number_of_contours = number_of_contours
-          @x_min = x_min
-          @y_min = y_min
-          @x_max = x_max
-          @y_max = y_max
+          io = StringIO.new(raw)
 
-          # Because TTFunk is, at this time, a library for simply pulling
-          # metrics out of font files, or for writing font subsets, we don't
-          # really care what the contours are for simple glyphs. We just
-          # care that we've got an entire glyph's definition. Also, a
-          # bounding box could be nice to know. Since we've got all that
-          # at this point, we don't need to worry about parsing the full
-          # contents of the glyph.
+          @number_of_contours, @x_min, @y_min, @x_max, @y_max =
+            io.read(10).unpack('n*').map do |i|
+              BinUtils.twos_comp_to_int(i, bit_width: 16)
+            end
+
+          @end_points_of_contours = io.read(number_of_contours * 2).unpack('n*')
+          @instruction_length = io.read(2).unpack1('n')
+          @instructions = io.read(instruction_length).unpack('C*')
         end
 
         def compound?
@@ -33,6 +33,10 @@ module TTFunk
 
         def recode(_mapping)
           raw
+        end
+
+        def end_point_of_last_contour
+          end_points_of_contours.last + 1
         end
       end
     end
