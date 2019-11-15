@@ -41,14 +41,13 @@ module TTFunk
 
         parse_from(offset + index) do
           raw = io.read(size)
-          number_of_contours, x_min, y_min, x_max, y_max =
-            raw.unpack('n5').map { |i| to_signed(i) }
+          number_of_contours = to_signed(raw.unpack1('n'))
 
           @cache[glyph_id] =
             if number_of_contours == -1
-              Compound.new(raw, x_min, y_min, x_max, y_max)
+              Compound.new(glyph_id, raw)
             else
-              Simple.new(raw, number_of_contours, x_min, y_min, x_max, y_max)
+              Simple.new(glyph_id, raw)
             end
         end
       end

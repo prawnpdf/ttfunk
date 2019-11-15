@@ -15,18 +15,22 @@ module TTFunk
         WE_HAVE_A_TWO_BY_TWO     = 0x0080
         WE_HAVE_INSTRUCTIONS     = 0x0100
 
-        attr_reader :raw
+        attr_reader :id, :raw
+        attr_reader :number_of_contours
         attr_reader :x_min, :y_min, :x_max, :y_max
         attr_reader :glyph_ids
 
         Component = Struct.new(:flags, :glyph_index, :arg1, :arg2, :transform)
 
-        def initialize(raw, x_min, y_min, x_max, y_max)
+        def initialize(id, raw)
+          @id = id
           @raw = raw
-          @x_min = x_min
-          @y_min = y_min
-          @x_max = x_max
-          @y_max = y_max
+          io = StringIO.new(raw)
+
+          @number_of_contours, @x_min, @y_min, @x_max, @y_max =
+            io.read(10).unpack('n*').map do |i|
+              BinUtils.twos_comp_to_int(i, bit_width: 16)
+            end
 
           # Because TTFunk only cares about glyphs insofar as they (1) provide
           # a bounding box for each glyph, and (2) can be rewritten into a
@@ -72,7 +76,7 @@ module TTFunk
         end
 
         def recode(mapping)
-          result = @raw.dup
+          result = raw.dup
           new_ids = glyph_ids.map { |id| mapping[id] }
 
           new_ids.zip(@glyph_id_offsets).each do |new_id, offset|
