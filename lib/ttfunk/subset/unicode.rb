@@ -6,9 +6,12 @@ require_relative 'base'
 module TTFunk
   module Subset
     class Unicode < Base
+      SPACE_CHAR = 0x20
+
       def initialize(original)
         super
         @subset = Set.new
+        use(SPACE_CHAR)
       end
 
       def unicode?
