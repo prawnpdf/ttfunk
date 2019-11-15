@@ -3,6 +3,7 @@
 require 'stringio'
 require 'pathname'
 
+require_relative 'ttfunk/aggregate'
 require_relative 'ttfunk/directory'
 require_relative 'ttfunk/resource_file'
 require_relative 'ttfunk/collection'
@@ -14,6 +15,9 @@ require_relative 'ttfunk/sci_form'
 require_relative 'ttfunk/bit_field'
 require_relative 'ttfunk/bin_utils'
 require_relative 'ttfunk/sub_table'
+require_relative 'ttfunk/min'
+require_relative 'ttfunk/max'
+require_relative 'ttfunk/sum'
 require_relative 'ttfunk/one_based_array'
 
 module TTFunk
