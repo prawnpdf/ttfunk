@@ -150,6 +150,14 @@ module TTFunk
           TTFunk::Table::Dsig.new(self)
         end
     end
+
+    def find_glyph(glyph_id)
+      if cff.exists?
+        cff.top_index[0].charstrings_index[glyph_id].glyph
+      else
+        glyph_outlines.for(glyph_id)
+      end
+    end
   end
 end
 
