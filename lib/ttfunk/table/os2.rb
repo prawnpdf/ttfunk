@@ -143,6 +143,30 @@ module TTFunk
 
       UNICODE_MAX = 0xFFFF
       UNICODE_RANGES = UNICODE_BLOCKS.keys.freeze
+      LOWERCASE_START = 'a'.ord
+      LOWERCASE_END = 'z'.ord
+      LOWERCASE_COUNT = (LOWERCASE_END - LOWERCASE_START) + 1
+      CODEPOINT_SPACE = 32
+      SPACE_GLYPH_MISSING_ERROR = "Space glyph (0x#{CODEPOINT_SPACE.to_s(16)})"\
+        ' must be included in the font'
+
+      # Used to calculate the xAvgCharWidth field.
+      # From https://docs.microsoft.com/en-us/typography/opentype/spec/os2:
+      #
+      # "When first defined, the specification was biased toward Basic Latin
+      # characters, and it was thought that the xAvgCharWidth value could be
+      # used to estimate the average length of lines of text. A formula for
+      # calculating xAvgCharWidth was provided using frequency-of-use
+      # weighting factors for lowercase letters a - z."
+      #
+      # The array below contains 26 weight values which correspond to the
+      # 26 letters in the Latin alphabet. Each weight is the relative
+      # frequency of that letter in the English language.
+      WEIGHT_SPACE = 166
+      WEIGHT_LOWERCASE = [
+        64, 14, 27, 35, 100, 20, 14, 42, 63, 3, 6, 35, 20,
+        56, 56, 17, 4, 49, 56, 71, 31, 10, 18, 3, 18, 2
+      ].freeze
 
       def tag
         'OS/2'
@@ -152,7 +176,7 @@ module TTFunk
         def encode(os2, subset)
           ''.b.tap do |result|
             result << [
-              os2.version, os2.ave_char_width, os2.weight_class,
+              os2.version, avg_char_width_for(os2, subset), os2.weight_class,
               os2.width_class, os2.type, os2.y_subscript_x_size,
               os2.y_subscript_y_size, os2.y_subscript_x_offset,
               os2.y_subscript_y_offset, os2.y_superscript_x_size,
@@ -255,6 +279,82 @@ module TTFunk
               end
             end
           end
+        end
+
+        def avg_char_width_for(os2, subset)
+          if subset.microsoft_symbol?
+            avg_ms_symbol_char_width_for(os2, subset)
+          else
+            avg_weighted_char_width_for(os2, subset)
+          end
+        end
+
+        def avg_ms_symbol_char_width_for(os2, subset)
+          total_width = 0
+          num_glyphs = 0
+
+          # use new -> old glyph mapping in order to include compound glyphs
+          # in the calculation
+          subset.new_to_old_glyph.each do |_, old_gid|
+            if (metric = os2.file.horizontal_metrics.for(old_gid))
+              total_width += metric.advance_width
+              num_glyphs += 1 if metric.advance_width > 0
+            end
+          end
+
+          return 0 if num_glyphs == 0
+
+          total_width / num_glyphs # this should be a whole number
+        end
+
+        def avg_weighted_char_width_for(os2, subset)
+          # make sure the subset includes the space char
+          unless subset.to_unicode_map[CODEPOINT_SPACE]
+            raise SPACE_GLYPH_MISSING_ERROR
+          end
+
+          space_gid = os2.file.cmap.unicode.first[CODEPOINT_SPACE]
+          space_hm = os2.file.horizontal_metrics.for(space_gid)
+          return 0 unless space_hm
+
+          total_weight = space_hm.advance_width * WEIGHT_SPACE
+          num_lowercase = 0
+
+          # calculate the weighted sum of all the lowercase widths in
+          # the subset
+          LOWERCASE_START.upto(LOWERCASE_END) do |lowercase_cp|
+            # make sure the subset includes the character
+            next unless subset.to_unicode_map[lowercase_cp]
+
+            lowercase_gid = os2.file.cmap.unicode.first[lowercase_cp]
+            lowercase_hm = os2.file.horizontal_metrics.for(lowercase_gid)
+
+            num_lowercase += 1
+            total_weight += lowercase_hm.advance_width *
+              WEIGHT_LOWERCASE[lowercase_cp - 'a'.ord]
+          end
+
+          # return if all lowercase characters are present in the subset
+          return total_weight / 1000 if num_lowercase == LOWERCASE_COUNT
+
+          # If not all lowercase characters are present in the subset, take
+          # the average width of all the subsetted characters. This differs
+          # from avg_ms_char_width_for in that it includes zero-width glyphs
+          # in the calculation.
+          total_width = 0
+          num_glyphs = subset.new_to_old_glyph.size
+
+          # use new -> old glyph mapping in order to include compound glyphs
+          # in the calculation
+          subset.new_to_old_glyph.each do |_, old_gid|
+            if (metric = os2.file.horizontal_metrics.for(old_gid))
+              total_width += metric.advance_width
+            end
+          end
+
+          return 0 if num_glyphs == 0
+
+          total_width / num_glyphs # this should be a whole number
         end
       end
 
