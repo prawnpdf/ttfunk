@@ -38,6 +38,7 @@ module TTFunk
         @code_page = code_page
         @encoding = encoding
         @subset = Array.new(256)
+        use(space_char_code)
       end
 
       def to_unicode_map
@@ -78,6 +79,10 @@ module TTFunk
       def original_glyph_ids
         ([0] + @subset.map { |unicode| unicode && unicode_cmap[unicode] })
           .compact.uniq.sort
+      end
+
+      def space_char_code
+        @space_char_code ||= from_unicode(Unicode::SPACE_CHAR)
       end
     end
   end

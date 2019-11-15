@@ -6,6 +6,8 @@ require 'ttfunk/subset'
 
 describe TTFunk do
   describe 'subsetting' do
+    let(:space_char) { TTFunk::Subset::Unicode::SPACE_CHAR }
+
     it 'consistently names font for same subsets' do
       font = TTFunk::File.open test_font('DejaVuSans')
 
@@ -18,6 +20,34 @@ describe TTFunk do
       name2 = TTFunk::File.new(subset2.encode).name.strings[6]
 
       expect(name1).to eq name2
+    end
+
+    it 'can reconstruct an entire font' do
+      font = TTFunk::File.open test_font('DejaVuSans')
+      subset = TTFunk::Subset.for(font, :unicode)
+
+      font.cmap.unicode.first.code_map.each do |code_point, _gid|
+        subset.use(code_point)
+      end
+
+      expect { subset.encode }.to_not raise_error
+    end
+
+    it 'always includes the space glyph' do
+      font = TTFunk::File.open test_font('DejaVuSans')
+      subset = TTFunk::Subset.for(font, :unicode)
+      new_font = TTFunk::File.new(subset.encode)
+
+      # space should be GID 1 since it's the only glyph in the font
+      # (0 is always .notdef)
+      expect(new_font.cmap.unicode.first[space_char]).to eq(1)
+    end
+
+    it "explodes if the space glyph isn't included" do
+      font = TTFunk::File.open test_font('DejaVuSans')
+      subset = TTFunk::Subset.for(font, :unicode)
+      subset.instance_variable_get(:@subset).delete(space_char)
+      expect { subset.encode }.to raise_error(/Space glyph .* must be included/)
     end
 
     it 'changes font names for different subsets' do
@@ -54,7 +84,7 @@ describe TTFunk do
       expect(table_tags.first).to be < table_tags.last
     end
 
-    it 'calculates correct search_range, entry_selector & range_shift values' do
+    it 'calculates search_range, entry_selector & range_shift values' do
       font = TTFunk::File.open test_font('DejaVuSans')
 
       subset = TTFunk::Subset.for(font, :unicode)
