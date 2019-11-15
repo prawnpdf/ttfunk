@@ -19,16 +19,49 @@ module TTFunk
       attr_reader :metric_data_format
       attr_reader :number_of_metrics
 
-      def self.encode(hhea, hmtx)
-        ''.b.tap do |table|
-          table << [hhea.version].pack('N')
-          table << [
-            hhea.ascent, hhea.descent, hhea.line_gap, hhea.advance_width_max,
-            hhea.min_left_side_bearing, hhea.min_right_side_bearing,
-            hhea.x_max_extent, hhea.carot_slope_rise, hhea.carot_slope_run,
-            hhea.caret_offset, 0, 0, 0, 0, hhea.metric_data_format,
-            hmtx[:number_of_metrics]
-          ].pack('n*')
+      class << self
+        def encode(hhea, hmtx, original, mapping)
+          ''.b.tap do |table|
+            table << [hhea.version].pack('N')
+            table << [
+              hhea.ascent, hhea.descent, hhea.line_gap,
+              *min_max_values_for(original, mapping),
+              hhea.carot_slope_rise, hhea.carot_slope_run, hhea.caret_offset,
+              0, 0, 0, 0, hhea.metric_data_format, hmtx[:number_of_metrics]
+            ].pack('n*')
+          end
+        end
+
+        private
+
+        def min_max_values_for(original, mapping)
+          min_lsb = Min.new
+          min_rsb = Min.new
+          max_aw = Max.new
+          max_extent = Max.new
+
+          mapping.each do |_, old_glyph_id|
+            horiz_metrics = original.horizontal_metrics.for(old_glyph_id)
+            next unless horiz_metrics
+
+            min_lsb << horiz_metrics.left_side_bearing
+            max_aw << horiz_metrics.advance_width
+
+            glyph = original.find_glyph(old_glyph_id)
+            next unless glyph
+
+            x_delta = glyph.x_max - glyph.x_min
+
+            min_rsb << horiz_metrics.advance_width -
+              horiz_metrics.left_side_bearing - x_delta
+
+            max_extent << horiz_metrics.left_side_bearing + x_delta
+          end
+
+          [
+            max_aw.value_or(0), min_lsb.value_or(0),
+            min_rsb.value_or(0), max_extent.value_or(0)
+          ]
         end
       end
 
