@@ -36,14 +36,16 @@ module TTFunk
           mapping = ENCODING_MAPPINGS[encoding]
 
           # platform-id, encoding-id, offset
-          result[:subtable] = [
-            mapping[:platform_id],
-            mapping[:encoding_id],
-            12,
-            result[:subtable]
-          ].pack('nnNA*')
-
-          result
+          result.merge(
+            platform_id: mapping[:platform_id],
+            encoding_id: mapping[:encoding_id],
+            subtable: [
+              mapping[:platform_id],
+              mapping[:encoding_id],
+              12,
+              result[:subtable]
+            ].pack('nnNA*')
+          )
         end
 
         def initialize(file, table_start)
