@@ -90,7 +90,7 @@ module TTFunk
 
     def hhea_table
       @hhea_table = TTFunk::Table::Hhea.encode(
-        original.horizontal_header, hmtx_table
+        original.horizontal_header, hmtx_table, original, new_to_old_glyph
       )
     end
 
@@ -114,7 +114,7 @@ module TTFunk
 
     def head_table
       @head_table ||= TTFunk::Table::Head.encode(
-        original.header, loca_table
+        original.header, loca_table, new_to_old_glyph
       )
     end
 
@@ -189,49 +189,16 @@ module TTFunk
       }.reject { |_tag, table| table.nil? }
     end
 
-    def old_to_new_glyph
-      @old_to_new_glyph ||= begin
-        charmap = cmap_table[:charmap]
-        old_to_new = charmap.each_with_object(0 => 0) do |(_, ids), map|
-          map[ids[:old]] = ids[:new]
-        end
-
-        next_glyph_id = cmap_table[:max_glyph_id]
-
-        glyphs.keys.each do |old_id|
-          unless old_to_new.key?(old_id)
-            old_to_new[old_id] = next_glyph_id
-            next_glyph_id += 1
-          end
-        end
-
-        old_to_new
-      end
-    end
-
-    # derive this and pass it to Table#encode methods so each table
-    # doesn't have to do the same work
-    def new_to_old_glyph
-      @new_to_old_glyph ||= old_to_new_glyph.invert
-    end
-
     def glyphs
-      @glyphs ||= collect_glyphs(subset.original_glyph_ids)
+      subset.glyphs
     end
 
-    def collect_glyphs(glyph_ids)
-      glyphs = glyph_ids.each_with_object({}) do |id, h|
-        h[id] = original.glyph_outlines.for(id)
-      end
+    def new_to_old_glyph
+      subset.new_to_old_glyph
+    end
 
-      additional_ids = glyphs.values
-                             .select { |g| g && g.compound? }
-                             .map(&:glyph_ids)
-                             .flatten
-
-      glyphs.update(collect_glyphs(additional_ids)) if additional_ids.any?
-
-      glyphs
+    def old_to_new_glyph
+      subset.old_to_new_glyph
     end
 
     def checksum(data)
