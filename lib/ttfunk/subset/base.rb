@@ -15,6 +15,9 @@ require_relative '../table/simple'
 module TTFunk
   module Subset
     class Base
+      MICROSOFT_PLATFORM_ID = 3
+      MS_SYMBOL_ENCODING_ID = 0
+
       attr_reader :original
 
       def initialize(original)
@@ -23,6 +26,11 @@ module TTFunk
 
       def unicode?
         false
+      end
+
+      def microsoft_symbol?
+        new_cmap_table[:platform_id] == MICROSOFT_PLATFORM_ID &&
+          new_cmap_table[:encoding_id] == MS_SYMBOL_ENCODING_ID
       end
 
       def to_unicode_map
