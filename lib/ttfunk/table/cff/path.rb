@@ -30,21 +30,6 @@ module TTFunk
           @number_of_contours += 1
         end
 
-        def to_svg
-          path_data = commands.map do |command|
-            instr = case command[0]
-                    when :move then 'M'
-                    when :line then 'L'
-                    when :curve then 'C'
-                    when :close then 'Z'
-                    end
-
-            "#{instr}#{format_values(command)}"
-          end.join(' ')
-
-          "<path d=\"#{path_data}\"/>"
-        end
-
         def render(x: 0, y: 0, font_size: 72, units_per_em: 1000)
           new_path = self.class.new
           scale = 1.0 / units_per_em * font_size
