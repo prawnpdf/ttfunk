@@ -10,7 +10,7 @@ module TTFunk
       class << self
         def unicode_mapping_for(encoding)
           mapping_cache[encoding] ||= (0..255).each_with_object({}) do |c, ret|
-            # rubocop:disable Lint/HandleExceptions
+            # rubocop:disable Lint/SuppressedException
             begin
               ret[c] = c.chr(encoding)
                         .encode(Encoding::UTF_8)
@@ -20,7 +20,7 @@ module TTFunk
               # There is not a strict 1:1 mapping between all code page
               # characters and unicode.
             end
-            # rubocop:enable Lint/HandleExceptions
+            # rubocop:enable Lint/SuppressedException
           end
         end
 

@@ -83,7 +83,6 @@ module TTFunk
           end
         end
 
-        # rubocop:disable Naming/UncommunicativeMethodParamName
         def render(x: 0, y: 0, font_size: 72)
           path.render(
             x: x,
@@ -92,7 +91,6 @@ module TTFunk
             units_per_em: @top_dict.file.header.units_per_em
           )
         end
-        # rubocop:enable Naming/UncommunicativeMethodParamName
 
         def encode
           raw
@@ -169,7 +167,6 @@ module TTFunk
           add_contour(@x, @y)
         end
 
-        # rubocop:disable Naming/UncommunicativeMethodParamName
         def add_contour(x, y)
           if @open
             @path.close_path
@@ -178,7 +175,6 @@ module TTFunk
           @path.move_to(x, y)
           @open = true
         end
-        # rubocop:enable Naming/UncommunicativeMethodParamName
 
         def rlineto
           until @stack.empty?

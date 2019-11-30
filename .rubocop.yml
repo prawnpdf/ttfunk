@@ -12,14 +12,14 @@ AllCops:
   Exclude:
     - 'pkg/**/*'
 
-Layout/AlignArguments:
-  EnforcedStyle: with_fixed_indentation
-
-Layout/ParameterAlignment:
+Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
 
 Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
+
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
 
 Metrics/AbcSize:
   Enabled: false
@@ -44,6 +44,17 @@ Metrics/ParameterLists:
 
 Metrics/PerceivedComplexity:
   Enabled: false
+
+Naming/MethodParameterName:
+  AllowedNames:
+    - id
+    - io
+    - x
+    - x1
+    - x2
+    - y
+    - y1
+    - y2
 
 RSpec/ExampleLength:
   Enabled: false

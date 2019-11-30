@@ -13,7 +13,6 @@ module TTFunk
           @number_of_contours = 0
         end
 
-        # rubocop:disable Naming/UncommunicativeMethodParamName
         def move_to(x, y)
           @commands << [:move, x, y]
         end
@@ -70,7 +69,6 @@ module TTFunk
 
           new_path
         end
-        # rubocop:enable Naming/UncommunicativeMethodParamName
 
         private
 
