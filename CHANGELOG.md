@@ -7,6 +7,56 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+
+* Ruby 2.6 support
+
+  Alexander Mankuta
+
+* JRuby 9.2 support
+
+  Alexander Mankuta
+
+### Removed
+
+* Dropped Ruby 2.1 & 2.2 support
+
+  Alexander Mankuta
+
+* Removed JRuby 9.1 support
+
+  Alexander Mankuta
+
+### Fixed
+
+* Sort name table entries when generating subset font
+
+  Matjaz Gregoric
+
+* Map the 0xFFFF char code to glyph 0 in cmap format 4
+
+  Matjaz Gregoric
+
+* Order tables by tag when generating font subset
+
+  Matjaz Gregoric
+
+* Fix typo in TTFunk::Subset::Unicode#includes?
+
+  Matjaz Gregoric
+
+* Fixe calculation of search_range for font subsets
+
+  Matjaz Gregoric
+
+* Fixed instance variable @offset and @length not initialized
+
+  Katsuya HIDAKA
+
+* Code style fixes
+
+  Katsuya HIDAKA, Matjaz Gregoric, Alexander Mankuta
+
 ## [1.5.1]
 
 ### Fixed
