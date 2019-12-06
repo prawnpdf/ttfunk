@@ -12,7 +12,7 @@ AllCops:
   Exclude:
     - 'pkg/**/*'
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
 Layout/MultilineOperationIndentation:
