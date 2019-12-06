@@ -1,6 +1,7 @@
 # TTFunk
 
-![Maintained: yes](https://img.shields.io/badge/maintained-yes-brightgreen.png)
+![Maintained: yes](https://img.shields.io/badge/maintained-yes-brightgreen.svg)
+![CI status](https://github.com/prawnpdf/ttfunk/workflows/CI/badge.svg)
 
 TTFunk is a TrueType font parser written in pure ruby.
 
