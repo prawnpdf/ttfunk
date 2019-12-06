@@ -9,6 +9,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Added
 
+* OpenType fonts support
+
+  * Added support for CFF-flavored fonts (also known as CID-keyed or OpenType fonts)
+  * Added support for the VORG and DSIG tables
+  * Improved charset encoding support
+  * Improved font metrics calculations in the head, maxp, hhea, hmtx, and os/2 tables
+  * Subsetted fonts verified with Font-Validator, fontlint, and Mac OS's Font Book
+
+  Cameron Dutro
+
 * Ruby 2.6 support
 
   Alexander Mankuta
