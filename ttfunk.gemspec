@@ -20,14 +20,16 @@ Gem::Specification.new do |spec|
     'Brad Ediger',
     'Daniel Nelson',
     'Jonathan Greenberg',
-    'James Healy'
+    'James Healy',
+    'Cameron Dutro'
   ]
   spec.email = [
     'gregory.t.brown@gmail.com',
     'brad@bradediger.com',
     'dnelson@bluejade.com',
     'greenberg@entryway.net',
-    'jimmy@deefa.com'
+    'jimmy@deefa.com',
+    'camertron@gmail.com'
   ]
 
   spec.files = Dir.glob('lib/**/*') +
