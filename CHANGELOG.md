@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.6.0]
+
 ### Added
 
 * OpenType fonts support
@@ -171,7 +173,8 @@ Initial release as a standalone gem
 
 
 
-[Unreleased]: https://github.com/prawnpdf/ttfunk/compare/1.5.1...HEAD
+[Unreleased]: https://github.com/prawnpdf/ttfunk/compare/1.6.0...HEAD
+[1.6.0]: https://github.com/prawnpdf/ttfunk/compare/1.5.1...1.6.0
 [1.5.1]: https://github.com/prawnpdf/ttfunk/compare/1.5.0...1.5.1
 [1.5.0]: https://github.com/prawnpdf/ttfunk/compare/1.4.0...1.5.0
 [1.4.0]: https://github.com/prawnpdf/ttfunk/compare/1.3.0...1.4.0
