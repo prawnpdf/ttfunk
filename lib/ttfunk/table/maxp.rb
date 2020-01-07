@@ -51,7 +51,7 @@ module TTFunk
                 stats[:max_size_of_instructions],
                 stats[:max_component_elements],
                 stats[:max_component_depth]
-              ].pack('n*')
+              ].pack('Nn*')
             end
           end
         end
