@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+
+* Fixed maxp table encoding
+
+  Cameron Dutro
+
 ## [1.6.0]
 
 ### Added
