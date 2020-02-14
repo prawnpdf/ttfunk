@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name = 'ttfunk'
-  spec.version = '1.6.2'
+  spec.version = '1.6.2.1'
   spec.platform = Gem::Platform::RUBY
   spec.summary = 'TrueType Font Metrics Parser'
   spec.description = 'Font Metrics Parser for the Prawn PDF generator'

@@ -7,6 +7,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.6.2.1]
+
+### Fixed
+
+* 1.6.2 gem conains local debuging code. This is the same commit but without
+  local changes.
+
+  Alexander Mankuta
+
 ## [1.6.2]
 
 ### Fixed
