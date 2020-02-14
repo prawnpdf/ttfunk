@@ -7,6 +7,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.6.2]
+
+### Fixed
+
+* Reverted to pre 1.6 maxp table serialization.
+
+  Cameron Dutro
+
 ## [1.6.1]
 
 ### Fixed
@@ -181,7 +189,8 @@ Initial release as a standalone gem
 
 
 
-[Unreleased]: https://github.com/prawnpdf/ttfunk/compare/1.6.1...HEAD
+[Unreleased]: https://github.com/prawnpdf/ttfunk/compare/1.6.2...HEAD
+[1.6.2]: https://github.com/prawnpdf/ttfunk/compare/1.6.1...1.6.2
 [1.6.1]: https://github.com/prawnpdf/ttfunk/compare/1.6.0...1.6.1
 [1.6.0]: https://github.com/prawnpdf/ttfunk/compare/1.5.1...1.6.0
 [1.5.1]: https://github.com/prawnpdf/ttfunk/compare/1.5.0...1.5.1
