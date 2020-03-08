@@ -5,8 +5,14 @@ module TTFunk
     include Enumerable
 
     def self.open(path)
-      ::File.open(path, 'rb') do |io|
-        yield new(io)
+      if path.respond_to?(:read)
+        result = yield new(path)
+        path.rewind
+        result
+      else
+        ::File.open(path, 'rb') do |io|
+          yield new(io)
+        end
       end
     end
 
