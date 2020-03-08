@@ -22,7 +22,8 @@ describe TTFunk::Collection do
     it 'will open TTC files as IO' do
       success = false
 
-      described_class.open(StringIO.new(File.read(test_font('DejaVuSans', :ttc)))) do |_ttc|
+      io = StringIO.new(File.read(test_font('DejaVuSans', :ttc)))
+      described_class.open(io) do |_ttc|
         success = true
       end
 
