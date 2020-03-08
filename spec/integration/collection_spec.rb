@@ -19,6 +19,16 @@ describe TTFunk::Collection do
       expect(success).to be true
     end
 
+    it 'will open TTC files as IO' do
+      success = false
+
+      described_class.open(StringIO.new(File.read(test_font('DejaVuSans', :ttc)))) do |_ttc|
+        success = true
+      end
+
+      expect(success).to be true
+    end
+
     it 'will report fonts in TTC' do
       described_class.open(test_font('DejaVuSans', :ttc)) do |ttc|
         expect(ttc.count).to eq 2
