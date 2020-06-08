@@ -251,7 +251,7 @@ module TTFunk
       }.freeze
 
       UNICODE_MAX = 0xFFFF
-      UNICODE_RANGES = UNICODE_BLOCKS.keys.freeze
+      UNICODE_RANGES = UNICODE_BLOCKS.keys.sort_by(&:max).freeze
       LOWERCASE_START = 'a'.ord
       LOWERCASE_END = 'z'.ord
       LOWERCASE_COUNT = (LOWERCASE_END - LOWERCASE_START) + 1
@@ -380,13 +380,15 @@ module TTFunk
 
         def group_original_code_points_by_bit(os2)
           Hash.new { |h, k| h[k] = [] }.tap do |result|
-            os2.file.cmap.unicode.first.code_map.each_key do |code_point|
-              # find corresponding bit
-              range = UNICODE_RANGES.find { |r| r.cover?(code_point) }
-
-              if (bit = UNICODE_BLOCKS[range])
-                result[bit] << code_point
+            code_points = os2.file.cmap.unicode.first.code_map.keys.sort
+            UNICODE_RANGES.each do |r|
+              code_points = code_points.drop_while { |p| p < r.min }
+              code_points.take_while { |p| p <= r.max }.each do |code_point|
+                if (bit = UNICODE_BLOCKS[r])
+                  result[bit] << code_point
+                end
               end
+              code_points = code_points.drop_while { |p| p <= r.max }
             end
           end
         end
