@@ -81,9 +81,3 @@ Style/HashLikeCase:
   Exclude:
     - 'lib/ttfunk/table/cff/charset.rb'
     - 'lib/ttfunk/table/cff/encoding.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/NegatedIfElseCondition:
-  Exclude:
-    - 'lib/ttfunk/table/glyf/compound.rb'

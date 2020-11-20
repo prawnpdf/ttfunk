@@ -55,10 +55,10 @@ module TTFunk
             offset += 4
 
             offset +=
-              if flags & ARG_1_AND_2_ARE_WORDS != 0
-                4
-              else
+              if flags & ARG_1_AND_2_ARE_WORDS == 0
                 2
+              else
+                4
               end
 
             if flags & WE_HAVE_A_TWO_BY_TWO != 0
