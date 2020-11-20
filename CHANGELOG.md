@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changes
+
+* Actualize rubocop dependencies and fix some warnings
+
 ## [1.6.2.1]
 
 ### Fixed
