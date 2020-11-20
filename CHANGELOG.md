@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changes
+
+* Allow gem installation on Ruby 3.0
+
 ## [1.6.2.1]
 
 ### Fixed
