@@ -69,12 +69,6 @@ Style/CollectionCompact:
     - 'lib/ttfunk/otf_encoder.rb'
     - 'lib/ttfunk/ttf_encoder.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/HashEachMethods:
-  Exclude:
-    - 'lib/ttfunk/subset/base.rb'
-
 # Offense count: 3
 # Configuration parameters: MinBranchesCount.
 Style/HashLikeCase:
