@@ -6,13 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 3
-Lint/MissingSuper:
-  Exclude:
-    - 'lib/ttfunk/max.rb'
-    - 'lib/ttfunk/min.rb'
-    - 'lib/ttfunk/sum.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Lint/RedundantCopDisableDirective:
