@@ -202,7 +202,7 @@ module TTFunk
     end
 
     def checksum(data)
-      align(raw(data), 4).unpack('N*').reduce(0, :+) & 0xFFFF_FFFF
+      align(raw(data), 4).unpack('N*').sum & 0xFFFF_FFFF
     end
 
     def raw(data)

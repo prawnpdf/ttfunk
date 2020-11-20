@@ -44,12 +44,6 @@ Performance/CollectionLiteralInLoop:
   Exclude:
     - 'spec/ttfunk/table/os2_spec.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Performance/Sum:
-  Exclude:
-    - 'lib/ttfunk/ttf_encoder.rb'
-
 # Offense count: 10
 # Configuration parameters: AllowSubject.
 RSpec/MultipleMemoizedHelpers:
