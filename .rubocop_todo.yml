@@ -49,13 +49,6 @@ Performance/CollectionLiteralInLoop:
 RSpec/MultipleMemoizedHelpers:
   Max: 21
 
-# Offense count: 164
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: separated, grouped
-Style/AccessorGrouping:
-  Enabled: false
-
 # Offense count: 3
 # Configuration parameters: MinBranchesCount.
 Style/HashLikeCase:

@@ -6,11 +6,7 @@ module TTFunk
   class Table
     class Glyf
       class Simple
-        attr_reader :id, :raw
-        attr_reader :number_of_contours
-        attr_reader :x_min, :y_min, :x_max, :y_max
-        attr_reader :end_points_of_contours
-        attr_reader :instruction_length, :instructions
+        attr_reader :id, :raw, :number_of_contours, :x_min, :y_min, :x_max, :y_max, :end_points_of_contours, :instruction_length, :instructions
 
         def initialize(id, raw)
           @id = id

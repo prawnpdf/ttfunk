@@ -6,42 +6,7 @@ require 'set'
 module TTFunk
   class Table
     class OS2 < Table
-      attr_reader :version
-
-      attr_reader :ave_char_width
-      attr_reader :weight_class
-      attr_reader :width_class
-      attr_reader :type
-      attr_reader :y_subscript_x_size
-      attr_reader :y_subscript_y_size
-      attr_reader :y_subscript_x_offset
-      attr_reader :y_subscript_y_offset
-      attr_reader :y_superscript_x_size
-      attr_reader :y_superscript_y_size
-      attr_reader :y_superscript_x_offset
-      attr_reader :y_superscript_y_offset
-      attr_reader :y_strikeout_size
-      attr_reader :y_strikeout_position
-      attr_reader :family_class
-      attr_reader :panose
-      attr_reader :char_range
-      attr_reader :vendor_id
-      attr_reader :selection
-      attr_reader :first_char_index
-      attr_reader :last_char_index
-
-      attr_reader :ascent
-      attr_reader :descent
-      attr_reader :line_gap
-      attr_reader :win_ascent
-      attr_reader :win_descent
-      attr_reader :code_page_range
-
-      attr_reader :x_height
-      attr_reader :cap_height
-      attr_reader :default_char
-      attr_reader :break_char
-      attr_reader :max_context
+      attr_reader :version, :ave_char_width, :weight_class, :width_class, :type, :y_subscript_x_size, :y_subscript_y_size, :y_subscript_x_offset, :y_subscript_y_offset, :y_superscript_x_size, :y_superscript_y_size, :y_superscript_x_offset, :y_superscript_y_offset, :y_strikeout_size, :y_strikeout_position, :family_class, :panose, :char_range, :vendor_id, :selection, :first_char_index, :last_char_index, :ascent, :descent, :line_gap, :win_ascent, :win_descent, :code_page_range, :x_height, :cap_height, :default_char, :break_char, :max_context
 
       CODE_PAGE_BITS = {
         1252 => 0,  1250 => 1,  1251 => 2,  1253 => 3,  1254 => 4,

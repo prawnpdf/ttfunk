@@ -7,8 +7,7 @@ module TTFunk
     class Vorg < Table
       TAG = 'VORG'
 
-      attr_reader :major_version, :minor_version
-      attr_reader :default_vert_origin_y, :count
+      attr_reader :major_version, :minor_version, :default_vert_origin_y, :count
 
       def self.encode(vorg)
         return nil unless vorg

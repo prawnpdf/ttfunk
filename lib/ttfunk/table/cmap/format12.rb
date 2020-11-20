@@ -4,8 +4,7 @@ module TTFunk
   class Table
     class Cmap
       module Format12
-        attr_reader :language
-        attr_reader :code_map
+        attr_reader :language, :code_map
 
         def self.encode(charmap)
           next_id = 0

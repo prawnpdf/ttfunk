@@ -5,17 +5,7 @@ require_relative '../table'
 module TTFunk
   class Table
     class Post < Table
-      attr_reader :format
-      attr_reader :italic_angle
-      attr_reader :underline_position
-      attr_reader :underline_thickness
-      attr_reader :fixed_pitch
-      attr_reader :min_mem_type42
-      attr_reader :max_mem_type42
-      attr_reader :min_mem_type1
-      attr_reader :max_mem_type1
-
-      attr_reader :subtable
+      attr_reader :format, :italic_angle, :underline_position, :underline_thickness, :fixed_pitch, :min_mem_type42, :max_mem_type42, :min_mem_type1, :max_mem_type1, :subtable
 
       def self.encode(post, mapping)
         return nil unless post.exists?

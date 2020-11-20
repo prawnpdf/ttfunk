@@ -3,8 +3,7 @@
 module TTFunk
   class Table
     class Cmap < Table
-      attr_reader :version
-      attr_reader :tables
+      attr_reader :version, :tables
 
       def self.encode(charmap, encoding)
         result = Cmap::Subtable.encode(charmap, encoding)

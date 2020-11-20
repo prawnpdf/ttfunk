@@ -8,9 +8,7 @@ module TTFunk
       class Subtable
         include Reader
 
-        attr_reader :platform_id
-        attr_reader :encoding_id
-        attr_reader :format
+        attr_reader :platform_id, :encoding_id, :format
 
         ENCODING_MAPPINGS = {
           mac_roman: { platform_id: 1, encoding_id: 0 }.freeze,

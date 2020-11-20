@@ -34,8 +34,7 @@ module TTFunk
           end
         end
 
-        attr_reader :entries, :length
-        attr_reader :top_dict, :format, :count, :offset_or_id
+        attr_reader :entries, :length, :top_dict, :format, :count, :offset_or_id
 
         def initialize(top_dict, file, offset_or_id = nil, length = nil)
           @top_dict = top_dict

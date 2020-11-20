@@ -24,8 +24,7 @@ module TTFunk
 
       TAG = 'CFF ' # the extra space is important
 
-      attr_reader :header, :name_index, :top_index, :string_index
-      attr_reader :global_subr_index
+      attr_reader :header, :name_index, :top_index, :string_index, :global_subr_index
 
       def tag
         TAG

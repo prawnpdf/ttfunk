@@ -5,9 +5,7 @@ require_relative '../table'
 module TTFunk
   class Table
     class Hmtx < Table
-      attr_reader :metrics
-      attr_reader :left_side_bearings
-      attr_reader :widths
+      attr_reader :metrics, :left_side_bearings, :widths
 
       def self.encode(hmtx, mapping)
         metrics = mapping.keys.sort.map do |new_id|

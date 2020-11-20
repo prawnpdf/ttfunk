@@ -5,10 +5,7 @@ require_relative '../table'
 module TTFunk
   class Table
     class Sbix < Table
-      attr_reader :version
-      attr_reader :flags
-      attr_reader :num_strikes
-      attr_reader :strikes
+      attr_reader :version, :flags, :num_strikes, :strikes
 
       BitmapData = Struct.new(:x, :y, :type, :data, :ppem, :resolution)
 

@@ -22,8 +22,7 @@ require_relative 'ttfunk/one_based_array'
 
 module TTFunk
   class File
-    attr_reader :contents
-    attr_reader :directory
+    attr_reader :contents, :directory
 
     def self.open(io_or_path)
       new verify_and_open(io_or_path).read
