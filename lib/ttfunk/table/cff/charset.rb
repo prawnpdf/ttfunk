@@ -174,19 +174,15 @@ module TTFunk
         end
 
         def element_width(fmt = format_sym)
-          case fmt
-          when :array_format then 2 # SID
-          when :range_format_8 then 3 # SID + Card8
-          when :range_format_16 then 4 # SID + Card16
-          end
+          { array_format: 2,
+            range_format_8: 3,
+            range_format_16: 4 }[fmt]
         end
 
         def element_format(fmt = format_sym)
-          case fmt
-          when :array_format then 'n'
-          when :range_format_8 then 'nC'
-          when :range_format_16 then 'nn'
-          end
+          { array_format: 'n',
+            range_format_8: 'nC',
+            range_format_16: 'nn' }[fmt]
         end
 
         def format_sym

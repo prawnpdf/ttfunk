@@ -173,11 +173,9 @@ module TTFunk
         end
 
         def element_format(fmt = format_sym)
-          case fmt
-          when :array_format then 'C'
-          when :range_format then 'CC'
-          when :supplemental then 'Cn'
-          end
+          { array_format: 'C',
+            range_format: 'CC',
+            supplemental: 'Cn' }[fmt]
         end
 
         # @TODO: handle supplemental encoding (necessary?)
