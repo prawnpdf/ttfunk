@@ -72,6 +72,10 @@ Style/Documentation:
 RSpec/FilePath:
   Enabled: false
 
+# Require major redone of spec structure
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
 RSpec/MultipleExpectations:
   Enabled: false
 
