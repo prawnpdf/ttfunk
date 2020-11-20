@@ -39,7 +39,7 @@ module TTFunk
         'BASE' => base_table,
         'VORG' => vorg_table,
         'CFF ' => cff_table
-      ).reject { |_tag, table| table.nil? }
+      ).compact
     end
 
     def optimal_table_order

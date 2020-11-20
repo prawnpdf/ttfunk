@@ -186,7 +186,7 @@ module TTFunk
         'VORG' => vorg_table,
         'DSIG' => dsig_table,
         'gasp' => gasp_table
-      }.reject { |_tag, table| table.nil? }
+      }.compact
     end
 
     def glyphs

@@ -62,13 +62,6 @@ RSpec/MultipleMemoizedHelpers:
 Style/AccessorGrouping:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/CollectionCompact:
-  Exclude:
-    - 'lib/ttfunk/otf_encoder.rb'
-    - 'lib/ttfunk/ttf_encoder.rb'
-
 # Offense count: 3
 # Configuration parameters: MinBranchesCount.
 Style/HashLikeCase:
