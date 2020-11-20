@@ -12,15 +12,6 @@ Lint/RedundantCopDisableDirective:
   Exclude:
     - 'lib/ttfunk/subset/code_page.rb'
 
-# Offense count: 16
-# Configuration parameters: EnforcedStyle, CheckMethodNames, CheckSymbols, AllowedIdentifiers.
-# SupportedStyles: snake_case, normalcase, non_integer
-Naming/VariableNumber:
-  Exclude:
-    - 'lib/ttfunk/subset.rb'
-    - 'lib/ttfunk/table/cff/charset.rb'
-    - 'spec/integration/subset_spec.rb'
-
 # Offense count: 1
 # Configuration parameters: MinSize.
 Performance/CollectionLiteralInLoop:

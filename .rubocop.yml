@@ -59,6 +59,10 @@ Naming/MethodParameterName:
     - y1
     - y2
 
+# Some variables are in one style, some in other, disable for safety
+Naming/VariableNumber:
+  Enabled: false
+
 RSpec/ExampleLength:
   Enabled: false
 
