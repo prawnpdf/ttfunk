@@ -124,7 +124,7 @@ module TTFunk
           return glyph_id unless offset
 
           case format_sym
-          when :array_format
+          when :array_format, :supplemental
             @entries[glyph_id]
 
           when :range_format
@@ -139,9 +139,6 @@ module TTFunk
             end
 
             0
-
-          when :supplemental
-            @entries[glyph_id]
           end
         end
 

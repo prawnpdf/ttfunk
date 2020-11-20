@@ -7,11 +7,6 @@
 # versions of RuboCop, may require this file to be generated again.
 
 # Offense count: 1
-Lint/DuplicateBranch:
-  Exclude:
-    - 'lib/ttfunk/table/cff/encoding.rb'
-
-# Offense count: 1
 Lint/FloatComparison:
   Exclude:
     - 'lib/ttfunk/sci_form.rb'
