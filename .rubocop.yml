@@ -3,6 +3,7 @@ require:
   - rubocop-rspec
 
 AllCops:
+  NewCops: disable
   TargetRubyVersion: 2.4
   Include:
     - '**/*.rb'
@@ -11,6 +12,9 @@ AllCops:
     - '*.gemspec'
   Exclude:
     - 'pkg/**/*'
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
 
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
