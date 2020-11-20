@@ -93,10 +93,3 @@ Style/NegatedIfElseCondition:
 Style/RedundantAssignment:
   Exclude:
     - 'lib/ttfunk.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/StringConcatenation:
-  Exclude:
-    - 'spec/spec_helper.rb'
-    - 'spec/support/path_helpers.rb'
