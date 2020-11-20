@@ -53,8 +53,7 @@ module TTFunk
       io_or_path = Pathname.new(io_or_path)
       raise ArgumentError, "#{io_or_path} not found" unless io_or_path.file?
 
-      io = io_or_path.open('rb')
-      io
+      io_or_path.open('rb')
     end
 
     def initialize(contents, offset = 0)

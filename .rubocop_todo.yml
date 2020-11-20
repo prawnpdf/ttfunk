@@ -87,9 +87,3 @@ Style/HashLikeCase:
 Style/NegatedIfElseCondition:
   Exclude:
     - 'lib/ttfunk/table/glyf/compound.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/RedundantAssignment:
-  Exclude:
-    - 'lib/ttfunk.rb'
