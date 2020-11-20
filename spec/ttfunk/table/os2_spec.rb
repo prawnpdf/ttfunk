@@ -124,6 +124,7 @@ RSpec.describe TTFunk::Table::OS2 do
     context 'with a unicode subset' do
       let(:subset) { TTFunk::Subset::Unicode.new(font) }
       let(:original_unicode_map) { font.cmap.unicode.first.code_map }
+      let(:fields_to_recalculate) { %i[char_range code_page_range] }
 
       it 'roundtrips correctly' do
         original_unicode_map.each_key { |char| subset.use(char) }
@@ -135,7 +136,7 @@ RSpec.describe TTFunk::Table::OS2 do
           actual_value = reconstituted.public_send(field)
 
           # check these fields manually (they have been recalculated)
-          next if %i[char_range code_page_range].include?(field)
+          next if fields_to_recalculate.include?(field)
 
           expect(actual_value).to(
             eq(expected_value),
