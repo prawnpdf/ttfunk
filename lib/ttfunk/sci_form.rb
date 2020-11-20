@@ -17,7 +17,7 @@ module TTFunk
     def ==(other)
       case other
       when Float
-        other == to_f
+        (other - to_f).abs < Float::EPSILON
       when self.class
         other.significand == significand &&
           other.exponent == exponent
