@@ -78,6 +78,11 @@ RSpec/MultipleExpectations:
 RSpec/NotToNot:
   EnforcedStyle: to_not
 
+# Some classes has a lot of accessor
+# Fixing this cop will result a very long lines
+Style/AccessorGrouping:
+  Enabled: false
+
 Style/GuardClause:
   Enabled: false
 
