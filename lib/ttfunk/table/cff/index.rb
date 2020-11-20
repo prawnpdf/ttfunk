@@ -12,7 +12,8 @@ module TTFunk
         # offset array element size
         attr_reader :offset_size
 
-        attr_reader :raw_offset_length, :offsets, :raw_data, :data_start_pos
+        attr_reader :raw_offset_length, :offsets, :raw_data
+        attr_reader :data_start_pos
 
         def [](index)
           entry_cache[index] ||= raw_data[

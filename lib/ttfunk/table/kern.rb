@@ -5,7 +5,8 @@ require_relative '../table'
 module TTFunk
   class Table
     class Kern < Table
-      attr_reader :version, :tables
+      attr_reader :version
+      attr_reader :tables
 
       def self.encode(kerning, mapping)
         return nil unless kerning.exists? && kerning.tables.any?

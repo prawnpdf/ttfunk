@@ -7,7 +7,9 @@ module TTFunk
   class Table
     class Name < Table
       class NameString < ::String
-        attr_reader :platform_id, :encoding_id, :language_id
+        attr_reader :platform_id
+        attr_reader :encoding_id
+        attr_reader :language_id
 
         def initialize(text, platform_id, encoding_id, language_id)
           super(text)
@@ -23,7 +25,27 @@ module TTFunk
         end
       end
 
-      attr_reader :entries, :strings, :copyright, :font_family, :font_subfamily, :unique_subfamily, :font_name, :version, :trademark, :manufacturer, :designer, :description, :vendor_url, :designer_url, :license, :license_url, :preferred_family, :preferred_subfamily, :compatible_full, :sample_text
+      attr_reader :entries
+      attr_reader :strings
+
+      attr_reader :copyright
+      attr_reader :font_family
+      attr_reader :font_subfamily
+      attr_reader :unique_subfamily
+      attr_reader :font_name
+      attr_reader :version
+      attr_reader :trademark
+      attr_reader :manufacturer
+      attr_reader :designer
+      attr_reader :description
+      attr_reader :vendor_url
+      attr_reader :designer_url
+      attr_reader :license
+      attr_reader :license_url
+      attr_reader :preferred_family
+      attr_reader :preferred_subfamily
+      attr_reader :compatible_full
+      attr_reader :sample_text
 
       COPYRIGHT_NAME_ID = 0
       FONT_FAMILY_NAME_ID = 1

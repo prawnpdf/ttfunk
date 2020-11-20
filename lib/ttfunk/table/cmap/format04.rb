@@ -4,7 +4,8 @@ module TTFunk
   class Table
     class Cmap
       module Format04
-        attr_reader :language, :code_map
+        attr_reader :language
+        attr_reader :code_map
 
         # Expects a hash mapping character codes to glyph ids (where the
         # glyph ids are from the original font). Returns a hash including

@@ -2,7 +2,8 @@
 
 module TTFunk
   class Directory
-    attr_reader :tables, :scaler_type
+    attr_reader :tables
+    attr_reader :scaler_type
 
     def initialize(io, offset = 0)
       io.seek(offset)

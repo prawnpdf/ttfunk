@@ -6,7 +6,9 @@ module TTFunk
   class Table
     include Reader
 
-    attr_reader :file, :offset, :length
+    attr_reader :file
+    attr_reader :offset
+    attr_reader :length
 
     def initialize(file)
       @file = file

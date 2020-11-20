@@ -4,7 +4,9 @@ module TTFunk
   class Table
     class Glyf
       class PathBased
-        attr_reader :path, :horizontal_metrics, :x_min, :y_min, :x_max, :y_max, :left_side_bearing, :right_side_bearing
+        attr_reader :path, :horizontal_metrics
+        attr_reader :x_min, :y_min, :x_max, :y_max
+        attr_reader :left_side_bearing, :right_side_bearing
 
         def initialize(path, horizontal_metrics)
           @path = path

@@ -8,7 +8,8 @@ module TTFunk
       class Format0
         include Reader
 
-        attr_reader :attributes, :pairs
+        attr_reader :attributes
+        attr_reader :pairs
 
         def initialize(attributes = {})
           @attributes = attributes
