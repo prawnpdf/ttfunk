@@ -7,6 +7,7 @@ module TTFunk
     class Cff < TTFunk::Table
       class Dict < TTFunk::SubTable
         class InvalidOperandError < StandardError; end
+
         class TooManyOperandsError < StandardError; end
 
         # for regular single-byte operators
