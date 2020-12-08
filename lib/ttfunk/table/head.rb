@@ -37,7 +37,7 @@ module TTFunk
                 *min_max_values_for(head, mapping),
                 head.mac_style, head.lowest_rec_ppem, head.font_direction_hint,
                 loca[:type] || 0, head.glyph_data_format
-              ].pack('Nn2q2n*')
+              ].pack('Nn2q>2n*')
           end
         end
 
@@ -70,7 +70,7 @@ module TTFunk
 
       def parse!
         @version, @font_revision, @check_sum_adjustment, @magic_number,
-          @flags, @units_per_em, @created, @modified = read(36, 'N4n2q2')
+          @flags, @units_per_em, @created, @modified = read(36, 'N4n2q>2')
 
         @x_min, @y_min, @x_max, @y_max = read_signed(4)
 
