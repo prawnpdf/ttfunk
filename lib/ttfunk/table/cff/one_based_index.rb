@@ -8,8 +8,12 @@ module TTFunk
       class OneBasedIndex
         extend Forwardable
 
-        def_delegators :base_index, :each, :table_offset,
-          :count, :length, :encode
+        def_delegators :base_index,
+          :each,
+          :table_offset,
+          :count,
+          :length,
+          :encode
 
         attr_reader :base_index
 
@@ -18,7 +22,7 @@ module TTFunk
         end
 
         def [](idx)
-          if idx == 0
+          if idx.zero?
             raise IndexError,
               "index #{idx} was outside the bounds of the index"
           end

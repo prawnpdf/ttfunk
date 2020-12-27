@@ -29,7 +29,8 @@ module TTFunk
               return entry
             end
 
-            range, entry = entries.bsearch do |rng, _|
+            range, entry =
+              entries.bsearch do |rng, _|
               if rng.cover?(glyph_id)
                 0
               elsif glyph_id < rng.first
@@ -53,9 +54,10 @@ module TTFunk
         # mapping is new -> old glyph ids
         def encode(mapping)
           # get list of [new_gid, fd_index] pairs
-          new_indices = mapping.keys.sort.map do |new_gid|
-            [new_gid, self[mapping[new_gid]]]
-          end
+          new_indices =
+            mapping.keys.sort.map do |new_gid|
+              [new_gid, self[mapping[new_gid]]]
+            end
 
           ranges = rangify_gids(new_indices)
           total_range_size = ranges.size * RANGE_ENTRY_SIZE
@@ -119,11 +121,12 @@ module TTFunk
 
             ranges = Array.new(num_ranges) { read(RANGE_ENTRY_SIZE, 'nC') }
 
-            @entries = ranges.each_cons(2).map do |first, second|
-              first_gid, fd_index = first
-              second_gid, = second
-              [(first_gid...second_gid), fd_index]
-            end
+            @entries =
+              ranges.each_cons(2).map do |first, second|
+                first_gid, fd_index = first
+                second_gid, = second
+                [(first_gid...second_gid), fd_index]
+              end
 
             # read the sentinel GID, otherwise known as the number of glyphs
             # in the font
@@ -132,7 +135,7 @@ module TTFunk
             last_start_gid, last_fd_index = ranges.last
             @entries << [(last_start_gid...(n_glyphs + 1)), last_fd_index]
 
-            @count = entries.inject(0) { |sum, entry| sum + entry.first.size }
+            @count = entries.reduce(0) { |sum, entry| sum + entry.first.size }
           end
         end
 
@@ -141,7 +144,7 @@ module TTFunk
           when ARRAY_FORMAT then :array_format
           when RANGE_FORMAT then :range_format
           else
-            raise "unsupported fd select format '#{@format}'"
+            raise Error, "unsupported fd select format '#{@format}'"
           end
         end
       end

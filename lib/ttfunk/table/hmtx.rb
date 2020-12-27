@@ -10,10 +10,11 @@ module TTFunk
       attr_reader :widths
 
       def self.encode(hmtx, mapping)
-        metrics = mapping.keys.sort.map do |new_id|
-          metric = hmtx.for(mapping[new_id])
-          [metric.advance_width, metric.left_side_bearing]
-        end
+        metrics =
+          mapping.keys.sort.map do |new_id|
+            metric = hmtx.for(mapping[new_id])
+            [metric.advance_width, metric.left_side_bearing]
+          end
 
         {
           number_of_metrics: metrics.length,
@@ -43,7 +44,7 @@ module TTFunk
 
         file.horizontal_header.number_of_metrics.times do
           advance = read(2, 'n').first
-          lsb     = read_signed(1).first
+          lsb = read_signed(1).first
           @metrics.push HorizontalMetric.new(advance, lsb)
         end
 

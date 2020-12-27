@@ -43,7 +43,7 @@ module TTFunk
         end
 
         def [](glyph_id)
-          return 0 if glyph_id == 0
+          return 0 if glyph_id.zero?
           return code_for(glyph_id) if offset
 
           self.class.codes_for_encoding_id(offset_or_id)[glyph_id]
@@ -68,9 +68,10 @@ module TTFunk
           return '' unless offset
           return encode_supplemental(new_to_old, old_to_new) if supplemental?
 
-          codes = new_to_old.keys.sort.map do |new_gid|
-            code_for(new_to_old[new_gid])
-          end
+          codes =
+            new_to_old.keys.sort.map do |new_gid|
+              code_for(new_to_old[new_gid])
+            end
 
           ranges = TTFunk::BinUtils.rangify(codes)
 
@@ -100,11 +101,12 @@ module TTFunk
         private
 
         def encode_supplemental(_new_to_old, old_to_new)
-          new_entries = @entries.each_with_object({}) do |(code, old_gid), ret|
-            if (new_gid = old_to_new[old_gid])
-              ret[code] = new_gid
+          new_entries =
+            @entries.each_with_object({}) do |(code, old_gid), ret|
+              if (new_gid = old_to_new[old_gid])
+                ret[code] = new_gid
+              end
             end
-          end
 
           result = [format_int(:supplemental), new_entries.size].pack('CC')
           fmt = element_format(:supplemental)
@@ -117,14 +119,14 @@ module TTFunk
         end
 
         def code_for(glyph_id)
-          return 0 if glyph_id == 0
+          return 0 if glyph_id.zero?
 
           # rather than validating the glyph as part of one of the predefined
           # encodings, just pass it through
           return glyph_id unless offset
 
           case format_sym
-          when :array_format
+          when :array_format, :supplemental
             @entries[glyph_id]
 
           when :range_format
@@ -139,9 +141,6 @@ module TTFunk
             end
 
             0
-
-          when :supplemental
-            @entries[glyph_id]
           end
         end
 
@@ -176,11 +175,11 @@ module TTFunk
         end
 
         def element_format(fmt = format_sym)
-          case fmt
-          when :array_format then 'C'
-          when :range_format then 'CC'
-          when :supplemental then 'Cn'
-          end
+          {
+            array_format: 'C',
+            range_format: 'CC',
+            supplemental: 'Cn'
+          }[fmt]
         end
 
         # @TODO: handle supplemental encoding (necessary?)
@@ -190,7 +189,7 @@ module TTFunk
           when :range_format then 2
           when :supplemental then 3
           else
-            raise "'#{fmt}' is an unsupported encoding format"
+            raise Error, "'#{fmt}' is an unsupported encoding format"
           end
         end
 
@@ -201,7 +200,7 @@ module TTFunk
           when 0 then :array_format
           when 1 then :range_format
           else
-            raise "unsupported charset format '#{fmt}'"
+            raise Error, "unsupported charset format '#{fmt}'"
           end
         end
 
@@ -211,7 +210,7 @@ module TTFunk
           when :range_format then 1
           when :supplemental then 129
           else
-            raise "unsupported charset format '#{sym}'"
+            raise Error, "unsupported charset format '#{sym}'"
           end
         end
       end

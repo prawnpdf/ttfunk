@@ -15,15 +15,15 @@ RSpec.describe TTFunk::Table::OS2 do
   end
 
   # unicode char_range bits
-  let(:greek) { 7 }          # Greek and Coptic
-  let(:armenian) { 10 }      # Armenian
-  let(:hebrew) { 11 }        # Hebrew
-  let(:thai) { 24 }          # Thai
-  let(:greek_ext) { 30 }     # Greek extended
-  let(:curr_symbols) { 33 }  # currency symbols
-  let(:shapes) { 45 }        # geometric shapes
-  let(:ogham) { 78 }         # Ogham
-  let(:old_italic) { 85 }    # Old Italic
+  let(:greek) { 7 } # Greek and Coptic
+  let(:armenian) { 10 } # Armenian
+  let(:hebrew) { 11 } # Hebrew
+  let(:thai) { 24 } # Thai
+  let(:greek_ext) { 30 } # Greek extended
+  let(:curr_symbols) { 33 } # currency symbols
+  let(:shapes) { 45 } # geometric shapes
+  let(:ogham) { 78 } # Ogham
+  let(:old_italic) { 85 } # Old Italic
 
   let(:char_range_field_indices) { 42...58 }
   let(:code_page_range_field_indices) { 78...86 }
@@ -31,7 +31,7 @@ RSpec.describe TTFunk::Table::OS2 do
   let(:font_path) { test_font('DejaVuSans') }
   let(:font) { TTFunk::File.open(font_path) }
 
-  let(:expected_fields) do
+  let(:expected_fields) do # rubocop: disable Metrics/BlockLength
     {
       version: 1,
       ave_char_width: 1038,
@@ -73,9 +73,9 @@ RSpec.describe TTFunk::Table::OS2 do
 
   let(:error_message) do
     <<-ERROR_MESSAGE
-         field: %{field}
-      expected: %{expected_value}
-           got: %{actual_value}
+         field: %<field>s
+      expected: %<expected_value>s
+           got: %<actual_value>s
     ERROR_MESSAGE
   end
 
@@ -131,11 +131,12 @@ RSpec.describe TTFunk::Table::OS2 do
           TestFile.new(StringIO.new(encoded))
         )
 
+        skipped_fields = %i[char_range code_page_range]
         expected_fields.each do |field, expected_value|
           actual_value = reconstituted.public_send(field)
 
           # check these fields manually (they have been recalculated)
-          next if %i[char_range code_page_range].include?(field)
+          next if skipped_fields.include?(field)
 
           expect(actual_value).to(
             eq(expected_value),

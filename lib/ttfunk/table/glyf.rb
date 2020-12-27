@@ -32,11 +32,11 @@ module TTFunk
         return @cache[glyph_id] if @cache.key?(glyph_id)
 
         index = file.glyph_locations.index_of(glyph_id)
-        size  = file.glyph_locations.size_of(glyph_id)
+        size = file.glyph_locations.size_of(glyph_id)
 
-        if size == 0 # blank glyph, e.g. space character
+        if size.zero? # blank glyph, e.g. space character
           @cache[glyph_id] = nil
-          return nil
+          return
         end
 
         parse_from(offset + index) do

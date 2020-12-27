@@ -15,20 +15,21 @@ module TTFunk
           range_lengths = []
           last_glyph = last_code = -999
 
-          new_map = charmap.keys.sort.each_with_object({}) do |code, map|
-            glyph_map[charmap[code]] ||= next_id += 1
-            map[code] = { old: charmap[code], new: glyph_map[charmap[code]] }
+          new_map =
+            charmap.keys.sort.each_with_object({}) do |code, map|
+              glyph_map[charmap[code]] ||= next_id += 1
+              map[code] = { old: charmap[code], new: glyph_map[charmap[code]] }
 
-            if code > last_code + 1 || glyph_map[charmap[code]] > last_glyph + 1
-              range_firstcodes << code
-              range_firstglyphs << glyph_map[charmap[code]]
-              range_lengths << 1
-            else
-              range_lengths.push(range_lengths.pop) + 1
+              if code > last_code + 1 || glyph_map[charmap[code]] > last_glyph + 1
+                range_firstcodes << code
+                range_firstglyphs << glyph_map[charmap[code]]
+                range_lengths << 1
+              else
+                range_lengths.push(range_lengths.pop) + 1
+              end
+              last_code = code
+              last_glyph = glyph_map[charmap[code]]
             end
-            last_code = code
-            last_glyph = glyph_map[charmap[code]]
-          end
 
           subtable = [
             12, 0, 16 + 12 * range_lengths.size, 0, range_lengths.size

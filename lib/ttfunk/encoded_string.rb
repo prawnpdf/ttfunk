@@ -34,7 +34,7 @@ module TTFunk
     end
 
     def align!(width = 4)
-      if length % width > 0
+      if (length % width).positive?
         self << "\0" * (width - length % width)
       end
 
@@ -47,8 +47,8 @@ module TTFunk
 
     def string
       unless placeholders.empty?
-        raise UnresolvedPlaceholderError, 'string contains '\
-          "#{placeholders.size} unresolved placeholder(s)"
+        raise UnresolvedPlaceholderError,
+          "string contains #{placeholders.size} unresolved placeholder(s)"
       end
 
       io.string

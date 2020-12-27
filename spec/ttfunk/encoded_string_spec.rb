@@ -20,10 +20,11 @@ RSpec.describe TTFunk::EncodedString do
     end
 
     it 'allows shoveling on other instances of EncodedString' do
-      other = described_class.new do |str|
-        str << 'abc'
-        str << TTFunk::Placeholder.new(:foo, length: 3)
-      end
+      other =
+        described_class.new do |str|
+          str << 'abc'
+          str << TTFunk::Placeholder.new(:foo, length: 3)
+        end
 
       expect(other.placeholders[:foo].position).to eq(3)
 
@@ -44,7 +45,7 @@ RSpec.describe TTFunk::EncodedString do
     it 'adds padding bytes when adding a placeholder' do
       encoded_string << 'abc'
       encoded_string << TTFunk::Placeholder.new(:foo, length: 3)
-      expect(encoded_string.send(:io).string).to eq("abc\0\0\0")
+      expect(encoded_string.__send__(:io).string).to eq("abc\0\0\0")
     end
   end
 

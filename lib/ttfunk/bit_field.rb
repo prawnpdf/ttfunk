@@ -13,7 +13,7 @@ module TTFunk
     end
 
     def on?(pos)
-      value & 2**pos > 0
+      (value & 2**pos).positive?
     end
 
     def off(pos)

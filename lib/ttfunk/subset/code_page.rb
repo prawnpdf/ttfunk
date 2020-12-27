@@ -9,19 +9,15 @@ module TTFunk
     class CodePage < Base
       class << self
         def unicode_mapping_for(encoding)
-          mapping_cache[encoding] ||= (0..255).each_with_object({}) do |c, ret|
-            # rubocop:disable Lint/SuppressedException
-            begin
-              ret[c] = c.chr(encoding)
-                        .encode(Encoding::UTF_8)
-                        .codepoints
-                        .first
-            rescue Encoding::UndefinedConversionError
-              # There is not a strict 1:1 mapping between all code page
-              # characters and unicode.
+          mapping_cache[encoding] ||=
+            (0..255).each_with_object({}) do |c, ret|
+              codepoint =
+                c.chr(encoding)
+                  .encode(Encoding::UTF_8, undef: :replace, replace: '')
+                  .codepoints
+                  .first
+              ret[c] = codepoint if codepoint
             end
-            # rubocop:enable Lint/SuppressedException
-          end
         end
 
         private
@@ -65,15 +61,16 @@ module TTFunk
       end
 
       def new_cmap_table
-        @new_cmap_table ||= begin
-          mapping = {}
+        @new_cmap_table ||=
+          begin
+            mapping = {}
 
-          @subset.each_with_index do |unicode, roman|
-            mapping[roman] = unicode_cmap[unicode]
+            @subset.each_with_index do |unicode, roman|
+              mapping[roman] = unicode_cmap[unicode]
+            end
+
+            TTFunk::Table::Cmap.encode(mapping, :mac_roman)
           end
-
-          TTFunk::Table::Cmap.encode(mapping, :mac_roman)
-        end
       end
 
       def original_glyph_ids

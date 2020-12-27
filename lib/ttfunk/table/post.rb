@@ -18,7 +18,7 @@ module TTFunk
       attr_reader :subtable
 
       def self.encode(post, mapping)
-        return nil unless post.exists?
+        return unless post.exists?
 
         post.recode(mapping)
       end

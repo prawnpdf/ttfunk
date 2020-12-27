@@ -8,15 +8,16 @@ RSpec.describe TTFunk::TTFEncoder do
   let(:original_font_path) { test_font('DejaVuSans') }
   let(:original) { TTFunk::File.open(original_font_path) }
 
-  let(:subset) do
-    TTFunk::Subset::Unicode.new(original).tap do |subset|
-      # ASCII lowercase
-      (97..122).each { |char| subset.use(char) }
-    end
-  end
-
   let(:encoder_options) { {} }
-  let(:encoder) { described_class.new(original, subset, encoder_options) }
+  let(:encoder) do
+    subset =
+      TTFunk::Subset::Unicode.new(original).tap do |sub_set|
+        # ASCII lowercase
+        (97..122).each { |char| sub_set.use(char) }
+      end
+
+    described_class.new(original, subset, encoder_options)
+  end
 
   describe '#encode' do
     subject(:encoded_ttf) { encoder.encode }

@@ -7,6 +7,7 @@ module TTFunk
     class Cff < TTFunk::Table
       class Dict < TTFunk::SubTable
         class InvalidOperandError < StandardError; end
+
         class TooManyOperandsError < StandardError; end
 
         # for regular single-byte operators
@@ -103,9 +104,9 @@ module TTFunk
         end
 
         def encode_exponent(exp)
-          return [] if exp == 0
+          return [] if exp.zero?
 
-          [exp > 0 ? 0xB : 0xC, *encode_significand(exp.abs)]
+          [exp.positive? ? 0xB : 0xC, *encode_significand(exp.abs)]
         end
 
         def encode_significand(sig)
@@ -154,11 +155,12 @@ module TTFunk
               operands << decode_operand(b_zero)
 
               if operands.size > MAX_OPERANDS
-                raise TooManyOperandsError, 'found one too many operands at '\
+                raise TooManyOperandsError,
+                  'found one too many operands at '\
                   "position #{io.pos} in dict at position #{table_offset}"
               end
             else
-              raise "dict byte value #{b_zero} is reserved"
+              raise Error, "dict byte value #{b_zero} is reserved"
             end
           end
         end

@@ -9,7 +9,7 @@ module TTFunk
     end
 
     def [](idx)
-      if idx == 0
+      if idx.zero?
         raise IndexError,
           "index #{idx} was outside the bounds of the array"
       end

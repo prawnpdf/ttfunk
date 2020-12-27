@@ -12,12 +12,13 @@ module TTFunk
         end
 
         def [](index)
-          entry_cache[index] ||= begin
-            start, finish = absolute_offsets_for(index)
-            TTFunk::Table::Cff::FontDict.new(
-              top_dict, file, start, (finish - start) + 1
-            )
-          end
+          entry_cache[index] ||=
+            begin
+              start, finish = absolute_offsets_for(index)
+              TTFunk::Table::Cff::FontDict.new(
+                top_dict, file, start, (finish - start) + 1
+              )
+            end
         end
 
         def finalize(new_cff_data, mapping)

@@ -128,13 +128,14 @@ module TTFunk
         end
 
         def encoding
-          @encoding ||= begin
-            # PostScript type 1 fonts, i.e. CID fonts, i.e. some fonts that use
-            # the CFF table, don't specify an encoding, so this can be nil
-            if (encoding_offset_or_id = self[OPERATORS[:encoding]])
-              Encoding.new(self, file, encoding_offset_or_id.first)
+          @encoding ||=
+            begin
+              # PostScript type 1 fonts, i.e. CID fonts, i.e. some fonts that use
+              # the CFF table, don't specify an encoding, so this can be nil
+              if (encoding_offset_or_id = self[OPERATORS[:encoding]])
+                Encoding.new(self, file, encoding_offset_or_id.first)
+              end
             end
-          end
         end
 
         # https://www.microsoft.com/typography/otspec/cff.htm

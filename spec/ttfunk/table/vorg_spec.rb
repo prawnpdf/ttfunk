@@ -12,9 +12,10 @@ RSpec.describe TTFunk::Table::Vorg do
 
   describe '#origins' do
     it 'includes origins for certain chars traditionally written vertically' do
-      code_points = %w[〱 ０ １ ２ ３ ４ ５ ６ ７ ８ ９].map do |c|
-        c.unpack1('U*')
-      end
+      code_points =
+        %w[〱 ０ １ ２ ３ ４ ５ ６ ７ ８ ９].map do |c|
+          c.unpack1('U*')
+        end
 
       glyph_ids = code_points.map { |cp| cmap[cp] }
       glyph_ids.each { |glyph_id| expect(origins).to include(glyph_id) }

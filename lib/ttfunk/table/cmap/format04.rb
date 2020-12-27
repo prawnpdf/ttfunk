@@ -20,21 +20,22 @@ module TTFunk
           last = difference = nil
 
           glyph_map = { 0 => 0 }
-          new_map = charmap.keys.sort.each_with_object({}) do |code, map|
-            old = charmap[code]
-            glyph_map[old] ||= next_id += 1
-            map[code] = { old: old, new: glyph_map[old] }
+          new_map =
+            charmap.keys.sort.each_with_object({}) do |code, map|
+              old = charmap[code]
+              glyph_map[old] ||= next_id += 1
+              map[code] = { old: old, new: glyph_map[old] }
 
-            delta = glyph_map[old] - code
-            if last.nil? || delta != difference
-              end_codes << last if last
-              start_codes << code
-              difference = delta
+              delta = glyph_map[old] - code
+              if last.nil? || delta != difference
+                end_codes << last if last
+                start_codes << code
+                difference = delta
+              end
+              last = code
+
+              map
             end
-            last = code
-
-            map
-          end
 
           end_codes << last if last
           end_codes << 0xFFFF
@@ -119,7 +120,7 @@ module TTFunk
 
           end_code.each_with_index do |tail, i|
             start_code[i].upto(tail) do |code|
-              if id_range_offset[i] == 0
+              if (id_range_offset[i]).zero?
                 glyph_id = code + id_delta[i]
               else
                 index = id_range_offset[i] / 2 +

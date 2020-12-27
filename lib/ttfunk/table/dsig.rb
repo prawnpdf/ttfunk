@@ -19,7 +19,7 @@ module TTFunk
       TAG = 'DSIG'
 
       def self.encode(dsig)
-        return nil unless dsig
+        return unless dsig
 
         # Don't attempt to re-sign or anything - just use dummy values.
         # Since we're subsetting that should be permissible.
@@ -35,15 +35,17 @@ module TTFunk
       def parse!
         @version, num_signatures, @flags = read(8, 'Nnn')
 
-        @signatures = Array.new(num_signatures) do
-          format, length, sig_offset = read(12, 'N3')
-          signature = parse_from(offset + sig_offset) do
-            _, _, sig_length = read(8, 'nnN')
-            read(sig_length, 'C*')
-          end
+        @signatures =
+          Array.new(num_signatures) do
+            format, length, sig_offset = read(12, 'N3')
+            signature =
+              parse_from(offset + sig_offset) do
+                _, _, sig_length = read(8, 'nnN')
+                read(sig_length, 'C*')
+              end
 
-          SignatureRecord.new(format, length, sig_offset, signature)
-        end
+            SignatureRecord.new(format, length, sig_offset, signature)
+          end
       end
     end
   end

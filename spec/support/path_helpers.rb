@@ -2,7 +2,7 @@
 
 module PathHelpers
   def test_font(name, ext = :ttf)
-    base_path = File.expand_path(File.dirname(__FILE__) + '/../fonts')
+    base_path = File.expand_path('../fonts', __dir__)
     valid_filename = File.join(base_path, "#{name}.#{ext}")
     if File.file?(valid_filename)
       valid_filename

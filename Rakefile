@@ -1,18 +1,6 @@
 # frozen_string_literal: true
 
-require 'rake'
-require 'rspec/core/rake_task'
-require 'rubocop/rake_task'
+GEMSPEC = File.expand_path('ttfunk.gemspec', __dir__)
+require 'prawn/dev/tasks'
 
 task default: %i[rubocop spec]
-
-desc 'Run all rspec files'
-RSpec::Core::RakeTask.new('spec')
-
-RuboCop::RakeTask.new
-
-require 'yard'
-YARD::Rake::YardocTask.new do |t|
-  t.options = ['--output-dir', 'doc/html']
-end
-task docs: :yard

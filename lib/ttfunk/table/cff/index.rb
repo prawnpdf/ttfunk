@@ -30,10 +30,11 @@ module TTFunk
         def encode
           result = EncodedString.new
 
-          entries = each_with_object([]).with_index do |(entry, ret), index|
-            new_entry = block_given? ? yield(entry, index) : entry
-            ret << new_entry if new_entry
-          end
+          entries =
+            each_with_object([]).with_index do |(entry, ret), index|
+              new_entry = block_given? ? yield(entry, index) : entry
+              ret << new_entry if new_entry
+            end
 
           # "An empty INDEX is represented by a count field with a 0 value and
           # no additional fields. Thus, the total size of an empty INDEX is 2
@@ -89,7 +90,7 @@ module TTFunk
         def parse!
           @count = read(2, 'n').first
 
-          if count == 0
+          if count.zero?
             @length = 2
             @data = []
             return

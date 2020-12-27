@@ -48,7 +48,7 @@ module TTFunk
             end
           end
 
-          return nil if subset.empty?
+          return if subset.empty?
 
           num_pairs = subset.length
           search_range = 2 * 2**(Math.log(num_pairs) / Math.log(2)).to_i

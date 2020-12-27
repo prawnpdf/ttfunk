@@ -21,7 +21,7 @@ module TTFunk
       search_range = 2**Math.log2(tables.length).floor * 16
       entry_selector = Math.log2(2**Math.log2(tables.length).floor).to_i
       range_shift = tables.length * 16 - search_range
-      range_shift = 0 if range_shift < 0
+      range_shift = 0 if range_shift.negative?
 
       newfont = EncodedString.new
 
@@ -186,7 +186,7 @@ module TTFunk
         'VORG' => vorg_table,
         'DSIG' => dsig_table,
         'gasp' => gasp_table
-      }.reject { |_tag, table| table.nil? }
+      }.compact
     end
 
     def glyphs
@@ -202,7 +202,7 @@ module TTFunk
     end
 
     def checksum(data)
-      align(raw(data), 4).unpack('N*').reduce(0, :+) & 0xFFFF_FFFF
+      align(raw(data), 4).unpack('N*').sum & 0xFFFF_FFFF
     end
 
     def raw(data)
@@ -210,7 +210,7 @@ module TTFunk
     end
 
     def align(data, width)
-      if data.length % width > 0
+      if (data.length % width).positive?
         data + "\0" * (width - data.length % width)
       else
         data

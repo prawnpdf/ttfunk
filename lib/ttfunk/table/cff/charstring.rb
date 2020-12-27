@@ -46,11 +46,9 @@ module TTFunk
           @font_dict = font_dict
           @raw = raw
 
-          default_width_x = (@font_dict || @top_dict)
-                            .private_dict.default_width_x
+          default_width_x = (@font_dict || @top_dict).private_dict.default_width_x
 
-          @nominal_width_x = (@font_dict || @top_dict)
-                             .private_dict.nominal_width_x
+          @nominal_width_x = (@font_dict || @top_dict).private_dict.nominal_width_x
 
           @subrs = (@font_dict || @top_dict).private_dict.subr_index
           @gsubrs = @top_dict.cff.global_subr_index
@@ -77,10 +75,11 @@ module TTFunk
         end
 
         def glyph
-          @glyph ||= begin
-            horizontal_metrics = @top_dict.file.horizontal_metrics.for(glyph_id)
-            Glyf::PathBased.new(path, horizontal_metrics)
-          end
+          @glyph ||=
+            begin
+              horizontal_metrics = @top_dict.file.horizontal_metrics.for(glyph_id)
+              Glyf::PathBased.new(path, horizontal_metrics)
+            end
         end
 
         def render(x: 0, y: 0, font_size: 72)
@@ -109,7 +108,7 @@ module TTFunk
             if code >= 32 && code <= 246
               @stack << code - 139
             elsif (m = CODE_MAP[code])
-              send(m)
+              __send__(m)
             elsif code >= 247 && code <= 250
               b0 = code
               b1 = @data[@index]
@@ -229,73 +228,73 @@ module TTFunk
         def flex_select
           flex_code = @data[@index]
           @index += 1
-          send(FLEX_CODE_MAP[flex_code])
+          __send__(FLEX_CODE_MAP[flex_code])
         end
 
         def flex
-          c1x = @x  + @stack.shift    # dx1
-          c1y = @y  + @stack.shift    # dy1
-          c2x = c1x + @stack.shift    # dx2
-          c2y = c1y + @stack.shift    # dy2
-          jpx = c2x + @stack.shift    # dx3
-          jpy = c2y + @stack.shift    # dy3
-          c3x = jpx + @stack.shift    # dx4
-          c3y = jpy + @stack.shift    # dy4
-          c4x = c3x + @stack.shift    # dx5
-          c4y = c3y + @stack.shift    # dy5
-          @x  = c4x + @stack.shift    # dx6
-          @y  = c4y + @stack.shift    # dy6
-          @stack.shift                # flex depth
+          c1x = @x + @stack.shift # dx1
+          c1y = @y + @stack.shift # dy1
+          c2x = c1x + @stack.shift # dx2
+          c2y = c1y + @stack.shift # dy2
+          jpx = c2x + @stack.shift # dx3
+          jpy = c2y + @stack.shift # dy3
+          c3x = jpx + @stack.shift # dx4
+          c3y = jpy + @stack.shift # dy4
+          c4x = c3x + @stack.shift # dx5
+          c4y = c3y + @stack.shift # dy5
+          @x = c4x + @stack.shift # dx6
+          @y = c4y + @stack.shift # dy6
+          @stack.shift # flex depth
 
           @path.curve_to(c1x, c1y, c2x, c2y, jpx, jpy)
           @path.curve_to(c3x, c3y, c4x, c4y, @x, @y)
         end
 
         def hflex
-          c1x = @x + @stack.shift     # dx1
-          c1y = @y                    # dy1
-          c2x = c1x + @stack.shift    # dx2
-          c2y = c1y + @stack.shift    # dy2
-          jpx = c2x + @stack.shift    # dx3
-          jpy = c2y                   # dy3
-          c3x = jpx + stack.shift     # dx4
-          c3y = c2y                   # dy4
-          c4x = c3x + stack.shift     # dx5
-          c4y = @y                    # dy5
-          @x  = c4x + stack.shift     # dx6
+          c1x = @x + @stack.shift # dx1
+          c1y = @y # dy1
+          c2x = c1x + @stack.shift # dx2
+          c2y = c1y + @stack.shift # dy2
+          jpx = c2x + @stack.shift # dx3
+          jpy = c2y # dy3
+          c3x = jpx + stack.shift # dx4
+          c3y = c2y # dy4
+          c4x = c3x + stack.shift # dx5
+          c4y = @y # dy5
+          @x = c4x + stack.shift # dx6
 
           @path.curve_to(c1x, c1y, c2x, c2y, jpx, jpy)
           @path.curve_to(c3x, c3y, c4x, c4y, @x, @y)
         end
 
         def hflex1
-          c1x = @x  + @stack.shift    # dx1
-          c1y = @y  + @stack.shift    # dy1
-          c2x = c1x + @stack.shift    # dx2
-          c2y = c1y + @stack.shift    # dy2
-          jpx = c2x + @stack.shift    # dx3
-          jpy = c2y                   # dy3
-          c3x = jpx + @stack.shift    # dx4
-          c3y = c2y                   # dy4
-          c4x = c3x + @stack.shift    # dx5
-          c4y = c3y + @stack.shift    # dy5
-          @x  = c4x + @stack.shift    # dx6
+          c1x = @x + @stack.shift # dx1
+          c1y = @y + @stack.shift # dy1
+          c2x = c1x + @stack.shift # dx2
+          c2y = c1y + @stack.shift # dy2
+          jpx = c2x + @stack.shift # dx3
+          jpy = c2y # dy3
+          c3x = jpx + @stack.shift # dx4
+          c3y = c2y # dy4
+          c4x = c3x + @stack.shift # dx5
+          c4y = c3y + @stack.shift # dy5
+          @x = c4x + @stack.shift # dx6
 
           @path.curve_to(c1x, c1y, c2x, c2y, jpx, jpy)
           @path.curve_to(c3x, c3y, c4x, c4y, @x, @y)
         end
 
         def flex1
-          c1x = @x  + @stack.shift    # dx1
-          c1y = @y  + @stack.shift    # dy1
-          c2x = c1x + @stack.shift    # dx2
-          c2y = c1y + @stack.shift    # dy2
-          jpx = c2x + @stack.shift    # dx3
-          jpy = c2y + @stack.shift    # dy3
-          c3x = jpx + @stack.shift    # dx4
-          c3y = jpy + @stack.shift    # dy4
-          c4x = c3x + @stack.shift    # dx5
-          c4y = c3y + @stack.shift    # dy5
+          c1x = @x + @stack.shift # dx1
+          c1y = @y + @stack.shift # dy1
+          c2x = c1x + @stack.shift # dx2
+          c2y = c1y + @stack.shift # dy2
+          jpx = c2x + @stack.shift # dx3
+          jpy = c2y + @stack.shift # dy3
+          c3x = jpx + @stack.shift # dx4
+          c3y = jpy + @stack.shift # dy4
+          c4x = c3x + @stack.shift # dx5
+          c4y = c3y + @stack.shift # dy5
 
           if (c4x - @x).abs > (c4y - @y).abs
             @x = c4x + @stack.shift

@@ -56,7 +56,7 @@ module TTFunk
         end
 
         def [](glyph_id)
-          return FIRST_GLYPH_STRING if glyph_id == 0
+          return FIRST_GLYPH_STRING if glyph_id.zero?
 
           find_string(sid_for(glyph_id))
         end
@@ -83,12 +83,13 @@ module TTFunk
           ranges = TTFunk::BinUtils.rangify(sids)
           range_max = ranges.map(&:last).max
 
-          range_bytes = if range_max > 0
-                          (Math.log2(range_max) / 8).floor + 1
-                        else
-                          # for cases when there are no sequences at all
-                          Float::INFINITY
-                        end
+          range_bytes =
+            if range_max.positive?
+              (Math.log2(range_max) / 8).floor + 1
+            else
+              # for cases when there are no sequences at all
+              Float::INFINITY
+            end
 
           # calculate whether storing the charset as a series of ranges is
           # more efficient (i.e. takes up less space) vs storing it as an
@@ -99,7 +100,7 @@ module TTFunk
           if total_array_size <= total_range_size
             ([format_int(:array_format)] + sids).pack('Cn*')
           else
-            fmt = range_bytes == 1 ? :range_format_8 : :range_format_16
+            fmt = range_bytes == 1 ? :range_format8 : :range_format16
             element_fmt = element_format(fmt)
             result = [format_int(fmt)].pack('C')
             ranges.each { |range| result << range.pack(element_fmt) }
@@ -110,7 +111,7 @@ module TTFunk
         private
 
         def sid_for(glyph_id)
-          return 0 if glyph_id == 0
+          return 0 if glyph_id.zero?
 
           # rather than validating the glyph as part of one of the predefined
           # charsets, just pass it through
@@ -120,8 +121,8 @@ module TTFunk
           when :array_format
             entries[glyph_id]
 
-          when :range_format_8, :range_format_16
-            entries.inject(glyph_id) do |remaining, range|
+          when :range_format8, :range_format16
+            entries.reduce(glyph_id) do |remaining, range|
               if range.size >= remaining
                 break (range.first + remaining) - 1
               end
@@ -156,7 +157,7 @@ module TTFunk
             @length = count * element_width
             @entries = OneBasedArray.new(read(length, 'n*'))
 
-          when :range_format_8, :range_format_16
+          when :range_format8, :range_format16
             # The number of ranges is not explicitly specified in the font.
             # Instead, software utilizing this data simply processes ranges
             # until all glyphs in the font are covered.
@@ -174,37 +175,37 @@ module TTFunk
         end
 
         def element_width(fmt = format_sym)
-          case fmt
-          when :array_format then 2 # SID
-          when :range_format_8 then 3 # SID + Card8
-          when :range_format_16 then 4 # SID + Card16
-          end
+          {
+            array_format: 2, # SID
+            range_format8: 3, # SID + Card8
+            range_format16: 4 # SID + Card16
+          }[fmt]
         end
 
         def element_format(fmt = format_sym)
-          case fmt
-          when :array_format then 'n'
-          when :range_format_8 then 'nC'
-          when :range_format_16 then 'nn'
-          end
+          {
+            array_format: 'n',
+            range_format8: 'nC',
+            range_format16: 'nn'
+          }[fmt]
         end
 
         def format_sym
           case @format
           when ARRAY_FORMAT then :array_format
-          when RANGE_FORMAT_8 then :range_format_8
-          when RANGE_FORMAT_16 then :range_format_16
+          when RANGE_FORMAT_8 then :range_format8
+          when RANGE_FORMAT_16 then :range_format16
           else
-            raise "unsupported charset format '#{fmt}'"
+            raise Error, "unsupported charset format '#{fmt}'"
           end
         end
 
         def format_int(sym = format_sym)
-          case sym
-          when :array_format then ARRAY_FORMAT
-          when :range_format_8 then RANGE_FORMAT_8
-          when :range_format_16 then RANGE_FORMAT_16
-          end
+          {
+            array_format: ARRAY_FORMAT,
+            range_format8: RANGE_FORMAT_8,
+            range_format16: RANGE_FORMAT_16
+          }[sym]
         end
       end
     end

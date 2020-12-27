@@ -33,15 +33,15 @@ module TTFunk
       bytes = string.unpack('C*')
       bytes.each_with_index do |c, i|
         printf('%02X', c)
-        if (i + 1) % 16 == 0
+        if ((i + 1) % 16).zero?
           puts
-        elsif (i + 1) % 8 == 0
+        elsif ((i + 1) % 8).zero?
           print '  '
         else
           print ' '
         end
       end
-      puts unless bytes.length % 16 == 0
+      puts unless (bytes.length % 16).zero?
     end
   end
 end

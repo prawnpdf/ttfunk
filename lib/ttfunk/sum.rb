@@ -5,6 +5,7 @@ module TTFunk
     attr_reader :value
 
     def initialize(init_value = 0)
+      super()
       @value = init_value
     end
 

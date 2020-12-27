@@ -1,102 +1,14 @@
-require:
-  - rubocop-performance
-  - rubocop-rspec
-
-AllCops:
-  TargetRubyVersion: 2.4
-  Include:
-    - '**/*.rb'
-    - '**/Rakefile'
-    - '**/Gemfile'
-    - '*.gemspec'
-  Exclude:
-    - 'pkg/**/*'
-
-Layout/ArgumentAlignment:
-  EnforcedStyle: with_fixed_indentation
-
-Layout/MultilineOperationIndentation:
-  EnforcedStyle: indented
-
-Layout/ParameterAlignment:
-  EnforcedStyle: with_fixed_indentation
-
-Metrics/AbcSize:
-  Enabled: false
-
-Metrics/BlockLength:
-  Enabled: false
-
-Metrics/ClassLength:
-  Enabled: false
-
-Metrics/ModuleLength:
-  Enabled: false
-
-Metrics/CyclomaticComplexity:
-  Enabled: false
-
-Metrics/MethodLength:
-  Enabled: false
-
-Metrics/ParameterLists:
-  Max: 6
-
-Metrics/PerceivedComplexity:
-  Enabled: false
-
-Naming/MethodParameterName:
-  AllowedNames:
-    - id
-    - io
-    - x
-    - x1
-    - x2
-    - y
-    - y1
-    - y2
-
-RSpec/ExampleLength:
-  Enabled: false
-
-Style/Documentation:
-  Enabled: false
+inherit_gem:
+  prawn-dev: rubocop.yml
 
 RSpec/FilePath:
   Enabled: false
 
-RSpec/MultipleExpectations:
-  Enabled: false
-
-RSpec/NotToNot:
-  EnforcedStyle: to_not
-
-Style/GuardClause:
-  Enabled: false
-
-# We don't always prefer modified if statements even if they do fit on
-# a line.
-Style/IfUnlessModifier:
-  Enabled: false
-
-Style/NumericPredicate:
-  EnforcedStyle: comparison
-
-Style/PercentLiteralDelimiters:
-  PreferredDelimiters:
-    '%': '()'
-    '%i': '[]'
-    '%I': '[]'
-    '%q': '()'
-    '%Q': '()'
-    '%r': '{}'
-    '%s': '()'
-    '%w': '[]'
-    '%W': '[]'
-    '%x': '()'
-
-Style/WhileUntilModifier:
-  Enabled: false
+RSpec/MultipleMemoizedHelpers:
+  Max: 7
+  Exclude:
+    - spec/ttfunk/table/os2_spec.rb
 
 Style/FormatStringToken:
-  Enabled: false
+  Exclude:
+    - examples/metrics.rb

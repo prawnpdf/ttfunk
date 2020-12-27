@@ -76,7 +76,7 @@ module TTFunk
 
         strings = names.strings.dup
         strings[6] = [postscript_name]
-        str_count = strings.inject(0) { |sum, (_, list)| sum + list.length }
+        str_count = strings.reduce(0) { |sum, (_, list)| sum + list.length }
 
         table = [0, str_count, 6 + 12 * str_count].pack('n*')
         strtable = +''
@@ -87,9 +87,10 @@ module TTFunk
             items << [id, string]
           end
         end
-        items = items.sort_by do |id, string|
-          [string.platform_id, string.encoding_id, string.language_id, id]
-        end
+        items =
+          items.sort_by do |id, string|
+            [string.platform_id, string.encoding_id, string.language_id, id]
+          end
         items.each do |id, string|
           table << [
             string.platform_id, string.encoding_id, string.language_id, id,
@@ -151,7 +152,7 @@ module TTFunk
 
         unless @strings[POSTSCRIPT_NAME_NAME_ID].empty?
           @postscript_name = @strings[POSTSCRIPT_NAME_NAME_ID]
-                             .first.strip_extended
+            .first.strip_extended
         end
 
         @trademark = @strings[TRADEMARK_NAME_ID]

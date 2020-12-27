@@ -8,12 +8,12 @@ module TTFunk
       class Compound
         include Reader
 
-        ARG_1_AND_2_ARE_WORDS    = 0x0001
-        WE_HAVE_A_SCALE          = 0x0008
-        MORE_COMPONENTS          = 0x0020
+        ARG_1_AND_2_ARE_WORDS = 0x0001
+        WE_HAVE_A_SCALE = 0x0008
+        MORE_COMPONENTS = 0x0020
         WE_HAVE_AN_X_AND_Y_SCALE = 0x0040
-        WE_HAVE_A_TWO_BY_TWO     = 0x0080
-        WE_HAVE_INSTRUCTIONS     = 0x0100
+        WE_HAVE_A_TWO_BY_TWO = 0x0080
+        WE_HAVE_INSTRUCTIONS = 0x0100
 
         attr_reader :id, :raw
         attr_reader :number_of_contours
@@ -55,10 +55,10 @@ module TTFunk
             offset += 4
 
             offset +=
-              if flags & ARG_1_AND_2_ARE_WORDS != 0
-                4
-              else
+              if (flags & ARG_1_AND_2_ARE_WORDS).zero?
                 2
+              else
+                4
               end
 
             if flags & WE_HAVE_A_TWO_BY_TWO != 0

@@ -57,9 +57,9 @@ module TTFunk
             @format = read(2, 'n').first
 
             case @format
-            when 0  then extend(TTFunk::Table::Cmap::Format00)
-            when 4  then extend(TTFunk::Table::Cmap::Format04)
-            when 6  then extend(TTFunk::Table::Cmap::Format06)
+            when 0 then extend(TTFunk::Table::Cmap::Format00)
+            when 4 then extend(TTFunk::Table::Cmap::Format04)
+            when 6 then extend(TTFunk::Table::Cmap::Format06)
             when 10 then extend(TTFunk::Table::Cmap::Format10)
             when 12 then extend(TTFunk::Table::Cmap::Format12)
             end
@@ -71,7 +71,7 @@ module TTFunk
         def unicode?
           platform_id == 3 && (encoding_id == 1 || encoding_id == 10) &&
             format != 0 ||
-            platform_id == 0 && format != 0
+            platform_id.zero? && format != 0
         end
 
         def supported?

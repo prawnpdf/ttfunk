@@ -9,10 +9,10 @@ module TTFunk
       attr_reader :tables
 
       def self.encode(kerning, mapping)
-        return nil unless kerning.exists? && kerning.tables.any?
+        return unless kerning.exists? && kerning.tables.any?
 
         tables = kerning.tables.map { |table| table.recode(mapping) }.compact
-        return nil if tables.empty?
+        return if tables.empty?
 
         [0, tables.length, tables.join].pack('nnA*')
       end
@@ -53,7 +53,7 @@ module TTFunk
           length: length,
           coverage: coverage,
           data: raw[10..-1],
-          vertical: (coverage & 0x1 == 0),
+          vertical: (coverage & 0x1).zero?,
           minimum: (coverage & 0x2 != 0),
           cross: (coverage & 0x4 != 0),
           override: (coverage & 0x8 != 0)
@@ -79,7 +79,7 @@ module TTFunk
       end
 
       def add_table(format, attributes = {})
-        if format == 0
+        if format.zero?
           @tables << Kern::Format0.new(attributes)
         end
         # Unsupported kerning tables are silently ignored

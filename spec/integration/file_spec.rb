@@ -10,9 +10,10 @@ describe TTFunk::File do
     end
 
     it 'opens IO Objects' do
-      io = File.open test_font('DejaVuSans')
-      font = described_class.open io
-      expect(font.contents.read(4)).to eq("\x00\x00\x00\x01")
+      File.open test_font('DejaVuSans') do |io|
+        font = described_class.open io
+        expect(font.contents.read(4)).to eq("\x00\x00\x00\x01")
+      end
     end
   end
 

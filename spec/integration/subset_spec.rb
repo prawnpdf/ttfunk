@@ -116,7 +116,7 @@ describe TTFunk do
       unicode = TTFunk::Subset.for(font, :unicode)
       unicode_8bit = TTFunk::Subset.for(font, :unicode_8bit)
       mac_roman = TTFunk::Subset.for(font, :mac_roman)
-      windows1252 = TTFunk::Subset.for(font, :windows_1252)
+      windows1252 = TTFunk::Subset.for(font, :windows_1252) # rubocop: disable Naming/VariableNumber
 
       [unicode, unicode_8bit, mac_roman, windows1252].each do |subset|
         expect(subset).to_not be_includes(97)

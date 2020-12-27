@@ -11,7 +11,7 @@ module TTFunk
       attr_reader :default_vert_origin_y, :count
 
       def self.encode(vorg)
-        return nil unless vorg
+        return unless vorg
 
         ''.b.tap do |table|
           table << [
