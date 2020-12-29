@@ -11,6 +11,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 * Allow gem installation on Ruby 3.0
 
+  Pavel Lobashov
+
+* Allow TTC files to be read from IO object
+
+  Tom de Grunt
+
 ## [1.6.2.1]
 
 ### Fixed
