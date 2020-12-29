@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## 1.7.0
+
 ### Changes
 
 * Allow gem installation on Ruby 3.0
@@ -208,7 +210,9 @@ Initial release as a standalone gem
 
 
 
-[Unreleased]: https://github.com/prawnpdf/ttfunk/compare/1.6.2...HEAD
+[Unreleased]: https://github.com/prawnpdf/ttfunk/compare/1.7.0...HEAD
+[1.7.0]: https://github.com/prawnpdf/ttfunk/compare/1.6.2.1...1.7.0
+[1.6.2.1]: https://github.com/prawnpdf/ttfunk/compare/1.6.2...1.6.2.1
 [1.6.2]: https://github.com/prawnpdf/ttfunk/compare/1.6.1...1.6.2
 [1.6.1]: https://github.com/prawnpdf/ttfunk/compare/1.6.0...1.6.1
 [1.6.0]: https://github.com/prawnpdf/ttfunk/compare/1.5.1...1.6.0
