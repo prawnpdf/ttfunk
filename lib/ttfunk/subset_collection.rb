@@ -17,12 +17,16 @@ module TTFunk
     def use(characters)
       characters.each do |char|
         covered = false
-        @subsets.each_with_index do |subset, _i|
-          next unless subset.covers?(char)
-
-          subset.use(char)
-          covered = true
-          break
+        i = 0
+        length = @subsets.length
+        while i < length
+          subset = @subsets[i]
+          if subset.covers?(char)
+            subset.use(char)
+            covered = true
+            break
+          end
+          i += 1
         end
 
         unless covered

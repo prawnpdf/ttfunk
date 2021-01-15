@@ -34,6 +34,7 @@ module TTFunk
         @code_page = code_page
         @encoding = encoding
         @subset = Array.new(256)
+        @from_unicode_cache = {}
         use(space_char_code)
       end
 
@@ -55,7 +56,7 @@ module TTFunk
       end
 
       def from_unicode(character)
-        [character].pack('U*').encode(encoding).ord
+        @from_unicode_cache[character] ||= (+'' << character).encode!(encoding).ord
       rescue Encoding::UndefinedConversionError
         nil
       end
