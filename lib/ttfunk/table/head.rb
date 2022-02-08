@@ -26,8 +26,8 @@ module TTFunk
       # Long date time (used in TTF headers) is defined here:
       # https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6.html
 
-      # January 1, 1904 00:00:00 UTC offset from Epoch
-      LDT_BASIS_OFFSET = 2_082_844_800
+      # January 1, 1904 00:00:00 UTC basis used by Long date time
+      LDT_BASIS = Time.new(1904, 1, 1, 0, 0, 0, 0).to_i
 
       class << self
         # mapping is new -> old glyph ids
@@ -48,11 +48,11 @@ module TTFunk
         end
 
         def from_ldt(ldt)
-          Time.at(ldt - LDT_BASIS_OFFSET).utc
+          Time.at(ldt + LDT_BASIS).utc
         end
 
         def to_ldt(time)
-          time.to_i + LDT_BASIS_OFFSET
+          time.to_i - LDT_BASIS
         end
 
         private
