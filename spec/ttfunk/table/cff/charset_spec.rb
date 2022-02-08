@@ -42,7 +42,7 @@ RSpec.describe TTFunk::Table::Cff::Charset do
         )
 
         # these should come from the strings index
-        expect(strings[-6..-1]).to eq(
+        expect(strings[-6..]).to eq(
           %w[
             endash.smcp emdash.smcp parenleft.alt parenright.alt
             parenleft.smcp parenright.smcp
@@ -72,7 +72,7 @@ RSpec.describe TTFunk::Table::Cff::Charset do
         )
 
         # these should come from the strings index
-        expect(strings[-6..-1]).to eq(
+        expect(strings[-6..]).to eq(
           %w[r_r s_s t_t w_w_w zero_seven zero_zero]
         )
       end
@@ -106,7 +106,7 @@ RSpec.describe TTFunk::Table::Cff::Charset do
         # font are Chinese characters which may not have useful descriptions.
         # For example, the Unicode/CLDR data for most Chinese characters simply
         # contains the description "CJK Ideograph."
-        expect(strings[-6..-1]).to eq(
+        expect(strings[-6..]).to eq(
           [nil, nil, nil, nil, nil, nil]
         )
       end

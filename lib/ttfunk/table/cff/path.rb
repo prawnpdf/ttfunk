@@ -60,7 +60,7 @@ module TTFunk
         private
 
         def format_values(command)
-          command[1..-1].map { |k| format('%.2f', k) }.join(' ')
+          command[1..].map { |k| format('%.2f', k) }.join(' ')
         end
       end
     end
