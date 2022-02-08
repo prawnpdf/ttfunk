@@ -24,6 +24,12 @@ module TTFunk
       attr_reader :glyph_data_format
 
       class << self
+        # Long date time (used in TTF headers) is defined here:
+        # https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6.html
+        # January 1, 1904 00:00:00 UTC basis used by Long date time
+        LONG_DATE_TIME_BASIS = Time.new(1904, 1, 1, 0, 0, 0, 0).to_i
+        private_constant :LONG_DATE_TIME_BASIS
+
         # mapping is new -> old glyph ids
         def encode(head, loca, mapping)
           EncodedString.new do |table|
@@ -39,6 +45,14 @@ module TTFunk
                 loca[:type] || 0, head.glyph_data_format
               ].pack('Nn2q>2n*')
           end
+        end
+
+        def from_long_date_time(ldt)
+          Time.at(ldt + LONG_DATE_TIME_BASIS, in: 'UTC')
+        end
+
+        def to_long_date_time(time)
+          time.to_i - LONG_DATE_TIME_BASIS
         end
 
         private
