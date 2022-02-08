@@ -23,6 +23,12 @@ module TTFunk
       attr_reader :index_to_loc_format
       attr_reader :glyph_data_format
 
+      # Long date time (used in TTF headers) is defined here:
+      # https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6.html
+
+      # January 1, 1904 00:00:00 UTC offset from Epoch
+      LDT_BASIS_OFFSET = 2_082_844_800
+
       class << self
         # mapping is new -> old glyph ids
         def encode(head, loca, mapping)
@@ -33,12 +39,20 @@ module TTFunk
               [
                 head.magic_number,
                 head.flags, head.units_per_em,
-                head.created, head.modified,
+                to_ldt(head.created), to_ldt(head.modified),
                 *min_max_values_for(head, mapping),
                 head.mac_style, head.lowest_rec_ppem, head.font_direction_hint,
                 loca[:type] || 0, head.glyph_data_format
-              ].pack('Nn2q2n*')
+              ].pack('Nn2q>2n*')
           end
+        end
+
+        def from_ldt(ldt)
+          Time.at(ldt - LDT_BASIS_OFFSET).utc
+        end
+
+        def to_ldt(time)
+          time.to_i + LDT_BASIS_OFFSET
         end
 
         private
@@ -70,7 +84,10 @@ module TTFunk
 
       def parse!
         @version, @font_revision, @check_sum_adjustment, @magic_number,
-          @flags, @units_per_em, @created, @modified = read(36, 'N4n2q2')
+          @flags, @units_per_em, created_as_ldt, modified_as_ldt = read(36, 'N4n2q>2')
+
+        @created = self.class.from_ldt(created_as_ldt)
+        @modified = self.class.from_ldt(modified_as_ldt)
 
         @x_min, @y_min, @x_max, @y_max = read_signed(4)
 
