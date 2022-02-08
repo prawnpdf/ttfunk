@@ -52,7 +52,7 @@ module TTFunk
           version: version,
           length: length,
           coverage: coverage,
-          data: raw[10..-1],
+          data: raw[10..],
           vertical: (coverage & 0x1).zero?,
           minimum: (coverage & 0x2 != 0),
           cross: (coverage & 0x4 != 0),

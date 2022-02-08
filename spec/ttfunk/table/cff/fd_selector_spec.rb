@@ -72,7 +72,7 @@ RSpec.describe TTFunk::Table::Cff::FdSelector do
         [15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17]
       )
 
-      expect(fd_indices[-10..-1]).to eq(
+      expect(fd_indices[-10..]).to eq(
         [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
       )
     end

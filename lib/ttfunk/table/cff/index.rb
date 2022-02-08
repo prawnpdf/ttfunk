@@ -81,7 +81,7 @@ module TTFunk
           when 2
             [offset].pack('n')
           when 3
-            [offset].pack('N')[1..-1]
+            [offset].pack('N')[1..]
           when 4
             [offset].pack('N')
           end
