@@ -13,7 +13,7 @@ RSpec.describe TTFunk::Table::Cff::TopIndex do
     end
 
     it 'always contains a single top dict' do
-      expect(top_index.count).to eq(1)
+      expect(top_index.items_count).to eq(1)
     end
   end
 

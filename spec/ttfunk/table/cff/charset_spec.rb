@@ -28,8 +28,8 @@ RSpec.describe TTFunk::Table::Cff::Charset do
         # From the spec: There is one less element in the glyph name array than
         # nGlyphs (i.e. charstrings count) because the .notdef glyph name is
         # omitted.
-        expect(charset.count).to(
-          eq(font.cff.top_index[0].charstrings_index.count - 1)
+        expect(charset.items_count).to(
+          eq(font.cff.top_index[0].charstrings_index.items_count - 1)
         )
       end
 
@@ -58,8 +58,8 @@ RSpec.describe TTFunk::Table::Cff::Charset do
         # From the spec: There is one less element in the glyph name array than
         # nGlyphs (i.e. charstrings count) because the .notdef glyph name is
         # omitted.
-        expect(charset.count).to(
-          eq(font.cff.top_index[0].charstrings_index.count - 1)
+        expect(charset.items_count).to(
+          eq(font.cff.top_index[0].charstrings_index.items_count - 1)
         )
       end
 
@@ -85,8 +85,8 @@ RSpec.describe TTFunk::Table::Cff::Charset do
         # From the spec: There is one less element in the glyph name array than
         # nGlyphs (i.e. charstrings count) because the .notdef glyph name is
         # omitted.
-        expect(charset.count).to(
-          eq(font.cff.top_index[0].charstrings_index.count - 1)
+        expect(charset.items_count).to(
+          eq(font.cff.top_index[0].charstrings_index.items_count - 1)
         )
       end
 
@@ -115,14 +115,21 @@ RSpec.describe TTFunk::Table::Cff::Charset do
 
   describe '#encode' do
     let(:font_path) { test_font('NotoSansCJKsc-Thin', :otf) }
-    let(:encoded) { charset.encode(subset_mapping) }
+    let(:encoded) { charset.encode(charmap) }
 
     context 'when the subset contains non-sequential SIDs' do
-      let(:subset_mapping) do
+      let(:charmap) do
         # the idea here is to demonstrate that non-sequental SIDs can sometimes
         # be more compactly represented as individual elements as opposed to
         # ranges (supposed to be new => old glyph IDs)
-        { 1 => 1, 4 => 4, 10 => 10, 14 => 14, 15 => 15, 21 => 21 }
+        {
+          0x20 => { old: 1, new: 1 },
+          0x23 => { old: 4, new: 4 },
+          0x29 => { old: 10, new: 10 },
+          0x2d => { old: 14, new: 14 },
+          0x2e => { old: 15, new: 15 },
+          0x34 => { old: 21, new: 21 }
+        }
       end
 
       it 'encodes using the array-based format' do
@@ -141,10 +148,10 @@ RSpec.describe TTFunk::Table::Cff::Charset do
     end
 
     context 'when the subset contains few sequential SIDs' do
-      let(:subset_mapping) do
+      let(:charmap) do
         # i.e. the first 20 characters, in order
         # (supposed to be new => old glyph IDs)
-        Hash[(1..20).map { |i| [i, i] }]
+        Hash[(1..20).map { |i| [0x20 + i, { old: i, new: i }] }]
       end
 
       it 'encodes using the 8-bit range-based format' do
@@ -158,10 +165,10 @@ RSpec.describe TTFunk::Table::Cff::Charset do
     end
 
     context 'when the subset contains many sequential SIDs' do
-      let(:subset_mapping) do
+      let(:charmap) do
         # we want to get a 2-byte range to demonstrate the 16-bit format
         # (supposed to be new => old glyph IDs)
-        Hash[(1..2**10).map { |i| [i, i] }]
+        Hash[(1..2**10).map { |i| [0x20 + i, { old: i, new: i }] }]
       end
 
       it 'encodes using the 16-bit range-based format' do

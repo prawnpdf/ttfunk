@@ -4,12 +4,15 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       class TopIndex < TTFunk::Table::Cff::Index
-        def [](index)
-          entry_cache[index] ||=
-            begin
-              start, finish = absolute_offsets_for(index)
-              TTFunk::Table::Cff::TopDict.new(file, start, (finish - start) + 1)
-            end
+        private
+
+        def decode_item(_index, offset, length)
+          TTFunk::Table::Cff::TopDict.new(file, offset, length)
+        end
+
+        def encode_items(*)
+          # Re-encode the top dict
+          map(&:encode)
         end
       end
     end

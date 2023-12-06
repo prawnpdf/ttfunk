@@ -11,7 +11,7 @@ module TTFunk
         def_delegators :base_index,
           :each,
           :table_offset,
-          :count,
+          :items_count,
           :length,
           :encode
 

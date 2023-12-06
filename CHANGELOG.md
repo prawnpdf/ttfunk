@@ -7,6 +7,41 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+
+* Corrupted CFF index data
+
+  there was a subtle bug in cff index implementation that resulted in
+  a data corruption. in certain circumstances some items didn't get
+  properly encoded. this happened when items were not previously accessed.
+
+  this resulted, for instance, in missing glyphs. but only sometimes
+  because indexes might've still contain data that shouldn't've been
+  there. in combination with incorrect encoding (see further) this
+  resulted in some glyphs still being rendered, sometimes even correctly.
+
+  along with the fix a rather large api change landed. this resulted in
+  quite a big diff.
+
+  Alexander Mankuta
+
+* Incorrect CFF encoding in subsets
+
+  TTFunk used to reuse encoding from the original font. This mapping was
+  incorrect for subset fonts which used not just a subset of glyphs but
+  also a different encoding.
+
+  A separate issue was that some fonts have empty CFF encoding. This
+  incorrect mapping resulted in encoding that mapped all codes to glyph 0.
+
+  This had impact on Prawn in particular. PDF spec explicitly says that
+  CFF encoding is not to be used in OpenType fonts. `cmap` table should
+  directly index charstrings in the CFF table. Despite this PDF renderers
+  still use CFF encoding to retrieve glyphs. So TTFunk has to discard the
+  original CFF encoding and supply its own.
+
+  Alexander Mankuta
+
 ## 1.7.0
 
 ### Changes

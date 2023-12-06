@@ -91,10 +91,6 @@ module TTFunk
           )
         end
 
-        def encode
-          raw
-        end
-
         private
 
         def parse!

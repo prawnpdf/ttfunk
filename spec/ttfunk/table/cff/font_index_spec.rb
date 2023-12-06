@@ -9,7 +9,7 @@ RSpec.describe TTFunk::Table::Cff::FontIndex do
   let(:font_path) { test_font('NotoSansCJKsc-Thin', :otf) }
 
   it 'provides access to font dicts by index' do
-    expect(font_index.count).to eq(19)
+    expect(font_index.items_count).to eq(19)
     expect(font_index[0]).to be_a(TTFunk::Table::Cff::FontDict)
   end
 end

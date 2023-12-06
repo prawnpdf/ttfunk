@@ -40,6 +40,7 @@ module TTFunk
 
       def to_unicode_map
         self.class.unicode_mapping_for(encoding)
+          .select { |codepoint, _unicode| @subset[codepoint] }
       end
 
       def use(character)

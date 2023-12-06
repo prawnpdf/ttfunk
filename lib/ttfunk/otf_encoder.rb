@@ -27,7 +27,7 @@ module TTFunk
     end
 
     def cff_table
-      @cff_table ||= original.cff.encode(new_to_old_glyph, old_to_new_glyph)
+      @cff_table ||= original.cff.encode(subset)
     end
 
     def vorg_table
@@ -47,15 +47,6 @@ module TTFunk
       OPTIMAL_TABLE_ORDER +
         (tables.keys - ['DSIG'] - OPTIMAL_TABLE_ORDER) +
         ['DSIG']
-    end
-
-    def collect_glyphs(glyph_ids)
-      # CFF top indexes are supposed to contain only one font, although they're
-      # capable of supporting many (no idea why this is true, maybe for CFF
-      # v2??). Anyway it's cool to do top_index[0], don't worry about it.
-      glyph_ids.each_with_object({}) do |id, h|
-        h[id] = original.cff.top_index[0].charstrings_index[id]
-      end
     end
   end
 end

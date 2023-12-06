@@ -24,7 +24,7 @@ RSpec.describe TTFunk::Table::Cff::FdSelector do
       instance_double(
         TTFunk::Table::Cff::CharstringsIndex,
         :charstrings_index,
-        count: entry_count
+        items_count: entry_count
       )
     end
     let(:fd_selector) do
@@ -38,7 +38,7 @@ RSpec.describe TTFunk::Table::Cff::FdSelector do
     end
 
     it 'includes entries for all the glyphs in the font' do
-      expect(fd_selector.count).to eq(entry_count)
+      expect(fd_selector.items_count).to eq(entry_count)
     end
 
     it 'parses the entries correctly' do
@@ -46,8 +46,12 @@ RSpec.describe TTFunk::Table::Cff::FdSelector do
     end
 
     it 'encodes correctly' do
-      mapping = { 1 => 1, 3 => 3, 5 => 5 }
-      expect(fd_selector.encode(mapping)).to eq("\x00\x02\x04\x06")
+      charmap = {
+        0x20 => { old: 1, new: 1 },
+        0x22 => { old: 3, new: 3 },
+        0x24 => { old: 5, new: 5 }
+      }
+      expect(fd_selector.encode(charmap)).to eq("\x00\x02\x04\x06")
     end
   end
 
@@ -56,8 +60,8 @@ RSpec.describe TTFunk::Table::Cff::FdSelector do
 
     it 'includes entries for all the glyphs in the font' do
       # the charstrings index doesn't contain an entry for the .notdef glyph
-      expect(fd_selector.count).to(
-        eq(font.cff.top_index[0].charstrings_index.count + 1)
+      expect(fd_selector.items_count).to(
+        eq(font.cff.top_index[0].charstrings_index.items_count + 1)
       )
     end
 
@@ -78,8 +82,8 @@ RSpec.describe TTFunk::Table::Cff::FdSelector do
     end
 
     it 'encodes correctly' do
-      mapping = Hash[(0..15).map { |i| [i, i] }]
-      result = fd_selector.encode(mapping)
+      charmap = Hash[(0..15).map { |i| [i, { old: i, new: i }] }]
+      result = fd_selector.encode(charmap)
       expect(result).to(
         #   fmt | count |  range 1  |  range 2  | n glyphs
         eq("\x03\x00\x02\x00\x00\x05\x00\x01\x0F\x00\x10")

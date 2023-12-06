@@ -31,18 +31,18 @@ module TTFunk
         TAG
       end
 
-      def encode(new_to_old, old_to_new)
+      def encode(subset)
         EncodedString.new do |result|
-          sub_tables = [
+          result.concat(
             header.encode,
             name_index.encode,
-            top_index.encode(&:encode),
+            top_index.encode,
             string_index.encode,
             global_subr_index.encode
-          ]
+          )
 
-          sub_tables.each { |tb| result << tb }
-          top_index[0].finalize(result, new_to_old, old_to_new)
+          charmap = subset.new_cmap_table[:charmap]
+          top_index[0].finalize(result, charmap)
         end
       end
 

@@ -22,7 +22,7 @@ module TTFunk
           end
         end
 
-        attr_reader :top_dict, :format, :count, :offset_or_id
+        attr_reader :top_dict, :format, :items_count, :offset_or_id
 
         def initialize(top_dict, file, offset_or_id = nil, length = nil)
           @top_dict = top_dict
@@ -30,8 +30,10 @@ module TTFunk
 
           if offset
             super(file, offset, length)
+            @supplemental = format >> 7 == 1
           else
-            @count = self.class.codes_for_encoding_id(offset_or_id).size
+            @items_count = self.class.codes_for_encoding_id(offset_or_id).size
+            @supplemental = false
           end
         end
 
@@ -39,7 +41,7 @@ module TTFunk
           return to_enum(__method__) unless block_given?
 
           # +1 adjusts for the implicit .notdef glyph
-          (count + 1).times { |i| yield self[i] }
+          (items_count + 1).times { |i| yield self[i] }
         end
 
         def [](glyph_id)
@@ -62,16 +64,18 @@ module TTFunk
           end
         end
 
-        def encode(new_to_old, old_to_new)
-          # no offset means no encoding was specified (i.e. we're supposed to
-          # use a predefined encoding) so there's nothing to encode
-          return '' unless offset
-          return encode_supplemental(new_to_old, old_to_new) if supplemental?
+        def encode(charmap)
+          # Any subset encoding is all but guaranteed to be different from the
+          # standard encoding so we don't even attempt to see if it matches. We
+          # assume it's different and just encode it anew.
+
+          return encode_supplemental(charmap) if supplemental?
 
           codes =
-            new_to_old.keys.sort.map do |new_gid|
-              code_for(new_to_old[new_gid])
-            end
+            charmap
+              .reject { |_code, mapping| mapping[:new].zero? }
+              .sort_by { |_code, mapping| mapping[:new] }
+              .map { |(code, _m)| code }
 
           ranges = TTFunk::BinUtils.rangify(codes)
 
@@ -95,18 +99,16 @@ module TTFunk
 
         def supplemental?
           # high-order bit set to 1 indicates supplemental encoding
-          @format >> 7 == 1
+          @supplemental
         end
 
         private
 
-        def encode_supplemental(_new_to_old, old_to_new)
+        def encode_supplemental(charmap)
           new_entries =
-            @entries.each_with_object({}) do |(code, old_gid), ret|
-              if (new_gid = old_to_new[old_gid])
-                ret[code] = new_gid
-              end
-            end
+            charmap
+              .reject { |_code, mapping| mapping[:new].zero? }
+              .transform_values { |mapping| mapping[:new] }
 
           result = [format_int(:supplemental), new_entries.size].pack('CC')
           fmt = element_format(:supplemental)
@@ -150,22 +152,22 @@ module TTFunk
 
           case format_sym
           when :array_format
-            @count = entry_count
+            @items_count = entry_count
             @entries = OneBasedArray.new(read(length, 'C*'))
 
           when :range_format
             @entries = []
-            @count = 0
+            @items_count = 0
 
             entry_count.times do
               code, num_left = read(element_width, element_format)
               @entries << (code..(code + num_left))
-              @count += num_left + 1
+              @items_count += num_left + 1
             end
 
           when :supplemental
             @entries = {}
-            @count = entry_count
+            @items_count = entry_count
 
             entry_count.times do
               code, glyph = read(element_width, element_format)

@@ -32,14 +32,21 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
 
   describe '#encode' do
     let(:font_path) { test_font('AlbertTextBold', :otf) }
-    let(:encoded) { encoding.encode(subset_mapping, subset_mapping.invert) }
+    let(:encoded) { encoding.encode(charmap) }
 
     context 'when the subset contains non-sequential codes' do
-      let(:subset_mapping) do
+      let(:charmap) do
         # the idea here is to demonstrate that non-sequental codes can
         # sometimes be more compactly represented as individual elements
         # as opposed to ranges (supposed to be new => old glyph IDs)
-        { 1 => 1, 4 => 4, 10 => 10, 14 => 14, 15 => 15, 21 => 21 }
+        {
+          0x20 => { old: 1, new: 1 },
+          0x23 => { old: 4, new: 4 },
+          0x29 => { old: 10, new: 10 },
+          0x2d => { old: 14, new: 14 },
+          0x2e => { old: 15, new: 15 },
+          0x34 => { old: 21, new: 13 }
+        }
       end
 
       it 'encodes using the array-based format' do
@@ -48,13 +55,7 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
 
       it 'encodes correctly' do
         # format (0x00), codes (1 byte each)
-        expect(encoded.bytes).to eq(
-          [
-            0,
-            subset_mapping.count,
-            *subset_mapping.map { |old_gid, _| encoding[old_gid] }
-          ]
-        )
+        expect(encoded).to eq("\x00\x06\x20\x23\x29\x34\x2d\x2e")
       end
 
       # unfortunately I haven't been able to find an example font that defines
@@ -83,16 +84,16 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
           font.cff.top_index[0], file, fake_offset, encoded.length
         )
 
-        expect(new_encoding.to_a).to eq([0, 26, 29, 35, 39, 40, 46])
+        expect(new_encoding.to_a).to eq([0, 0x20, 0x23, 0x29, 0x34, 0x2d, 0x2e])
       end
       # rubocop: enable RSpec/AnyInstance
     end
 
     context 'when the subset contains sequential codes' do
-      let(:subset_mapping) do
+      let(:charmap) do
         # i.e. the first 20 characters, in order
         # (supposed to be new => old glyph IDs)
-        Hash[(1..20).map { |i| [i, i] }]
+        Hash[(1..20).map { |i| [0x20 + i, { old: i, new: i }] }]
       end
 
       it 'encodes using the range-based format' do
@@ -100,9 +101,9 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
       end
 
       it 'encodes correctly' do
-        # format (0x01), count (0x01, start code (0x1D, i.e. 26),
+        # format (0x01), count (0x01, start code (0x21, i.e. 33),
         # rest (0x13, i.e. 19)
-        expect(encoded.bytes).to eq([0x01, 0x01, 0x1A, 0x13])
+        expect(encoded.bytes).to eq([0x01, 0x01, 0x21, 0x13])
       end
     end
   end

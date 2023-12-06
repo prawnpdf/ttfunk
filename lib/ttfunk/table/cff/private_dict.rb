@@ -18,7 +18,7 @@ module TTFunk
 
         # @TODO: use mapping to determine which subroutines are still used.
         # For now, just encode them all.
-        def encode(_mapping)
+        def encode
           EncodedString.new do |result|
             each do |operator, operands|
               case OPERATOR_CODES[operator]
@@ -72,7 +72,7 @@ module TTFunk
         private
 
         def encode_subrs
-          EncodedString.new.tap do |result|
+          EncodedString.new do |result|
             result << Placeholder.new(
               :"subrs_#{@table_offset}", length: PLACEHOLDER_LENGTH
             )

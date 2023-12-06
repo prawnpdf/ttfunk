@@ -6,72 +6,80 @@ module TTFunk
       class Index < TTFunk::SubTable
         include Enumerable
 
-        # number of objects in the index
-        attr_reader :count
-
-        # offset array element size
-        attr_reader :offset_size
-
-        attr_reader :raw_offset_length, :offsets, :raw_data
-        attr_reader :data_start_pos
-
         def [](index)
-          entry_cache[index] ||= raw_data[
-            offsets[index]...offsets[index + 1]
-          ]
+          return if index >= items_count
+
+          entry_cache[index] ||=
+            decode_item(
+              index,
+              data_reference_offset + offsets[index],
+              offsets[index + 1] - offsets[index]
+            )
         end
 
-        def each
-          return to_enum(__method__) unless block_given?
+        def each(&block)
+          return to_enum(__method__) unless block
 
-          count.times { |i| yield self[i] }
+          items_count.times do |i|
+            yield self[i]
+          end
         end
 
-        def encode
-          result = EncodedString.new
+        def items_count
+          items.length
+        end
 
-          entries =
-            each_with_object([]).with_index do |(entry, ret), index|
-              new_entry = block_given? ? yield(entry, index) : entry
-              ret << new_entry if new_entry
-            end
+        def encode(*args)
+          new_items = encode_items(*args)
 
-          # "An empty INDEX is represented by a count field with a 0 value and
-          # no additional fields. Thus, the total size of an empty INDEX is 2
-          # bytes."
-          result << [entries.size].pack('n')
-          return result if entries.empty?
-
-          offset_size = (Math.log2(entries.size) / 8.0).round + 1
-          result << [offset_size].pack('C')
-          data_offset = 1
-
-          data = EncodedString.new
-
-          entries.each do |entry|
-            result << encode_offset(data_offset, offset_size)
-            data << entry
-            data_offset += entry.length
+          if new_items.empty?
+            return [0].pack('n')
           end
 
-          unless entries.empty?
-            result << encode_offset(data_offset, offset_size)
+          if new_items.length > 0xffff
+            raise Error, 'Too many items in a CFF index'
           end
 
-          result << data
+          offsets_array =
+            new_items
+              .each_with_object([1]) do |item, offsets|
+                offsets << offsets.last + item.length
+              end
+
+          offset_size = (offsets_array.last.bit_length / 8.0).ceil
+
+          offsets_array.map! { |offset| encode_offset(offset, offset_size) }
+
+          EncodedString.new.concat(
+            [new_items.length, offset_size].pack('nC'),
+            *offsets_array,
+            *new_items
+          )
         end
 
         private
+
+        attr_reader :items, :offsets, :data_reference_offset
 
         def entry_cache
           @entry_cache ||= {}
         end
 
-        def absolute_offsets_for(index)
-          [
-            table_offset + offsets[index] + data_start_pos,
-            table_offset + offsets[index + 1] + data_start_pos
-          ]
+        # Returns an array of EncodedString elements (plain strings,
+        # placeholders, or EncodedString instances). Each element is supposed to
+        # represent an encoded item.
+        #
+        # This is the place to do all the filtering, reordering, or individual
+        # item encoding.
+        #
+        # It gets all the arguments `encode` gets.
+        def encode_items(*)
+          items
+        end
+
+        # By default do nothing
+        def decode_item(index, _offset, _length)
+          items[index]
         end
 
         def encode_offset(offset, offset_size)
@@ -88,35 +96,38 @@ module TTFunk
         end
 
         def parse!
-          @count = read(2, 'n').first
+          @entry_cache = {}
 
-          if count.zero?
+          num_entries = read(2, 'n').first
+
+          if num_entries.zero?
             @length = 2
-            @data = []
+            @items = []
             return
           end
 
-          @offset_size = read(1, 'C').first
+          offset_size = read(1, 'C').first
 
-          # read an extra offset_size bytes to get rid of the first offset,
-          # which is always 1
-          io.read(offset_size)
+          @offsets =
+            Array.new(num_entries + 1) do
+              unpack_offset(io.read(offset_size), offset_size)
+            end
 
-          @raw_offset_length = count * offset_size
-          raw_offsets = io.read(raw_offset_length)
+          @data_reference_offset = table_offset + 3 + offsets.length * offset_size - 1
 
-          @offsets = [0] + Array.new(count) do |idx|
-            start = offset_size * idx
-            finish = offset_size * (idx + 1)
-            unpack_offset(raw_offsets[start...finish]) - 1
-          end
+          @length =
+            2 + # num entries
+            1 + # offset size
+            offsets.length * offset_size + # offsets
+            offsets.last - 1 # items
 
-          @raw_data = io.read(offsets.last)
-          @data_start_pos = 3 + offset_size + raw_offset_length
-          @length = data_start_pos + raw_data.size
+          @items =
+            offsets.each_cons(2).map do |offset, next_offset|
+              io.read(next_offset - offset)
+            end
         end
 
-        def unpack_offset(offset_data)
+        def unpack_offset(offset_data, offset_size)
           padding = "\x00" * (4 - offset_size)
           (padding + offset_data).unpack1('N')
         end

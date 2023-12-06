@@ -41,7 +41,7 @@ RSpec.describe TTFunk::Table::Cff::PrivateDict do
 
   describe '#encode' do
     it 'produces an encoded dict that can be re-parsed successfully' do
-      result = private_dict.encode({})
+      result = private_dict.encode
       dict_length = result.length
 
       private_dict.finalize(result)
@@ -57,7 +57,7 @@ RSpec.describe TTFunk::Table::Cff::PrivateDict do
         )
       )
 
-      expect(new_dict.subr_index.count).to eq(private_dict.subr_index.count)
+      expect(new_dict.subr_index.items_count).to eq(private_dict.subr_index.items_count)
     end
   end
 end

@@ -11,20 +11,20 @@ module TTFunk
           @top_dict = top_dict
         end
 
-        def [](index)
-          entry_cache[index] ||= TTFunk::Table::Cff::Charstring.new(
+        private
+
+        def decode_item(index, _offset, _length)
+          TTFunk::Table::Cff::Charstring.new(
             index, top_dict, font_dict_for(index), super
           )
         end
 
-        # gets passed a mapping of new => old glyph ids
-        def encode(mapping)
-          super() do |_entry, index|
-            self[mapping[index]].encode if mapping.include?(index)
-          end
+        def encode_items(charmap)
+          charmap
+            .reject { |code, mapping| mapping[:new].zero? && !code.zero? }
+            .sort_by { |_code, mapping| mapping[:new] }
+            .map { |(_code, mapping)| items[mapping[:old]] }
         end
-
-        private
 
         def font_dict_for(index)
           # only CID-keyed fonts contain an FD selector and font dicts

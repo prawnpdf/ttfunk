@@ -11,18 +11,21 @@ module TTFunk
           @top_dict = top_dict
         end
 
-        def [](index)
-          entry_cache[index] ||=
-            begin
-              start, finish = absolute_offsets_for(index)
-              TTFunk::Table::Cff::FontDict.new(
-                top_dict, file, start, (finish - start) + 1
-              )
-            end
+        def finalize(new_cff_data)
+          each { |font_dict| font_dict.finalize(new_cff_data) }
         end
 
-        def finalize(new_cff_data, mapping)
-          each { |font_dict| font_dict.finalize(new_cff_data, mapping) }
+        private
+
+        def decode_item(_index, offset, length)
+          TTFunk::Table::Cff::FontDict.new(
+            top_dict, file, offset, length
+          )
+        end
+
+        def encode_items(*)
+          # Re-encode font dicts
+          map(&:encode)
         end
       end
     end

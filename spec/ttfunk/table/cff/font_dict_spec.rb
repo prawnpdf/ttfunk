@@ -24,11 +24,11 @@ RSpec.describe TTFunk::Table::Cff::FontDict do
     end
 
     it 'produces an encoded dict that can be re-parsed successfully' do
-      result = font_dict.encode({})
+      result = font_dict.encode
       dict_length = result.length
-      private_dict_length = font_dict.private_dict.encode({}).length
+      private_dict_length = font_dict.private_dict.encode.length
 
-      font_dict.finalize(result, {})
+      font_dict.finalize(result)
       io = StringIO.new(result.string)
       file = TestFile.new(io)
       new_dict = described_class.new(top_dict, file, 0, dict_length)

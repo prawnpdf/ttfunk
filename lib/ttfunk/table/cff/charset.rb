@@ -35,7 +35,7 @@ module TTFunk
         end
 
         attr_reader :entries, :length
-        attr_reader :top_dict, :format, :count, :offset_or_id
+        attr_reader :top_dict, :format, :items_count, :offset_or_id
 
         def initialize(top_dict, file, offset_or_id = nil, length = nil)
           @top_dict = top_dict
@@ -44,7 +44,7 @@ module TTFunk
           if offset
             super(file, offset, length)
           else
-            @count = self.class.strings_for_charset_id(offset_or_id).size
+            @items_count = self.class.strings_for_charset_id(offset_or_id).size
           end
         end
 
@@ -52,7 +52,7 @@ module TTFunk
           return to_enum(__method__) unless block_given?
 
           # +1 adjusts for the implicit .notdef glyph
-          (count + 1).times { |i| yield self[i] }
+          (items_count + 1).times { |i| yield self[i] }
         end
 
         def [](glyph_id)
@@ -73,13 +73,18 @@ module TTFunk
           end
         end
 
-        # mapping is new -> old glyph ids
-        def encode(mapping)
+        def encode(charmap)
           # no offset means no charset was specified (i.e. we're supposed to
           # use a predefined charset) so there's nothing to encode
           return '' unless offset
 
-          sids = mapping.keys.sort.map { |new_gid| sid_for(mapping[new_gid]) }
+          sids =
+            charmap
+              .values
+              .reject { |mapping| mapping[:new].zero? }
+              .sort_by { |mapping| mapping[:new] }
+              .map { |mapping| sid_for(mapping[:old]) }
+
           ranges = TTFunk::BinUtils.rangify(sids)
           range_max = ranges.map(&:last).max
 
@@ -138,7 +143,7 @@ module TTFunk
 
             idx = sid - 390
 
-            if idx < file.cff.string_index.count
+            if idx < file.cff.string_index.items_count
               file.cff.string_index[idx]
             end
           else
@@ -153,23 +158,23 @@ module TTFunk
 
           case format_sym
           when :array_format
-            @count = top_dict.charstrings_index.count - 1
-            @length = count * element_width
+            @items_count = top_dict.charstrings_index.items_count - 1
+            @length = @items_count * element_width
             @entries = OneBasedArray.new(read(length, 'n*'))
 
           when :range_format8, :range_format16
             # The number of ranges is not explicitly specified in the font.
             # Instead, software utilizing this data simply processes ranges
             # until all glyphs in the font are covered.
-            @count = 0
+            @items_count = 0
             @entries = []
             @length = 0
 
-            until count >= top_dict.charstrings_index.count - 1
+            until @items_count >= top_dict.charstrings_index.items_count - 1
               @length += 1 + element_width
               sid, num_left = read(element_width, element_format)
-              entries << (sid..(sid + num_left))
-              @count += num_left + 1
+              @entries << (sid..(sid + num_left))
+              @items_count += num_left + 1
             end
           end
         end

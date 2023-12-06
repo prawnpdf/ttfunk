@@ -12,7 +12,7 @@ module TTFunk
         RANGE_ENTRY_SIZE = 3
         ARRAY_ENTRY_SIZE = 1
 
-        attr_reader :top_dict, :count, :entries, :n_glyphs
+        attr_reader :top_dict, :items_count, :entries, :n_glyphs
 
         def initialize(top_dict, file, offset, length = nil)
           @top_dict = top_dict
@@ -48,16 +48,16 @@ module TTFunk
         def each
           return to_enum(__method__) unless block_given?
 
-          count.times { |i| yield self[i] }
+          items_count.times { |i| yield self[i] }
         end
 
-        # mapping is new -> old glyph ids
-        def encode(mapping)
+        def encode(charmap)
           # get list of [new_gid, fd_index] pairs
           new_indices =
-            mapping.keys.sort.map do |new_gid|
-              [new_gid, self[mapping[new_gid]]]
-            end
+            charmap
+              .reject { |code, mapping| mapping[:new].zero? && !code.zero? }
+              .sort_by { |_code, mapping| mapping[:new] }
+              .map { |(_code, mapping)| [mapping[:new], self[mapping[:old]]] }
 
           ranges = rangify_gids(new_indices)
           total_range_size = ranges.size * RANGE_ENTRY_SIZE
@@ -108,10 +108,10 @@ module TTFunk
 
           case format_sym
           when :array_format
-            @n_glyphs = top_dict.charstrings_index.count
+            @n_glyphs = top_dict.charstrings_index.items_count
             data = io.read(n_glyphs)
             @length += data.bytesize
-            @count = data.bytesize
+            @items_count = data.bytesize
             @entries = data.bytes
 
           when :range_format
@@ -135,7 +135,7 @@ module TTFunk
             last_start_gid, last_fd_index = ranges.last
             @entries << [(last_start_gid...(n_glyphs + 1)), last_fd_index]
 
-            @count = entries.reduce(0) { |sum, entry| sum + entry.first.size }
+            @items_count = entries.reduce(0) { |sum, entry| sum + entry.first.size }
           end
         end
 

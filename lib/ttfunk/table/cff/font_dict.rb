@@ -15,7 +15,7 @@ module TTFunk
           super(file, offset, length)
         end
 
-        def encode(_mapping)
+        def encode
           EncodedString.new do |result|
             each do |operator, operands|
               case OPERATOR_CODES[operator]
@@ -30,8 +30,8 @@ module TTFunk
           end
         end
 
-        def finalize(new_cff_data, mapping)
-          encoded_private_dict = private_dict.encode(mapping)
+        def finalize(new_cff_data)
+          encoded_private_dict = private_dict.encode
           encoded_offset = encode_integer32(new_cff_data.length)
           encoded_length = encode_integer32(encoded_private_dict.length)
 
