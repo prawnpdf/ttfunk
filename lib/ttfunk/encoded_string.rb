@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'stringio'
+require_relative 'placeholder'
 
 module TTFunk
   class UnresolvedPlaceholderError < StandardError
@@ -27,9 +28,16 @@ module TTFunk
           add_placeholder(placeholder.dup, placeholder.position + io.length)
         end
 
-        self << obj.unresolved_string
+        io << obj.unresolved_string
       end
 
+      self
+    end
+
+    def concat(*objs)
+      objs.each do |obj|
+        self << obj
+      end
       self
     end
 

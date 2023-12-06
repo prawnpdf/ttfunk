@@ -49,6 +49,24 @@ RSpec.describe TTFunk::EncodedString do
     end
   end
 
+  describe '#concat' do
+    it 'adds all arguments' do
+      encoded_string = described_class.new
+      encoded_string.concat("\00", "\01", "\02", TTFunk::Placeholder.new(:foo))
+
+      expect(encoded_string.__send__(:io).string).to eq("\00\01\02\00")
+      expect(encoded_string.placeholders[:foo]).to_not be_nil
+    end
+
+    it 'returns self' do
+      empty_encoded_string = described_class.new
+      encoded_string = empty_encoded_string.concat("\00", "\01", "\02")
+
+      expect(encoded_string.string).to eq("\00\01\02")
+      expect(encoded_string).to equal(empty_encoded_string)
+    end
+  end
+
   describe '#length' do
     it 'retrieves the number of bytes written' do
       encoded_string << 'foo'
@@ -66,6 +84,21 @@ RSpec.describe TTFunk::EncodedString do
       encoded_string << 'foo'
       encoded_string << TTFunk::Placeholder.new(:name)
       expect { encoded_string.string }.to(
+        raise_error(TTFunk::UnresolvedPlaceholderError)
+      )
+    end
+  end
+
+  describe '#bytes' do
+    it 'retrieves the encoded string bytes' do
+      encoded_string << 'foo'
+      expect(encoded_string.bytes).to eq([0x66, 0x6f, 0x6f])
+    end
+
+    it "raises an error if any placeholders haven't been resolved" do
+      encoded_string << 'foo'
+      encoded_string << TTFunk::Placeholder.new(:name)
+      expect { encoded_string.bytes }.to(
         raise_error(TTFunk::UnresolvedPlaceholderError)
       )
     end
