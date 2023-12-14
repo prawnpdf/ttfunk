@@ -10,9 +10,14 @@ Gem::Specification.new do |spec|
 
   spec.homepage = 'https://prawnpdf.org'
 
-  spec.cert_chain = ['certs/pointlessone.pem']
-  if $PROGRAM_NAME.end_with? 'gem'
-    spec.signing_key = File.expand_path('~/.gem/gem-private_key.pem')
+  signing_key = File.expand_path('~/.gem/gem-private_key.pem')
+  if File.exist?(signing_key)
+    spec.cert_chain = ['certs/pointlessone.pem']
+    if $PROGRAM_NAME.end_with?('gem')
+      spec.signing_key = signing_key
+    end
+  else
+    warn 'WARNING: Signing key is missing. The gem is not signed and its authenticity can not be verified.'
   end
 
   spec.authors = [
