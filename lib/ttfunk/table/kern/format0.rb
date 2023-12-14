@@ -9,14 +9,14 @@ module TTFunk
         include Reader
 
         attr_reader :attributes
-        attr_reader :pairs
+        # attr_reader :pairs
 
         def initialize(attributes = {})
           @attributes = attributes
 
           num_pairs, *pairs = attributes.delete(:data).unpack('nx6n*')
 
-          @pairs = {}
+          @pairs = Hash.new { |h, k| h[k] = {} }
           num_pairs.times do |i|
             # sanity check, in case there's a bad length somewhere
             break if i * 3 + 2 > pairs.length
@@ -24,8 +24,18 @@ module TTFunk
             left = pairs[i * 3]
             right = pairs[i * 3 + 1]
             value = to_signed(pairs[i * 3 + 2])
-            @pairs[[left, right]] = value
+            @pairs[left][right] = value
           end
+        end
+
+        def pairs
+          self
+        end
+
+        def [](lookup)
+          left = lookup[0]
+          right = lookup[1]
+          @pairs[left][right]
         end
 
         def vertical?
@@ -42,9 +52,11 @@ module TTFunk
 
         def recode(mapping)
           subset = []
-          pairs.each do |(left, right), value|
-            if mapping[left] && mapping[right]
-              subset << [mapping[left], mapping[right], value]
+          @pairs.each do |left, rights|
+            rights.each do |right, value|
+              if mapping[left] && mapping[right]
+                subset << [mapping[left], mapping[right], value]
+              end
             end
           end
 
