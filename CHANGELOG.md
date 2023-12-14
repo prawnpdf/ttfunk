@@ -42,6 +42,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
   Alexander Mankuta
 
+* `maxp` table
+
+  The table is now correctly parsed and encoded for both TrueType and CFF-based
+  OpenType fonts.
+
+  Cameron Dutro, Alexander Mankuta
+
 ## 1.7.0
 
 ### Changes
