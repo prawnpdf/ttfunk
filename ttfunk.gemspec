@@ -9,6 +9,9 @@ Gem::Specification.new do |spec|
   spec.licenses = %w[Nonstandard GPL-2.0 GPL-3.0]
 
   spec.homepage = 'https://prawnpdf.org'
+  spec.metadata = {
+    'rubygems_mfa_required' => 'true'
+  }
 
   signing_key = File.expand_path('~/.gem/gem-private_key.pem')
   if File.exist?(signing_key)
