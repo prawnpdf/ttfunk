@@ -63,6 +63,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
    Jens Kutilek, Peter Goldstein
 
+* Removed execution permissions on non-executable files
+
+  Keenan Brock
+
+### Changes
+
+* Performance improvement in subsets construction
+
+  Thomas Leitner
+
+* CI improvememnts
+
+  Peter Goldstein
+
 ## 1.7.0
 
 ### Changes
