@@ -55,6 +55,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
   Jon Burgess
 
+* Long date time in the `head` table
+
+  The `created` and `modified` fields we parsed and encoded with incorrect
+  endiannes. Additionally helper methods were added to convert these fields to
+  and from Ruby `Time`.
+
+   Jens Kutilek, Peter Goldstein
+
 ## 1.7.0
 
 ### Changes
