@@ -49,6 +49,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
   Cameron Dutro, Alexander Mankuta
 
+* Files are closed sooner
+
+  Files were garbage collected but could stay open for longer than necessary.
+
+  Jon Burgess
+
 ## 1.7.0
 
 ### Changes
