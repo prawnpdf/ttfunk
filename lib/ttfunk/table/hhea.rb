@@ -38,8 +38,28 @@ module TTFunk
       # Maximum extent.
       # @return [Integer]
       attr_reader :x_max_extent
-      attr_reader :carot_slope_rise
-      attr_reader :carot_slope_run
+
+      # Caret slope rise.
+      # @return [Integer]
+      attr_reader :caret_slope_rise
+
+      # @deprecated Use {caret_slope_rise} instead.
+      # @!parse attr_reader :carot_slope_rise
+      # @return [Integer]
+      def carot_slope_rise
+        @caret_slope_rise
+      end
+
+      # Caret slope run.
+      # @return [Integer]
+      attr_reader :caret_slope_run
+
+      # @deprecated Use {caret_slope_run} instead.
+      # @!parse attr_reader :carot_slope_run
+      # @return [Integer]
+      def carot_slope_run
+        @caret_slope_run
+      end
 
       # Caret offset.
       # @return [Integer]
@@ -68,7 +88,7 @@ module TTFunk
             table << [
               hhea.ascent, hhea.descent, hhea.line_gap,
               *min_max_values_for(original, mapping),
-              hhea.carot_slope_rise, hhea.carot_slope_run, hhea.caret_offset,
+              hhea.caret_slope_rise, hhea.caret_slope_run, hhea.caret_offset,
               0, 0, 0, 0, hhea.metric_data_format, hmtx[:number_of_metrics]
             ].pack('n*')
           end
@@ -115,7 +135,7 @@ module TTFunk
         @advance_width_max = read(2, 'n').first
 
         @min_left_side_bearing, @min_right_side_bearing, @x_max_extent,
-          @carot_slope_rise, @carot_slope_run, @caret_offset,
+          @caret_slope_rise, @caret_slope_run, @caret_offset,
           _reserved, _reserved, _reserved, _reserved,
           @metric_data_format = read_signed(11)
 
