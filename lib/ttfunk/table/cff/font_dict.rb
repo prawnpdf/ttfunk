@@ -3,18 +3,33 @@
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # CFF Font dict.
       class FontDict < TTFunk::Table::Cff::Dict
+        # Length of placeholders.
         PLACEHOLDER_LENGTH = 5
+
+        # Operators we care about in this dict.
         OPERATORS = { private: 18 }.freeze
+
+        # Inverse operator mapping.
         OPERATOR_CODES = OPERATORS.invert
 
+        # Top dict.
+        # @return [TTFunk::Table::Cff::TopDict]
         attr_reader :top_dict
 
+        # @param top_dict [TTFunk::Table:Cff::TopDict]
+        # @param file [TTFunk::File]
+        # @param offset [Integer]
+        # @param length [Integer]
         def initialize(top_dict, file, offset, length = nil)
           @top_dict = top_dict
           super(file, offset, length)
         end
 
+        # Encode dict.
+        #
+        # @return [TTFunk::EncodedString]
         def encode
           EncodedString.new do |result|
             each do |operator, operands|
@@ -30,6 +45,10 @@ module TTFunk
           end
         end
 
+        # Finalize dict.
+        #
+        # @param new_cff_data [TTFunk::EncodedString]
+        # @return [void]
         def finalize(new_cff_data)
           encoded_private_dict = private_dict.encode
           encoded_offset = encode_integer32(new_cff_data.length)
@@ -47,6 +66,9 @@ module TTFunk
           new_cff_data << encoded_private_dict
         end
 
+        # Private dict.
+        #
+        # @return [TTFunk::Table::Cff::PrivateDict, nil]
         def private_dict
           @private_dict ||=
             if (info = self[OPERATORS[:private]])

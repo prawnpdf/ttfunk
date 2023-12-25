@@ -4,10 +4,22 @@ require_relative '../table'
 
 module TTFunk
   class Table
+    # Kerning (`kern`) table
     class Kern < Table
+      # Table version
+      # @return [Integer]
       attr_reader :version
+
+      # Subtables.
+      # @return [Array<TTFunk::Table::Kern::Format0>]
       attr_reader :tables
 
+      # Encode table.
+      #
+      # @param kerning [TTFunk::Table::Kern]
+      # @param mapping [Hash{Integer => Integer}] keys are new glyph IDs, values
+      #   are old glyph IDs
+      # @return [String, nil]
       def self.encode(kerning, mapping)
         return unless kerning.exists? && kerning.tables.any?
 

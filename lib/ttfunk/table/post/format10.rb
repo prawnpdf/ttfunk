@@ -3,7 +3,10 @@
 module TTFunk
   class Table
     class Post
+      # Version 1.0 provides glyph names for standard 258 glyphs in the standard
+      # Macintosh TrueType font file.
       module Format10
+        # Glyph names.
         POSTSCRIPT_GLYPHS = %w[
           .notdef .null nonmarkingreturn space exclam quotedbl numbersign dollar
           percent ampersand quotesingle parenleft parenright asterisk plus comma
@@ -36,6 +39,10 @@ module TTFunk
           scedilla Cacute cacute Ccaron ccaron dcroat
         ].freeze
 
+        # Get glyph name for character code.
+        #
+        # @param code [Integer]
+        # @return [String]
         def glyph_for(code)
           POSTSCRIPT_GLYPHS[code] || '.notdef'
         end

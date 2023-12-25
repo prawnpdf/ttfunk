@@ -3,6 +3,7 @@
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # Predefined CFF data
       module Charsets
         autoload :EXPERT, 'ttfunk/table/cff/charsets/expert'
         autoload :EXPERT_SUBSET, 'ttfunk/table/cff/charsets/expert_subset'

@@ -3,16 +3,30 @@
 module TTFunk
   class Table
     class Cmap
+      # Format 4: Segment mapping to delta values.
+      #
+      # This module conditionally extends {TTFunk::Table::Cmap::Subtable}.
       module Format04
+        # Language.
+        # @return [Integer]
         attr_reader :language
+
+        # Code map.
+        # @return [Hash{Integer => Integer}]
         attr_reader :code_map
 
-        # Expects a hash mapping character codes to glyph ids (where the
-        # glyph ids are from the original font). Returns a hash including
-        # a new map (:charmap) that maps the characters in charmap to a
-        # another hash containing both the old (:old) and new (:new) glyph
-        # ids. The returned hash also includes a :subtable key, which contains
-        # the encoded subtable for the given charmap.
+        # Encode the encoding record to format 4.
+        #
+        # @param charmap [Hash{Integer => Integer}] a hash mapping character
+        #   codes to glyph IDs from the original font.
+        # @return [Hash]
+        #   * `:charmap` (<tt>Hash{Integer => Hash}</tt>) keys are the characrers in
+        #     `charset`, values are hashes:
+        #     * `:old` (<tt>Integer</tt>) - glyph ID in the original font.
+        #     * `:new` (<tt>Integer</tt>) - glyph ID in the subset font.
+        #     that maps the characters in charmap to a
+        #   * `:subtable` (<tt>String</tt>) - serialized encoding record.
+        #   * `:max_glyph_id` (<tt>Integer</tt>) - maximum glyph ID in the new font.
         def self.encode(charmap)
           end_codes = []
           start_codes = []
@@ -92,10 +106,17 @@ module TTFunk
           { charmap: new_map, subtable: subtable, max_glyph_id: next_id + 1 }
         end
 
+        # Get glyph ID for character code.
+        #
+        # @param code [Integer] character code.
+        # @return [Integer] glyph ID.
         def [](code)
           @code_map[code] || 0
         end
 
+        # Is this encoding record format supported?
+        #
+        # @return [true]
         def supported?
           true
         end

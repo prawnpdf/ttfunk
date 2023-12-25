@@ -4,11 +4,28 @@ require_relative '../table'
 
 module TTFunk
   class Table
+    # Horizontal Metrics (`hmtx`) table.
     class Hmtx < Table
+      # Glyph horizontal metrics.
+      # @return [Array<HorizontalMetric>]
       attr_reader :metrics
+
+      # Left side bearings.
+      # @return [Array<Ingteger>]
       attr_reader :left_side_bearings
+
+      # Glyph widths.
+      # @return [Array<Integer>]
       attr_reader :widths
 
+      # Encode table.
+      #
+      # @param hmtx [TTFunk::Table::Hmtx]
+      # @param mapping [Hash{Integer => Integer}] keys are new glyph IDs, values
+      #   are old glyph IDs
+      # @return [Hash{:number_of_metrics => Integer, :table => String}]
+      #   * `:number_of_metrics` - number of mertrics is the table.
+      #   * `:table` - encoded table.
       def self.encode(hmtx, mapping)
         metrics =
           mapping.keys.sort.map do |new_id|
@@ -22,8 +39,18 @@ module TTFunk
         }
       end
 
+      # Horyzontal glyph metric.
+      #
+      # @!attribute [rw] advance_width
+      #   @return [Integer] Advance width.
+      # @!attribute [rw] left_side_bearing
+      #   @return [Integer] Left side bearing.
       HorizontalMetric = Struct.new(:advance_width, :left_side_bearing)
 
+      # Get horizontal metric for glyph.
+      #
+      # @param glyph_id [Integer]
+      # @return [HorizontalMetric]
       def for(glyph_id)
         @metrics[glyph_id] ||
           metrics_cache[glyph_id] ||=

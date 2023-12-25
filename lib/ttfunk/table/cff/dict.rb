@@ -5,38 +5,59 @@ require 'bigdecimal'
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # CFF Dict.
       class Dict < TTFunk::SubTable
+        # Indicates malformed operand.
         class InvalidOperandError < StandardError; end
 
+        # Indicates too many operands.
         class TooManyOperandsError < StandardError; end
 
-        # for regular single-byte operators
+        # Single-byte operators.
         OPERATOR_BZERO = (0..21).freeze
+        # Bytes indicating an operand.
         OPERAND_BZERO = [28..30, 32..254].freeze
 
-        # for operators that are two bytes wide
+        # Two-byte operator
         WIDE_OPERATOR_BZERO = 12
+        # Two-byte operator adjustment. Used for encoding and decoding of wide
+        # operators.
         WIDE_OPERATOR_ADJUSTMENT = 1200
 
-        # maximum number of operands allowed per operator
+        # Maximum number of operands allowed per operator.
         MAX_OPERANDS = 48
 
-        # used to validate operands expressed in scientific notation
+        # Scientific notation operand significand validation regular
+        # experession.
         VALID_SCI_SIGNIFICAND_RE = /\A-?(\.\d+|\d+|\d+\.\d+)\z/.freeze
+
+        # Scientific notation operand exponent validation regular experession.
         VALID_SCI_EXPONENT_RE = /\A-?\d+\z/.freeze
 
         include Enumerable
 
+        # Get dict value by operator.
+        #
+        # @param operator [Integer]
+        # @return [Array<Integer, TTFunk::SciForm>]
         def [](operator)
           @dict[operator]
         end
 
+        # Iterate over dict entries.
+        #
+        # @yieldparam key [Integer]
+        # @yieldparam value [Array<Integer, TTFunk::SciForm>]
+        # @return [void]
         def each(&block)
           @dict.each(&block)
         end
 
         alias each_pair each
 
+        # Encode dict.
+        #
+        # @return [String]
         def encode
           map do |(operator, operands)|
             operands.map { |operand| encode_operand(operand) }.join +

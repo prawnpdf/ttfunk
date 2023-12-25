@@ -4,17 +4,31 @@ require 'stringio'
 require_relative 'placeholder'
 
 module TTFunk
+  # Risen when the final encoded string was requested but there were some
+  # unresolved placeholders in it.
   class UnresolvedPlaceholderError < StandardError
   end
 
+  # Risen when a placeholder is added to an Encoded String but it already
+  # contains a placeholder with the same name.
   class DuplicatePlaceholderError < StandardError
   end
 
+  # Encoded string takes care of placeholders in binary strings. Placeholders
+  # are used when bytes need to be placed in the stream before their value is
+  # known.
+  #
+  # @api private
   class EncodedString
+    # @yieldparam [self]
     def initialize
       yield self if block_given?
     end
 
+    # Append to string.
+    #
+    # @param [String, Placeholder, EncodedString]
+    # @return [self]
     def <<(obj)
       case obj
       when String
@@ -34,6 +48,10 @@ module TTFunk
       self
     end
 
+    # Append multiple objects.
+    #
+    # @param objs [Array<String, Placeholder, EncodedString>]
+    # @return [self]
     def concat(*objs)
       objs.each do |obj|
         self << obj
@@ -41,6 +59,10 @@ module TTFunk
       self
     end
 
+    # Append padding to align string to the specified word width.
+    #
+    # @param width [Integer]
+    # @return [self]
     def align!(width = 4)
       if (length % width).positive?
         self << "\0" * (width - length % width)
@@ -49,10 +71,18 @@ module TTFunk
       self
     end
 
+    # Length of this string.
+    #
+    # @return [Integer]
     def length
       io.length
     end
 
+    # Raw string.
+    #
+    # @return [String]
+    # @raise [UnresolvedPlaceholderError] if there are any unresolved
+    #   placeholders left.
     def string
       unless placeholders.empty?
         raise UnresolvedPlaceholderError,
@@ -62,14 +92,27 @@ module TTFunk
       io.string
     end
 
+    # Raw bytes.
+    #
+    # @return [Array<Integer>]
+    # @raise [UnresolvedPlaceholderError] if there are any unresolved
+    #   placeholders left.
     def bytes
       string.bytes
     end
 
+    # Unresolved raw string.
+    #
+    # @return [String]
     def unresolved_string
       io.string
     end
 
+    # Resolve placeholder.
+    #
+    # @param name [Symbol]
+    # @param value [String]
+    # @return [void]
     def resolve_placeholder(name, value)
       last_pos = io.pos
 
@@ -82,6 +125,9 @@ module TTFunk
       io.seek(last_pos)
     end
 
+    # Plaholders
+    #
+    # @return [Hash{Symbol => Plaholder}]
     def placeholders
       @placeholders ||= {}
     end

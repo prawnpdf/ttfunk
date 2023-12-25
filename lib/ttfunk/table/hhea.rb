@@ -4,22 +4,64 @@ require_relative '../table'
 
 module TTFunk
   class Table
+    # Horizontal Header (`hhea`) table.
     class Hhea < Table
+      # Table version
+      # @return [Integer]
       attr_reader :version
+
+      # Typographic ascent.
+      # @return [Integer]
       attr_reader :ascent
+
+      # Typographic descent.
+      # @return [Integer]
       attr_reader :descent
+
+      # Typographic line gap.
+      # @return [Integer]
       attr_reader :line_gap
+
+      # Maximum advance width value in `hmtx` table.
+      # @return [Integer]
       attr_reader :advance_width_max
+
+      # Minimum left sidebearing value in `hmtx` table for glyphs with contours
+      # (empty glyphs should be ignored).
+      # @return [Integer]
       attr_reader :min_left_side_bearing
+
+      # Minimum right sidebearing value.
+      # @return [Integer]
       attr_reader :min_right_side_bearing
+
+      # Maximum extent.
+      # @return [Integer]
       attr_reader :x_max_extent
       attr_reader :carot_slope_rise
       attr_reader :carot_slope_run
+
+      # Caret offset.
+      # @return [Integer]
       attr_reader :caret_offset
+
+      # Metric data format. `0` for current format.
+      # @return [Integer]
       attr_reader :metric_data_format
+
+      # Number of hMetric entries in `hmtx` table.
+      # @return [Integer]
       attr_reader :number_of_metrics
 
       class << self
+        # Encode table.
+        #
+        # @param hhea [TTFunk::Table::Hhea] table to encode.
+        # @param hmtx [TTFunk::Table::Hmtx]
+        # @param original [TTFunk::File] original font file.
+        # @param mapping [Hash{Integer => Integer}] keys are new glyph IDs, values
+        #   are old glyph IDs
+        # @return [String]
         def encode(hhea, hmtx, original, mapping)
           ''.b.tap do |table|
             table << [hhea.version].pack('N')

@@ -3,9 +3,15 @@
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # CFF Charstrings Index.
       class CharstringsIndex < TTFunk::Table::Cff::Index
+        # Top dict.
+        # @return [TTFunk::Table::Cff::TopDict]
         attr_reader :top_dict
 
+        # @param top_dict [TTFunk::Table:Cff::TopDict]
+        # @param file [TTFunk::File]
+        # @param subtable_start [Integer]
         def initialize(top_dict, *remaining_args)
           super(*remaining_args)
           @top_dict = top_dict

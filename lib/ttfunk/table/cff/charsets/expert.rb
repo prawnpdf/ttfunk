@@ -4,6 +4,7 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       module Charsets
+        # Predefinde CFF Expert charset
         EXPERT = OneBasedArray.new(
           [
             'space',

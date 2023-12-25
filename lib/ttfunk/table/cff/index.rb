@@ -3,9 +3,14 @@
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # CFF Index.
       class Index < TTFunk::SubTable
         include Enumerable
 
+        # Get value by index.
+        #
+        # @param index [Integer]
+        # @return [any]
         def [](index)
           return if index >= items_count
 
@@ -17,6 +22,13 @@ module TTFunk
             )
         end
 
+        # Iterate over index items.
+        #
+        # @overload each()
+        #   @yieldparam item [any]
+        #   @return [void]
+        # @overload each()
+        #   @return [Enumerator]
         def each(&block)
           return to_enum(__method__) unless block
 
@@ -25,10 +37,17 @@ module TTFunk
           end
         end
 
+        # Numer of items in this index.
+        #
+        # @return [Integer]
         def items_count
           items.length
         end
 
+        # Encode index.
+        #
+        # @param *args all arguments are passed to `encode_item` method.
+        # @return [TTFunk::EncodedString]
         def encode(*args)
           new_items = encode_items(*args)
 

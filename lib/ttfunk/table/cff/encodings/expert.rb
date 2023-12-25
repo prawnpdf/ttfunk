@@ -4,6 +4,7 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       module Encodings
+        # CFF predefined Expert encoding.
         EXPERT = OneBasedArray.new(
           [
             *[0] * 31,

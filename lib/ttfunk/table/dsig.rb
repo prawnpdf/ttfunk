@@ -2,10 +2,30 @@
 
 module TTFunk
   class Table
+    # Digital Signature (`DSIG`) table.
     class Dsig < Table
+      # Signature record.
       class SignatureRecord
-        attr_reader :format, :length, :offset, :signature
+        # Format of the signature.
+        # @return [Integer]
+        attr_reader :format
 
+        # Length of signature in bytes.
+        # @return [Integer]
+        attr_reader :length
+
+        # Offset to the signature block from the beginning of the table.
+        # @return [Integer]
+        attr_reader :offset
+
+        # Signature PKCS#7 packet.
+        # @return [String]
+        attr_reader :signature
+
+        # @param forma [Integer]
+        # @param length [Integer]
+        # @param offset [Integer]
+        # @param signature [String]
         def initialize(format, length, offset, signature)
           @format = format
           @length = length
@@ -14,10 +34,28 @@ module TTFunk
         end
       end
 
-      attr_reader :version, :flags, :signatures
+      # Version umber of this table.
+      # @return [Integer]
+      attr_reader :version
 
+      # Permission flags.
+      # @return [Integer]
+      attr_reader :flags
+
+      # Signature records.
+      # @return [Array<SignatureRecord>]
+      attr_reader :signatures
+
+      # Table tag.
       TAG = 'DSIG'
 
+      # Encode table.
+      #
+      # **Note**: all signatures will be lost. This encodes an empty table
+      # regardless whether the supplied table contains any signtaures or not.
+      #
+      # @param dsig [TTFunk::Table::Dsig]
+      # @return [String]
       def self.encode(dsig)
         return unless dsig
 
@@ -26,6 +64,9 @@ module TTFunk
         [dsig.version, 0, 0].pack('Nnn')
       end
 
+      # Table tag.
+      #
+      # @return [String]
       def tag
         TAG
       end

@@ -1,21 +1,41 @@
 # frozen_string_literal: true
 
 module TTFunk
+  # Encodes a TrueType font subset to its binary representation.
   class TTFEncoder
+    # Optimal table order according to TrueType specification.
     OPTIMAL_TABLE_ORDER = [
       'head', 'hhea', 'maxp', 'OS/2', 'hmtx', 'LTSH', 'VDMX',
       'hdmx', 'cmap', 'fpgm', 'prep', 'cvt ', 'loca', 'glyf',
       'kern', 'name', 'post', 'gasp', 'PCLT'
     ].freeze
 
-    attr_reader :original, :subset, :options
+    # Original font.
+    # @return [TTFunk::File]
+    attr_reader :original
 
+    # Subset to encode.
+    # @return [TTFunk::Subset]
+    attr_reader :subset
+
+    # Encoding options.
+    # @return [Hash]
+    attr_reader :options
+
+    # @param original [TTFunk::File]
+    # @param subset [TTFunk::Subset]
+    # @param options [Hash]
+    # @option options :kerning [Boolean] whether to encode Kerning (`kern`)
+    #   table.
     def initialize(original, subset, options = {})
       @original = original
       @subset = subset
       @options = options
     end
 
+    # Encode the font subset.
+    #
+    # @return [String]
     def encode
       # https://www.microsoft.com/typography/otspec/otff.htm#offsetTable
       search_range = 2**Math.log2(tables.length).floor * 16

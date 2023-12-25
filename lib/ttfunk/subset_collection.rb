@@ -3,17 +3,35 @@
 require_relative 'subset'
 
 module TTFunk
+  # Subset collection.
+  #
+  # For many use cases a font subset can be efficiently encoded using MacRoman
+  # encoding. However, for full font coverage and characters that are not in
+  # MacRoman encoding an additional Unicode subset is used. There can be as many
+  # as needed Unicode subsets to fully cover glyphs provided by the original
+  # font. Ther resulting set of subsets all use 8-bit encoding helping to
+  # efficiently encode text in Prawn.
   class SubsetCollection
+    # @param original [TTFunk::File]
     def initialize(original)
       @original = original
       @subsets = [Subset.for(@original, :mac_roman)]
     end
 
+    # Get subset by index.
+    #
+    # @param subset [Integer]
+    # @return [TTFunk::Subset::Unicode, TTFunk::Subset::Unicode8Bit,
+    #   TTFunk::Subset::MacRoman, TTFunk::Subset::Windows1252]
     def [](subset)
       @subsets[subset]
     end
 
-    # +characters+ should be an array of UTF-16 characters
+    # Add chracters to appropiate subsets.
+    #
+    # @param characters [Array<Integer>] should be an array of UTF-16 code
+    #   points
+    # @return [void]
     def use(characters)
       characters.each do |char|
         covered = false
@@ -36,13 +54,16 @@ module TTFunk
       end
     end
 
-    # +characters+ should be an array of UTF-16 characters. Returns
-    # an array of subset chunks, where each chunk is another array of
-    # two elements. The first element is the subset number, and the
-    # second element is the string of characters to render with that
-    # font subset. The strings will be encoded for their subset font,
-    # and so may not look (in the raw) like what was passed in, but
-    # they will render correctly with the indicated subset font.
+    # Encode characters into subset-character pairs.
+    #
+    # @param characters [Array<Integer>] should be an array of UTF-16 code
+    #   points
+    # @return [Array<Array(Integer, String)>] subset chunks, where each chunk
+    #   is another array of two elements. The first element is the subset
+    #   number, and the second element is the string of characters to render
+    #   with that font subset. The strings will be encoded for their subset
+    #   font, and so may not look (in the raw) like what was passed in, but they
+    #   will render correctly with the corresponding subset font.
     def encode(characters)
       return [] if characters.empty?
 

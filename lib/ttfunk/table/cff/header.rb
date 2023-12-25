@@ -3,21 +3,34 @@
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # CFF Header.
       class Header < TTFunk::SubTable
-        # cff format version numbers
+        # CFF table major version.
+        # @return [Integer]
         attr_reader :major
+
+        # CFF table minor version.
+        # @return [Integer]
         attr_reader :minor
 
-        # size of the header itself
+        # Size of the header itself.
+        # @return [Integer]
         attr_reader :header_size
 
-        # size of all offsets from beginning of table
+        # Size of all offsets from beginning of table.
+        # @return [Integer]
         attr_reader :absolute_offset_size
 
+        # Length of header.
+        #
+        # @return [Integer]
         def length
           4
         end
 
+        # Encode header.
+        #
+        # @return [String]
         def encode
           [major, minor, header_size, absolute_offset_size].pack('C*')
         end

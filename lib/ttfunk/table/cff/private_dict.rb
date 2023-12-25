@@ -3,22 +3,33 @@
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # CFF Private dict.
       class PrivateDict < TTFunk::Table::Cff::Dict
+        # Default value of Default Width X.
         DEFAULT_WIDTH_X_DEFAULT = 0
+
+        # Default value of Nominal Width X.
         DEFAULT_WIDTH_X_NOMINAL = 0
+
+        # Length of placeholders.
         PLACEHOLDER_LENGTH = 5
 
+        # Operators we care about in this dict.
         OPERATORS = {
           subrs: 19,
           default_width_x: 20,
           nominal_width_x: 21
         }.freeze
 
+        # Inverse operator mapping.
         OPERATOR_CODES = OPERATORS.invert
 
-        # @TODO: use mapping to determine which subroutines are still used.
-        # For now, just encode them all.
+        # Encode dict.
+        #
+        # @return [TTFunk::EncodedString]
         def encode
+          # TODO: use mapping to determine which subroutines are still used.
+          # For now, just encode them all.
           EncodedString.new do |result|
             each do |operator, operands|
               case OPERATOR_CODES[operator]
@@ -33,6 +44,10 @@ module TTFunk
           end
         end
 
+        # Finalize dict.
+        #
+        # @param new_cff_data [TTFunk::EncodedString]
+        # @return [void]
         def finalize(private_dict_data)
           return unless subr_index
 
@@ -46,6 +61,9 @@ module TTFunk
           private_dict_data << encoded_subr_index
         end
 
+        # Subroutine index.
+        #
+        # @return [TTFunk::Table::Cff::SubrIndex, nil]
         def subr_index
           @subr_index ||=
             if (subr_offset = self[OPERATORS[:subrs]])
@@ -53,6 +71,9 @@ module TTFunk
             end
         end
 
+        # Default Width X.
+        #
+        # @return [Integer]
         def default_width_x
           if (width = self[OPERATORS[:default_width_x]])
             width.first
@@ -61,6 +82,9 @@ module TTFunk
           end
         end
 
+        # Nominal Width X.
+        #
+        # @return [Integer]
         def nominal_width_x
           if (width = self[OPERATORS[:nominal_width_x]])
             width.first

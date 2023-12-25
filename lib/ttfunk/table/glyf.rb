@@ -4,15 +4,18 @@ require_relative '../table'
 
 module TTFunk
   class Table
+    # Glyph Data (`glyf`) table.
     class Glyf < Table
-      # Accepts a hash mapping (old) glyph-ids to glyph objects, and a hash
-      # mapping old glyph-ids to new glyph-ids.
+      # Encode table.
       #
-      # Returns a hash containing:
-      #
-      # * :table - a string representing the encoded 'glyf' table containing
-      #   the given glyphs.
-      # * :offsets - an array of offsets for each glyph
+      # @param glyphs [Hash] a hash mapping (old) glyph-ids to glyph objects
+      # @param new_to_old [Hash{Integer => Integer}] a hash mapping new glyph
+      #   IDs to glyph IDs in the original font.
+      # @param old_to_new [Hash{Integer => Integer}] a hash mapping old glyph
+      #   IDs to new glyph IDs.
+      # @return [Hash]
+      #   * `:table` (<tt>String</tt>) - encoded table.
+      #   * `:offsets` (<tt>Array\<Integer></tt>) - glyph offsets in the table.
       def self.encode(glyphs, new_to_old, old_to_new)
         result = { table: +'', offsets: [] }
 
@@ -28,6 +31,11 @@ module TTFunk
         result
       end
 
+      # Get glyph by ID.
+      #
+      # @param glyph_id [Integer]
+      # @return [TTFunk::Table::Glyf::Simple, TTFunk::Table::Glyf::Compound,
+      #   nil]
       def for(glyph_id)
         return @cache[glyph_id] if @cache.key?(glyph_id)
 

@@ -5,44 +5,147 @@ require 'set'
 
 module TTFunk
   class Table
+    # OS/2 and Windows Metrics (`OS/2`) table
     class OS2 < Table
+      # Table version.
+      # @return [Integer]
       attr_reader :version
 
+      # Average weighted escapement.
+      # @return [Integer]
       attr_reader :ave_char_width
+
+      # Weight class.
+      # @return [Integer]
       attr_reader :weight_class
+
+      # Width class.
+      # @return [Integer]
       attr_reader :width_class
+
+      # Type flags.
+      # @return [Integer]
       attr_reader :type
+
+      # Subscript horizontal font size.
+      # @return [Integer]
       attr_reader :y_subscript_x_size
+
+      # Subscript vertical font size.
+      # @return [Integer]
       attr_reader :y_subscript_y_size
+
+      # Subscript x offset.
+      # @return [Integer]
       attr_reader :y_subscript_x_offset
+
+      # Subscript y offset.
+      # @return [Integer]
       attr_reader :y_subscript_y_offset
+
+      # Superscript horizontal font size.
+      # @return [Integer]
       attr_reader :y_superscript_x_size
+
+      # Superscript vertical font size.
+      # @return [Integer]
       attr_reader :y_superscript_y_size
+
+      # Superscript x offset.
+      # @return [Integer]
       attr_reader :y_superscript_x_offset
+
+      # Superscript y offset.
+      # @return [Integer]
       attr_reader :y_superscript_y_offset
+
+      # Strikeout size.
+      # @return [Integer]
       attr_reader :y_strikeout_size
+
+      # Strikeout position.
+      # @return [Integer]
       attr_reader :y_strikeout_position
+
+      # Font-family class and subclass.
+      # @return [Integer]
       attr_reader :family_class
+
+      # PANOSE classification number.
+      # @return [Integer]
       attr_reader :panose
+
+      # Unicode Character Range.
+      # @return [Integer]
       attr_reader :char_range
+
+      # Font Vendor Identification.
+      # @return [String]
       attr_reader :vendor_id
+
+      # Font selection flags.
+      # @return [Integer]
       attr_reader :selection
+
+      # The minimum Unicode index (character code) in this font.
+      # @return [Integer]
       attr_reader :first_char_index
+
+      # The maximum Unicode index (character code) in this font.
+      # @return [Integer]
       attr_reader :last_char_index
 
+      # The typographic ascender for this font.
+      # @return [Integer]
       attr_reader :ascent
+
+      # The typographic descender for this font.
+      # @return [Integer]
       attr_reader :descent
+
+      # The typographic line gap for this font.
+      # @return [Integer]
       attr_reader :line_gap
+
+      # The "Windows ascender" metric.
+      # @return [Integer]
       attr_reader :win_ascent
+
+      # The "Windows descender" metric.
+      # @return [Integer]
       attr_reader :win_descent
+
+      # Code Page Character Range.
+      # @return [Integer]
       attr_reader :code_page_range
 
+      # The distance between the baseline and the approximate height of
+      # non-ascending lowercase letters.
+      # @return [Integer]
       attr_reader :x_height
+
+      # The distance between the baseline and the approximate height of
+      # uppercase letters.
+      # @return [Integer]
       attr_reader :cap_height
+
+      # The Unicode code point, in UTF-16 encoding, of a character that can be
+      # used for a default glyph if a requested character is not supported in
+      # the font.
+      # @return [Integer]
       attr_reader :default_char
+
+      # The Unicode code point, in UTF-16 encoding, of a character that can be
+      # used as a default break character.
+      # @return [Integer]
       attr_reader :break_char
+
+      # The maximum length of a target glyph context for any feature in this
+      # font.
+      # @return [Integer]
       attr_reader :max_context
 
+      # Code page bits.
       CODE_PAGE_BITS = {
         1252 => 0,
         1250 => 1,
@@ -78,6 +181,7 @@ module TTFunk
         437 => 63
       }.freeze
 
+      # Unicode blocks.
       UNICODE_BLOCKS = {
         (0x0000..0x007F) => 0,
         (0x0080..0x00FF) => 1,
@@ -250,14 +354,27 @@ module TTFunk
         (0x1F000..0x1F02F) => 122
       }.freeze
 
+      # Indicates that font supports supplementary characters.
       UNICODE_MAX = 0xFFFF
+
+      # Unicode block ranges.
       UNICODE_RANGES = UNICODE_BLOCKS.keys.sort_by(&:max).freeze
+
+      # Start chracter for average character width calculation.
       LOWERCASE_START = 'a'.ord
+
+      # End chracter for average character width calculation.
       LOWERCASE_END = 'z'.ord
+
+      # Number of chracters for average character width calculation.
       LOWERCASE_COUNT = (LOWERCASE_END - LOWERCASE_START) + 1
+
+      # Space character code point.
       CODEPOINT_SPACE = 32
       SPACE_GLYPH_MISSING_ERROR = "Space glyph (0x#{CODEPOINT_SPACE.to_s(16)})"\
         ' must be included in the font'
+
+      # Error message for missing space character.
 
       # Used to calculate the xAvgCharWidth field.
       # From https://docs.microsoft.com/en-us/typography/opentype/spec/os2:
@@ -272,16 +389,26 @@ module TTFunk
       # 26 letters in the Latin alphabet. Each weight is the relative
       # frequency of that letter in the English language.
       WEIGHT_SPACE = 166
+
+      # chracter weights for average character width calculation.
       WEIGHT_LOWERCASE = [
         64, 14, 27, 35, 100, 20, 14, 42, 63, 3, 6, 35, 20,
         56, 56, 17, 4, 49, 56, 71, 31, 10, 18, 3, 18, 2
       ].freeze
 
+      # Table tag.
+      # @return [String]
       def tag
         'OS/2'
       end
 
       class << self
+        # Encode table.
+        #
+        # @param head [TTFunk::Table::Head]
+        # @param subset [TTFunk::Subset::MacRoman, TTFunk::Subset::Windows1252,
+        #   TTFunk::Subset::Unicode, TTFunk::Subset::Unicode8Bit]
+        # @return [String]
         def encode(os2, subset)
           result = ''.b
           result << [

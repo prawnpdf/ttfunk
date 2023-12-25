@@ -3,22 +3,51 @@
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # CFF FDSelect.
       class FdSelector < TTFunk::SubTable
         include Enumerable
 
+        # Array format.
         ARRAY_FORMAT = 0
+
+        # Range format.
         RANGE_FORMAT = 3
 
+        # Range entry size.
         RANGE_ENTRY_SIZE = 3
+
+        # Array entry size.
         ARRAY_ENTRY_SIZE = 1
 
-        attr_reader :top_dict, :items_count, :entries, :n_glyphs
+        # Top dict.
+        # @return [TTFunk::Table::Cff::TopDict]
+        attr_reader :top_dict
 
+        # Number of encoded items.
+        # @return [Integer]
+        attr_reader :items_count
+
+        # Number of entries.
+        # @return [Array<Integer>] if format is array.
+        # @return [Array<Array(Range, Integer)>] if format is range.
+        attr_reader :entries
+
+        # Number of glyphs.
+        # @return [Integer]
+        attr_reader :n_glyphs
+
+        # @param top_dict [TTFunk::Table:Cff::TopDict]
+        # @param file [TTFunk::File]
+        # @param offset [Integer]
+        # @param length [Integer]
         def initialize(top_dict, file, offset, length = nil)
           @top_dict = top_dict
           super(file, offset, length)
         end
 
+        # Get font dict index for glyph ID.
+        #
+        # @return [Integer]
         def [](glyph_id)
           case format_sym
           when :array_format
@@ -45,12 +74,23 @@ module TTFunk
           end
         end
 
+        # Iterate over font dicts for each glyph ID.
+        #
+        # @yieldparam [Integer] font dict index.
+        # @return [void]
         def each
           return to_enum(__method__) unless block_given?
 
           items_count.times { |i| yield self[i] }
         end
 
+        # Encode Font dict selector.
+        #
+        # @param charmap [Hash{Integer => Hash}] keys are the charac codes,
+        #   values are hashes:
+        #   * `:old` (<tt>Integer</tt>) - glyph ID in the original font.
+        #   * `:new` (<tt>Integer</tt>) - glyph ID in the subset font.
+        # @return [String]
         def encode(charmap)
           # get list of [new_gid, fd_index] pairs
           new_indices =

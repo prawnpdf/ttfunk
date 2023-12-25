@@ -5,12 +5,19 @@ require_relative '../../reader'
 module TTFunk
   class Table
     class Kern
+      # Format 0 kerning subtable.
       class Format0
         include Reader
 
+        # Subtable attributes.
+        # @return [Hash{Symbol => any}]
         attr_reader :attributes
+
+        # Kerning pairs.
+        # @return [Hash{Array(Integer, Integer) => Integer}]
         attr_reader :pairs
 
+        # @param attributes [Hash{Symbol => any}]
         def initialize(attributes = {})
           @attributes = attributes
 
@@ -28,18 +35,29 @@ module TTFunk
           end
         end
 
+        # Is this vertical kerning?
+        # @return [Boolean]
         def vertical?
           @attributes[:vertical]
         end
 
+        # Is this horizontal kerning?
+        # @return [Boolean]
         def horizontal?
           !vertical?
         end
 
+        # Is this cross-stream kerning?
+        # @return [Boolean]
         def cross_stream?
           @attributes[:cross]
         end
 
+        # Recode this subtable using the specified mapping.
+        #
+        # @param mapping [Hash{Integer => Integer}] keys are new glyph IDs,
+        #   values are old glyph IDs
+        # @return [String]
         def recode(mapping)
           subset = []
           pairs.each do |(left, right), value|

@@ -2,6 +2,7 @@
 
 module TTFunk
   class Table
+    # Compact Font Format (`CFF `) table
     class Cff < TTFunk::Table
       autoload :Charset, 'ttfunk/table/cff/charset'
       autoload :Charsets, 'ttfunk/table/cff/charsets'
@@ -22,15 +23,40 @@ module TTFunk
       autoload :TopDict, 'ttfunk/table/cff/top_dict'
       autoload :TopIndex, 'ttfunk/table/cff/top_index'
 
-      TAG = 'CFF ' # the extra space is important
+      # Table tag. The extra space is important.
+      TAG = 'CFF '
 
-      attr_reader :header, :name_index, :top_index, :string_index
+      # Table header.
+      # @return [TTFunk::Table::Cff::Header]
+      attr_reader :header
+
+      # Name index.
+      # @return [TTFunk::Table::Cff::Index]
+      attr_reader :name_index
+
+      # Top dict index.
+      # @return [TTFunk::Table::Cff::TopIndex]
+      attr_reader :top_index
+
+      # Strings index.
+      # @return [TTFunk::Table::Cff::OneBasedIndex]
+      attr_reader :string_index
+
+      # Global subroutine index.
+      # @return [TTFunk::Table::Cff::SubrIndex]
       attr_reader :global_subr_index
 
+      # Table tag.
+      # @return [String]
       def tag
         TAG
       end
 
+      # Encode table.
+      #
+      # @param subset [TTFunk::Subset::MacRoman, TTFunk::Subset::Windows1252,
+      #   TTFunk::Subset::Unicode, TTFunk::Subset::Unicode8Bit]
+      # @return [TTFunk::EncodedString]
       def encode(subset)
         EncodedString.new do |result|
           result.concat(

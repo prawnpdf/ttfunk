@@ -5,23 +5,83 @@ require_relative '../../reader'
 module TTFunk
   class Table
     class Glyf
+      # Composite TrueType glyph.
       class Compound
         include Reader
 
+        # Flags bit 0: arg1 and arg2 are words.
         ARG_1_AND_2_ARE_WORDS = 0x0001
+
+        # Flags bit 3: there is a simple scale for the component.
         WE_HAVE_A_SCALE = 0x0008
+
+        # Flags bit 5: at least one more glyph after this one.
         MORE_COMPONENTS = 0x0020
+
+        # Flags bit 6: the x direction will use a different scale from the
+        # y direction.
         WE_HAVE_AN_X_AND_Y_SCALE = 0x0040
+
+        # Flags bit 7: there is a 2 by 2 transformation that will be used to
+        # scale the component.
         WE_HAVE_A_TWO_BY_TWO = 0x0080
+
+        # Flags bit 8: following the last component are instructions for the
+        # composite character.
         WE_HAVE_INSTRUCTIONS = 0x0100
 
-        attr_reader :id, :raw
+        # Glyph ID.
+        # @return [Integer]
+        attr_reader :id
+
+        # Binary serialization of this glyph.
+        # @return [String]
+        attr_reader :raw
+
+        # Number of contours in this glyph.
+        # @return [Integer]
         attr_reader :number_of_contours
-        attr_reader :x_min, :y_min, :x_max, :y_max
+
+        # Minimum x for coordinate.
+        # @return [Integer]
+        attr_reader :x_min
+
+        # Minimum y for coordinate.
+        # @return [Integer]
+        attr_reader :y_min
+
+        # Maximum x for coordinate.
+        # @return [Integer]
+        attr_reader :x_max
+
+        # Maximum y for coordinate.
+        # @return [Integer]
+        attr_reader :y_max
+
+
         attr_reader :glyph_ids
 
+        # Component glyph.
+        #
+        # @!attribute [rw] flags
+        #   Component flag.
+        #   @return [Integer]
+        # @!attribute [rw] glyph_index
+        #   Glyph index of component.
+        #   @return [Integer]
+        # @!attribute [rw] arg1
+        #   x-offset for component or point number.
+        #   @return [Integer]
+        # @!attribute [rw] arg2
+        #   y-offset for component or point number.
+        #   @return [Integer]
+        # @!attribute [rw] transform
+        #   Transformation.
+        #   @return []
         Component = Struct.new(:flags, :glyph_index, :arg1, :arg2, :transform)
 
+        # @param id [Integer] glyph ID.
+        # @param raw [String]
         def initialize(id, raw)
           @id = id
           @raw = raw
@@ -71,10 +131,17 @@ module TTFunk
           end
         end
 
+        # Is this a composite glyph?
+        # @return [true]
         def compound?
           true
         end
 
+        # Recode glyph.
+        #
+        # @param mapping [Hash{Integer => Integer}] a hash mapping old glyph IDs
+        #   to new glyph IDs.
+        # @return [String]
         def recode(mapping)
           result = raw.dup
           new_ids = glyph_ids.map { |id| mapping[id] }

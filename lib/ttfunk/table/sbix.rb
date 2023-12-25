@@ -4,14 +4,48 @@ require_relative '../table'
 
 module TTFunk
   class Table
+    # Standard Bitmap Graphics (`sbix`) table.
     class Sbix < Table
+      # Table version.
+      # @return [Integer]
       attr_reader :version
+
+      # Flags.
+      # @return [Integer]
       attr_reader :flags
+
+      # Number of bitmap strikes.
+      # @return [Integer]
       attr_reader :num_strikes
+
+      # Strikes.
+      # @return [Array<Hash>]
       attr_reader :strikes
 
+      # Bitmap Data.
+      #
+      # @!attribute [rw] x
+      #   The horizontal (x-axis) position of the left edge of the bitmap
+      #   graphic in relation to the glyph design space origin.
+      # @!attribute [rw] y
+      #   The vertical (y-axis) position of the bottom edge of the bitmap
+      #   graphic in relation to the glyph design space origin.
+      # @!attribute [rw] type
+      #   Indicates the format of the embedded graphic data: one of `jpg `,
+      #   `png `, `tiff`, or the special format `dupe`.
+      # @!attribute [rw] data
+      #   The actual embedded graphic data.
+      # @!attribute [rw] ppem
+      #   The PPEM size for which this strike was designed.
+      # @!attribute [rw] resolution
+      #   The device pixel density (in PPI) for which this strike was designed.
       BitmapData = Struct.new(:x, :y, :type, :data, :ppem, :resolution)
 
+      # Get bitmap for glyph strike.
+      #
+      # @param glyph_id [Integer]
+      # @param strike_index [Integer]
+      # @return [BitmapData]
       def bitmap_data_for(glyph_id, strike_index)
         strike = strikes[strike_index]
         return if strike.nil?
@@ -33,6 +67,10 @@ module TTFunk
         end
       end
 
+      # Get all bitmaps for glyph.
+      #
+      # @param glyph_id [Integer]
+      # @return [Array<BitmapData>]
       def all_bitmap_data_for(glyph_id)
         strikes.each_index.map do |strike_index|
           bitmap_data_for(glyph_id, strike_index)

@@ -6,9 +6,18 @@ require 'stringio'
 module TTFunk
   class Table
     class Post
+      # Version 2.0 is used for fonts that use glyph names that are not in the
+      # set of Macintosh glyph names. A given font may map some of its glyphs to
+      # the standard Macintosh glyph names, and some to its own custom names.
+      # A version 2.0 `post` table can be used in fonts with TrueType or CFF
+      # version 2 outlines.
       module Format20
         include Format10
 
+        # Get glyph name for character code.
+        #
+        # @param code [Integer]
+        # @return [String]
         def glyph_for(code)
           index = @glyph_name_index[code]
           return '.notdef' unless index

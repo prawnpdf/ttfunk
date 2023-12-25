@@ -14,45 +14,87 @@ require_relative '../table/simple'
 
 module TTFunk
   module Subset
+    # Base subset.
+    #
+    # @api private
     class Base
+      # Microsoft Platform ID
       MICROSOFT_PLATFORM_ID = 3
+
+      # Symbol Encoding ID for Microsoft Platform
       MS_SYMBOL_ENCODING_ID = 0
 
+      # Original font
+      #
+      # @return [TTFunk::File]
       attr_reader :original
 
+      # @param original [TTFunk::File]
       def initialize(original)
         @original = original
       end
 
+      # Is this Unicode-based subset?
+      #
+      # @return [Boolean]
       def unicode?
         false
       end
 
+      # Does this subset use Microsoft Symbolic encoding?
+      #
+      # @return [Boolean]
       def microsoft_symbol?
         new_cmap_table[:platform_id] == MICROSOFT_PLATFORM_ID &&
           new_cmap_table[:encoding_id] == MS_SYMBOL_ENCODING_ID
       end
 
+      # Get a mapping from this subset to Unicode.
+      #
+      # @return [Hash{Integer => Integer}]
       def to_unicode_map
         {}
       end
 
+      # Encode this subset into a binary font representation.
+      #
+      # @param options [Hash]
+      # @return [String]
       def encode(options = {})
         encoder_klass.new(original, self, options).encode
       end
 
+      # Encoder class for this subset.
+      #
+      # @return [TTFunk::TTFEncoder, TTFunk::OTFEncoder]
       def encoder_klass
         original.cff.exists? ? OTFEncoder : TTFEncoder
       end
 
+      # Get the first Unicode cmap from the original font.
+      #
+      # @return [TTFunk::Table::Cmap::Subtable]
       def unicode_cmap
         @unicode_cmap ||= @original.cmap.unicode.first
       end
 
+      # Get glyphs in this subset.
+      #
+      # @return [Hash{Integer => TTFunk::Table::Glyf::Simple,
+      #   TTFunk::Table::Glyf::Compound}] if original is a TrueType font
+      # @return [Hash{Integer => TTFunk::Table::Cff::Charstring] if original is
+      #   a CFF-based OpenType font
       def glyphs
         @glyphs ||= collect_glyphs(original_glyph_ids)
       end
 
+      # Get glyphs by their IDs in the original font.
+      #
+      # @param glyph_ids [Array<Integer>]
+      # @return [Hash{Integer => TTFunk::Table::Glyf::Simple,
+      #   TTFunk::Table::Glyf::Compound>] if original is a TrueType font
+      # @return [Hash{Integer => TTFunk::Table::Cff::Charstring}] if original is
+      #   a CFF-based OpenType font
       def collect_glyphs(glyph_ids)
         collected =
           glyph_ids.each_with_object({}) do |id, h|
@@ -69,6 +111,9 @@ module TTFunk
         collected
       end
 
+      # Glyph ID mapping from the original font to this subset.
+      #
+      # @return [Hash{Integer => Integer}]
       def old_to_new_glyph
         @old_to_new_glyph ||=
           begin
@@ -91,6 +136,9 @@ module TTFunk
           end
       end
 
+      # Glyph ID mapping from this subset to the original font.
+      #
+      # @return [Hash{Integer => Integer}]
       def new_to_old_glyph
         @new_to_old_glyph ||= old_to_new_glyph.invert
       end

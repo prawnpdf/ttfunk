@@ -4,6 +4,7 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       module Encodings
+        # CFF predefined Standard encoding.
         STANDARD = OneBasedArray.new(
           [
             *[0] * 31,

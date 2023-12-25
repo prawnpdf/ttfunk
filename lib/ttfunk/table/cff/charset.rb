@@ -3,25 +3,47 @@
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # CFF Charset
       class Charset < TTFunk::SubTable
         include Enumerable
 
+        # First glyph string. This is an implicit glyph present in all charsets.
         FIRST_GLYPH_STRING = '.notdef'
+
+        # Format 0.
         ARRAY_FORMAT = 0
+
+        # Format 1.
         RANGE_FORMAT_8 = 1
+
+        # Format 2.
         RANGE_FORMAT_16 = 2
 
+        # Predefined ISOAdobe charset ID.
         ISO_ADOBE_CHARSET_ID = 0
+
+        # Predefined Expert charset ID.
         EXPERT_CHARSET_ID = 1
+
+        # Predefined Expert Subset charset ID.
         EXPERT_SUBSET_CHARSET_ID = 2
 
+        # Default charset ID.
         DEFAULT_CHARSET_ID = ISO_ADOBE_CHARSET_ID
 
         class << self
+          # Standard strings defined in the spec that do not need to be defined
+          # in the CFF.
+          #
+          # @return [TTFunk::OneBasedArray<String>]
           def standard_strings
             Charsets::STANDARD_STRINGS
           end
 
+          # Strings for charset ID.
+          #
+          # @param charset_id [Integer]
+          # @return [TTFunk::OneBasedArray<String>]
           def strings_for_charset_id(charset_id)
             case charset_id
             when ISO_ADOBE_CHARSET_ID
@@ -34,9 +56,39 @@ module TTFunk
           end
         end
 
-        attr_reader :entries, :length
-        attr_reader :top_dict, :format, :items_count, :offset_or_id
+        # Encoded entries.
+        # @return [TTFunk::OneBasedArray<Integer>, Array<Range<Integer>>]
+        attr_reader :entries
 
+        # Length of encoded charset subtable.
+        # @return [Integer]
+        attr_reader :length
+
+        # Top dict.
+        # @return [TTFunk::Table::Cff::TopDict]
+        attr_reader :top_dict
+
+        # Encodign format.
+        # @return [Integer]
+        attr_reader :format
+
+        # Number of encoded items.
+        # @return [Integer]
+        attr_reader :items_count
+
+        # Offset or charset ID.
+        # @return [Integer]
+        attr_reader :offset_or_id
+
+        # @overload initialize(top_dict, file, offset = nil, length = nil)
+        #   @param top_dict [TTFunk::Table:Cff::TopDict]
+        #   @param file [TTFunk::File]
+        #   @param offset [Integer]
+        #   @param length [Integer]
+        # @overload initialize(top_dict, file, charset_id)
+        #   @param top_dict [TTFunk::Table:Cff::TopDict]
+        #   @param file [TTFunk::File]
+        #   @param charset_id [Integer] 0, 1, or 2
         def initialize(top_dict, file, offset_or_id = nil, length = nil)
           @top_dict = top_dict
           @offset_or_id = offset_or_id || DEFAULT_CHARSET_ID
@@ -48,6 +100,13 @@ module TTFunk
           end
         end
 
+        # Iterate over character names.
+        #
+        # @overload each()
+        #   @yieldparam name [String]
+        #   @return [void]
+        # @overload each()
+        #   @return [Enumerator]
         def each
           return to_enum(__method__) unless block_given?
 
@@ -55,12 +114,19 @@ module TTFunk
           (items_count + 1).times { |i| yield self[i] }
         end
 
+        # Get character name for glyph index.
+        #
+        # @param glyph_id [Integer]
+        # @return [String, nil]
         def [](glyph_id)
           return FIRST_GLYPH_STRING if glyph_id.zero?
 
           find_string(sid_for(glyph_id))
         end
 
+        # Charset offset in the file.
+        #
+        # @return [Integer, nil]
         def offset
           # Numbers from 0..2 mean charset IDs instead of offsets. IDs are
           # basically pre-defined sets of characters.
@@ -73,6 +139,13 @@ module TTFunk
           end
         end
 
+        # Encode charset.
+        #
+        # @param charmap [Hash{Integer => Hash}] keys are the charac codes,
+        #   values are hashes:
+        #   * `:old` (<tt>Integer</tt>) - glyph ID in the original font.
+        #   * `:new` (<tt>Integer</tt>) - glyph ID in the subset font.
+        # @return [String]
         def encode(charmap)
           # no offset means no charset was specified (i.e. we're supposed to
           # use a predefined charset) so there's nothing to encode

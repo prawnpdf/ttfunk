@@ -3,7 +3,9 @@
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # CFF Charstring.
       class Charstring
+        # Type 2 charstring operators
         CODE_MAP = {
           1 => :hstem,
           3 => :vstem,
@@ -31,6 +33,7 @@ module TTFunk
           31 => :hvcurveto
         }.freeze
 
+        # Type 2 Flex operators.
         FLEX_CODE_MAP = {
           35 => :flex,
           34 => :hflex,
@@ -38,8 +41,18 @@ module TTFunk
           37 => :flex1
         }.freeze
 
-        attr_reader :glyph_id, :raw
+        # Glyph ID.
+        # @return [Integer]
+        attr_reader :glyph_id
 
+        # Encoded charstring.
+        # @return [String]
+        attr_reader :raw
+
+        # @param glyph_id [Integer]
+        # @param top_dict [TTFunk::Table:Cff::TopDict]
+        # @param font_dict [TTFunk::Table:Cff::FontDict]
+        # @param raw [String]
         def initialize(glyph_id, top_dict, font_dict, raw)
           @glyph_id = glyph_id
           @top_dict = top_dict
@@ -66,6 +79,9 @@ module TTFunk
           @y = 0
         end
 
+        # Get path representation of this charstring.
+        #
+        # @return [TTFunk::Table::Cff::Path]
         def path
           @path || begin
             @path = Path.new
@@ -74,6 +90,9 @@ module TTFunk
           end
         end
 
+        # Get a TrueType-compatible glyph representation of this charstring.
+        #
+        # @return [TTFunk::Table::Glyf::PathBased]
         def glyph
           @glyph ||=
             begin
@@ -82,6 +101,12 @@ module TTFunk
             end
         end
 
+        # Get path representation of this charstring at the specified font size.
+        #
+        # @param x [Integer, Float] new horizontal position.
+        # @param y [Integer, Float] new vertical position.
+        # @param font_size [Integer, Float] font size.
+        # @return [TTFunk::Table::Cff::Path]
         def render(x: 0, y: 0, font_size: 72)
           path.render(
             x: x,

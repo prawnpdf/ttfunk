@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module TTFunk
+  # Encodes a CFF-based OpenType font subset to its binary representation.
   class OTFEncoder < TTFEncoder
+    # Optimal table order according to OpenType specification.
     OPTIMAL_TABLE_ORDER = [
       'head', 'hhea', 'maxp', 'OS/2', 'name', 'cmap', 'post', 'CFF '
     ].freeze

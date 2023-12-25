@@ -3,15 +3,25 @@
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # CFF Encoding.
       class Encoding < TTFunk::SubTable
         include Enumerable
 
+        # Predefined Standard Encoding ID.
         STANDARD_ENCODING_ID = 0
+
+        # Predefined Expert Encoding ID.
         EXPERT_ENCODING_ID = 1
 
+
+        # Default encoding ID.
         DEFAULT_ENCODING_ID = STANDARD_ENCODING_ID
 
         class << self
+          # Get predefined encoding by ID.
+          #
+          # @param encoding_id [Integer]
+          # @return [TTFunk::OneBasedArray<Integer>]
           def codes_for_encoding_id(encoding_id)
             case encoding_id
             when STANDARD_ENCODING_ID
@@ -22,8 +32,31 @@ module TTFunk
           end
         end
 
-        attr_reader :top_dict, :format, :items_count, :offset_or_id
+        # Top dict.
+        # @return [TTFunk::Table::Cff::TopDict]
+        attr_reader :top_dict
 
+        # Encodign format.
+        # @return [Integer]
+        attr_reader :format
+
+        # Number of encoded items.
+        # @return [Integer]
+        attr_reader :items_count
+
+        # Offset or encoding ID.
+        # @return [Integer]
+        attr_reader :offset_or_id
+
+        # @overload initialize(top_dict, file, offset = nil, length = nil)
+        #   @param top_dict [TTFunk::Table:Cff::TopDict]
+        #   @param file [TTFunk::File]
+        #   @param offset [Integer]
+        #   @param length [Integer]
+        # @overload initialize(top_dict, file, charset_id)
+        #   @param top_dict [TTFunk::Table:Cff::TopDict]
+        #   @param file [TTFunk::File]
+        #   @param encoding_id [Integer] 0, 1, or 2
         def initialize(top_dict, file, offset_or_id = nil, length = nil)
           @top_dict = top_dict
           @offset_or_id = offset_or_id || DEFAULT_ENCODING_ID
@@ -37,6 +70,13 @@ module TTFunk
           end
         end
 
+        # Iterate over character codes.
+        #
+        # @overload each()
+        #   @yieldparam code [Integer]
+        #   @return [void]
+        # @overload each()
+        #   @return [Enumerator]
         def each
           return to_enum(__method__) unless block_given?
 
@@ -44,6 +84,10 @@ module TTFunk
           (items_count + 1).times { |i| yield self[i] }
         end
 
+        # Get character code for glyph index.
+        #
+        # @param glyph_id [Integer]
+        # @return [Integer, nil]
         def [](glyph_id)
           return 0 if glyph_id.zero?
           return code_for(glyph_id) if offset
@@ -51,6 +95,9 @@ module TTFunk
           self.class.codes_for_encoding_id(offset_or_id)[glyph_id]
         end
 
+        # Encoding offset in the file.
+        #
+        # @return [Integer, nil]
         def offset
           # Numbers from 0..1 mean encoding IDs instead of offsets. IDs are
           # pre-defined, generic encodings that define the characters present
@@ -64,6 +111,13 @@ module TTFunk
           end
         end
 
+        # Encode encoding.
+        #
+        # @param charmap [Hash{Integer => Hash}] keys are the charac codes,
+        #   values are hashes:
+        #   * `:old` (<tt>Integer</tt>) - glyph ID in the original font.
+        #   * `:new` (<tt>Integer</tt>) - glyph ID in the subset font.
+        # @return [String]
         def encode(charmap)
           # Any subset encoding is all but guaranteed to be different from the
           # standard encoding so we don't even attempt to see if it matches. We
@@ -97,6 +151,9 @@ module TTFunk
           end
         end
 
+        # Is this a supplemental encoding?
+        #
+        # @return [Boolean]
         def supplemental?
           # high-order bit set to 1 indicates supplemental encoding
           @supplemental

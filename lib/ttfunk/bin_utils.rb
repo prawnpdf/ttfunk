@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 module TTFunk
+  # Bit crunching utility methods.
   module BinUtils
-    # assumes big-endian
+    # Turn a bunch of small integers into one big integer. Assumes big-endian.
+    #
+    # @param arr [Array<Integer>]
+    # @param bit_width [Integer] bit width of the elements
+    # @return Integer
     def stitch_int(arr, bit_width:)
       value = 0
 
@@ -13,7 +18,13 @@ module TTFunk
       value
     end
 
-    # assumes big-endian
+    # Slice a big integer into a bunch of small integers. Assumes big-endian.
+    #
+    # @param value [Integer]
+    # @param bit_width [Integer] bit width of the elements
+    # @param slice_count [Integer] number of elements to slice into. This is
+    #   needed for cases where top bits are zero.
+    # @return [Array<Integer>]
     def slice_int(value, bit_width:, slice_count:)
       mask = 2**bit_width - 1
 
@@ -22,6 +33,11 @@ module TTFunk
       end
     end
 
+    # Two's compliment to an integer.
+    #
+    # @param num [Integer]
+    # @param bit_width [Integer] number width
+    # @return [Integer]
     def twos_comp_to_int(num, bit_width:)
       if num >> (bit_width - 1) == 1
         # we want all ones
@@ -34,8 +50,11 @@ module TTFunk
       end
     end
 
-    # turns a (sorted) sequence of values into a series of two-element arrays
-    # where the first element is the start and the second is the length
+    # Turns a (sorted) sequence of values into a series of two-element arrays
+    # where the first element is the start and the second is the length.
+    #
+    # @param values [Array<Integer>]
+    # @return [Array<Array(Integer, Integer)>]
     def rangify(values)
       values
         .slice_when { |a, b| b - a > 1 }

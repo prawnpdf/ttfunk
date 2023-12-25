@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 module TTFunk
+  # Base class for different aggregate values and accumulators.
+  #
+  # @see TTFunk::Min
+  # @see TTFunk::Max
+  # @see TTFunk::Sum
   class Aggregate
     private
 

@@ -1,9 +1,18 @@
 # frozen_string_literal: true
 
 module TTFunk
+  # Data-fork suitcases resource file
   class ResourceFile
+    # Resource map
+    #
+    # @return [Hash]
     attr_reader :map
 
+    # Open a resource file
+    #
+    # @param [String, Pathname]
+    # @yieldparam resource_file [TTFunk::ResourceFile]
+    # @return [any] result of the block
     def self.open(path)
       ::File.open(path, 'rb') do |io|
         file = new(io)
@@ -11,6 +20,7 @@ module TTFunk
       end
     end
 
+    # @param io [IO]
     def initialize(io)
       @io = io
 
@@ -58,6 +68,16 @@ module TTFunk
       end
     end
 
+    # Get resource
+    #
+    # @overload [](type, index = 0)
+    #   @param type [String]
+    #   @param inxed [Integer]
+    #   @return [String]
+    # @overload [](type, name)
+    #   @param type [String]
+    #   @param name [String]
+    #   @return [String]
     def [](type, index = 0)
       if @map[type]
         collection = index.is_a?(Integer) ? :list : :named
@@ -70,6 +90,10 @@ module TTFunk
       end
     end
 
+    # Get resource names
+    #
+    # @param type [String]
+    # @return [Array<String>]
     def resources_for(type)
       (@map[type] && @map[type][:named] || {}).keys
     end

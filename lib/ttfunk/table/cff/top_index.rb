@@ -3,6 +3,7 @@
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # CFF Index conatining Top dict.
       class TopIndex < TTFunk::Table::Cff::Index
         private
 

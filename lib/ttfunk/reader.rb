@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module TTFunk
+  # Helper methods to read form file content.
+  # @api rpivate
   module Reader
     private
 

@@ -4,6 +4,7 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       module Charsets
+        # Predefined CFF ISOAdobe charset
         ISO_ADOBE = OneBasedArray.new(
           [
             'space',

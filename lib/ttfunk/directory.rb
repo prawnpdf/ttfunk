@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
 module TTFunk
+  # SFNT table directory.
   class Directory
+    # Table descriptors
+    # @return [Hash{String => Hash}]
     attr_reader :tables
+
+    # Scaler type
+    # @return [Integer]
     attr_reader :scaler_type
 
     def initialize(io, offset = 0)

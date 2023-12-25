@@ -5,6 +5,7 @@ require 'forwardable'
 module TTFunk
   class Table
     class Cff < TTFunk::Table
+      # CFF Index with indexing starting at 1.
       class OneBasedIndex
         extend Forwardable
 
@@ -15,12 +16,20 @@ module TTFunk
           :length,
           :encode
 
+        # Underlaying Index.
+        # @return [TTFunk::Table::Cff::Index]
         attr_reader :base_index
 
+        # @param *args [Array] all params are passed to the base index.
         def initialize(*args)
           @base_index = Index.new(*args)
         end
 
+        # Get item by index.
+        #
+        # @param idx [Integer]
+        # @return [any]
+        # @raise [IndexError] when requested index is 0.
         def [](idx)
           if idx.zero?
             raise IndexError,

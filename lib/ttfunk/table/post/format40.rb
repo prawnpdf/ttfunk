@@ -3,7 +3,12 @@
 module TTFunk
   class Table
     class Post
+      # Version 4.0 names glyphs by their character code.
       module Format40
+        # Get glyph name for character code.
+        #
+        # @param _code [Integer]
+        # @return [String]
         def glyph_for(code)
           @map[code] || 0xFFFF
         end

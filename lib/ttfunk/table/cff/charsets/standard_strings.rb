@@ -4,6 +4,7 @@ module TTFunk
   class Table
     class Cff < TTFunk::Table
       module Charsets
+        # Standard CFF strings
         STANDARD_STRINGS = OneBasedArray.new(
           [
             'space',
