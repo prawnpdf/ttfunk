@@ -58,6 +58,9 @@ module TTFunk
       #   TTFunk::Subset::Unicode, TTFunk::Subset::Unicode8Bit]
       # @return [TTFunk::EncodedString]
       def encode(subset)
+        # Make sure TopDict has an entry for encoding so it could be properly replaced
+        top_index[0][TopDict::OPERATORS[:encoding]] = 0
+
         EncodedString.new do |result|
           result.concat(
             header.encode,

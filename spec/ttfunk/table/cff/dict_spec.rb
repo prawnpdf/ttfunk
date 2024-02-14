@@ -79,4 +79,34 @@ RSpec.describe TTFunk::Table::Cff::Dict do
       described_class::TooManyOperandsError
     )
   end
+
+  it 'allows addition of entries' do
+    dict = described_class.new(TestFile.new(StringIO.new('')), 0, 0)
+
+    dict[1] = 42
+    dict[1201] = [43, 44]
+
+    expect(dict.encode).to eq("\xB5\x01\xb6\xb7\x0c\x01".b)
+  end
+
+  it 'allows replacement of entries' do
+    dict = described_class.new(TestFile.new(StringIO.new("\xB5\x01\xb6\xb7\x0c\x01".b)), 0, 6)
+
+    dict[1] = 0
+
+    expect(dict.encode).to eq("\x8b\x01\xb6\xb7\x0c\x01".b)
+  end
+
+  it 'uses a stable encoding order' do
+    dict1 = described_class.new(TestFile.new(StringIO.new('')), 0, 0)
+    dict2 = described_class.new(TestFile.new(StringIO.new('')), 0, 0)
+
+    dict1[1] = 1
+    dict1[2] = 2
+
+    dict2[2] = 2
+    dict2[1] = 1
+
+    expect(dict1.encode).to eq(dict2.encode)
+  end
 end

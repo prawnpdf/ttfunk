@@ -44,6 +44,14 @@ module TTFunk
           @dict[operator]
         end
 
+        # Add dict entry.
+        #
+        # @param operator [Integer] Entry operator. Must be in range 0..255. Wide operators must be in range 1200..1455.
+        # @param operands [Array<Integer, TTFunk::SciForm>]
+        def []=(operator, *operands)
+          @dict[operator] = Array(*operands)
+        end
+
         # Iterate over dict entries.
         #
         # @yieldparam key [Integer]
@@ -59,7 +67,8 @@ module TTFunk
         #
         # @return [String]
         def encode
-          map do |(operator, operands)|
+          sort_by(&:first)
+          .map do |(operator, operands)|
             operands.map { |operand| encode_operand(operand) }.join +
               encode_operator(operator)
           end.join
