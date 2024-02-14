@@ -240,7 +240,9 @@ module TTFunk
 
           validate_sci!(significand, exponent)
 
-          SciForm.new(significand.to_f, exponent.to_i)
+          exponent = 0 if exponent.empty?
+
+          SciForm.new(Float(significand), Integer(exponent))
         end
 
         def validate_sci!(significand, exponent)

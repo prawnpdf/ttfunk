@@ -36,7 +36,10 @@ RSpec.describe TTFunk::Table::Cff::Dict do
     # positive float with positive exponent, operator 11
     [0x1E, 0x0A, 0x14, 0x05, 0x41, 0xB3, 0xFF, 0x0B] => {
       11 => [TTFunk::SciForm.new(0.140541, 3)]
-    }
+    },
+
+    # Float with a missing exponent, operator 1
+    [0x1E, 0x0A, 0x1F, 0x01] => { 1 => [TTFunk::SciForm.new(0.1, 0)] },
   }
 
   test_cases.each_with_index do |(bytes, decoded_values), idx|
