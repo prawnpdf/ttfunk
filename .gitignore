@@ -3,5 +3,6 @@
 .ruby-version
 .yardoc
 Gemfile.lock
+Gemfile.local
 doc
 *.gem
