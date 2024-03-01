@@ -10,7 +10,7 @@ module TTFunk
 
     # Open a resource file
     #
-    # @param [String, Pathname]
+    # @param path [String, Pathname]
     # @yieldparam resource_file [TTFunk::ResourceFile]
     # @return [any] result of the block
     def self.open(path)

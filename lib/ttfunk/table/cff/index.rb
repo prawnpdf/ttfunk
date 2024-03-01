@@ -46,7 +46,7 @@ module TTFunk
 
         # Encode index.
         #
-        # @param *args all arguments are passed to `encode_item` method.
+        # @param args all arguments are passed to `encode_item` method.
         # @return [TTFunk::EncodedString]
         def encode(*args)
           new_items = encode_items(*args)

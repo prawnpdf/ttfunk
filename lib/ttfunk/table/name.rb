@@ -182,7 +182,7 @@ module TTFunk
 
       # Encode table.
       #
-      # @param name [TTFunk::Table::Name]
+      # @param names [TTFunk::Table::Name]
       # @param key [String]
       # @return [String]
       def self.encode(names, key = '')

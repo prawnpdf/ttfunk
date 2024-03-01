@@ -46,7 +46,7 @@ module TTFunk
 
         # Finalize dict.
         #
-        # @param new_cff_data [TTFunk::EncodedString]
+        # @param private_dict_data [TTFunk::EncodedString]
         # @return [void]
         def finalize(private_dict_data)
           return unless subr_index

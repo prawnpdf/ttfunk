@@ -9,9 +9,11 @@ module TTFunk
         # @return [TTFunk::Table::Cff::TopDict]
         attr_reader :top_dict
 
-        # @param top_dict [TTFunk::Table:Cff::TopDict]
-        # @param file [TTFunk::File]
-        # @param subtable_start [Integer]
+        # @overload initialize(top_dict, file, offset, length = nil)
+        #   @param top_dict [TTFunk::Table:Cff::TopDict]
+        #   @param file [TTFunk::File]
+        #   @param offset [Integer]
+        #   @param length [Integer]
         def initialize(top_dict, *remaining_args)
           super(*remaining_args)
           @top_dict = top_dict

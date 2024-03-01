@@ -46,11 +46,12 @@ module TTFunk
 
     # Read a series of values.
     #
-    # @param bytes [Integer] number of bytes to read.
-    # @param format [String] format to parse the bytes.
-    # @return [Array]
-    # @raise [EOTError]
-    # @see # Ruby Packed data
+    # @overload read(bytes, format)
+    #   @param bytes [Integer] number of bytes to read.
+    #   @param format [String] format to parse the bytes.
+    #   @return [Array]
+    #   @raise [EOTError]
+    #   @see # Ruby Packed data
     def read(*args)
       if eot?
         raise EOTError, 'attempted to read past the end of the table'

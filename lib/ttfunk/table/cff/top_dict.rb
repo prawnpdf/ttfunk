@@ -59,7 +59,7 @@ module TTFunk
 
         # Finalize the table.
         #
-        # @prama new_cff_data [TTFunk::EncodedString]
+        # @param new_cff_data [TTFunk::EncodedString]
         # @param charmap [Hash{Integer => Hash}] keys are the charac codes,
         #   values are hashes:
         #   * `:old` (<tt>Integer</tt>) - glyph ID in the original font.

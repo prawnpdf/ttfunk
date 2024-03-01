@@ -33,7 +33,7 @@ module TTFunk
 
       # Add a character to subset.
       #
-      # @param [Integer] Unicode codepoint
+      # @param character [Integer] Unicode codepoint
       # @return [void]
       def use(character)
         @subset << character
