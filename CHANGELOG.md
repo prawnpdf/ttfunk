@@ -69,6 +69,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changes
 
+* Minimum Ruby is 2.7
+
+  Alexander Mankuta
+
 * Performance improvement in subsets construction
 
   Thomas Leitner
