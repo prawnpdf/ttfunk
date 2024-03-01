@@ -32,7 +32,7 @@ module TTFunk
 
       # Add a character to subset.
       #
-      # @param [Integer] Unicode codepoint
+      # @param character [Integer] Unicode codepoint
       # @return [void]
       def use(character)
         unless @unicodes.key?(character)
@@ -44,7 +44,7 @@ module TTFunk
 
       # Can this subset include the character?
       #
-      # @param _character [Integer] Unicode codepoint
+      # @param character [Integer] Unicode codepoint
       # @return [Boolean]
       def covers?(character)
         @unicodes.key?(character) || @next < 256

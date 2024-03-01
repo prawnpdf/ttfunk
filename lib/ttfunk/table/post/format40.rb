@@ -7,7 +7,7 @@ module TTFunk
       module Format40
         # Get glyph name for character code.
         #
-        # @param _code [Integer]
+        # @param code [Integer]
         # @return [String]
         def glyph_for(code)
           @map[code] || 0xFFFF

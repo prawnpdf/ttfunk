@@ -22,7 +22,7 @@ module TTFunk
         # @return [String]
         attr_reader :signature
 
-        # @param forma [Integer]
+        # @param format [Integer]
         # @param length [Integer]
         # @param offset [Integer]
         # @param signature [String]

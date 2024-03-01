@@ -59,6 +59,7 @@ module TTFunk
         attr_reader :y_max
 
 
+        # IDs of compound glyphs.
         attr_reader :glyph_ids
 
         # Component glyph.

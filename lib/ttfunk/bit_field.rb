@@ -14,7 +14,7 @@ module TTFunk
 
     # Set bit on.
     #
-    # @prama pos [Integer] bit position
+    # @param pos [Integer] bit position
     # @return [void]
     def on(pos)
       @value |= 2**pos

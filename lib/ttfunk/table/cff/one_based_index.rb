@@ -20,7 +20,8 @@ module TTFunk
         # @return [TTFunk::Table::Cff::Index]
         attr_reader :base_index
 
-        # @param *args [Array] all params are passed to the base index.
+        # @param args [Array] all params are passed to the base index.
+        # @see Index
         def initialize(*args)
           @base_index = Index.new(*args)
         end

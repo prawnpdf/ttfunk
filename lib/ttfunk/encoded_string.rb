@@ -27,7 +27,7 @@ module TTFunk
 
     # Append to string.
     #
-    # @param [String, Placeholder, EncodedString]
+    # @param obj [String, Placeholder, EncodedString]
     # @return [self]
     def <<(obj)
       case obj

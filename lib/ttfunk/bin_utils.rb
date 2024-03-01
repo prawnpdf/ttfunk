@@ -7,7 +7,7 @@ module TTFunk
     #
     # @param arr [Array<Integer>]
     # @param bit_width [Integer] bit width of the elements
-    # @return Integer
+    # @return [Integer]
     def stitch_int(arr, bit_width:)
       value = 0
 
