@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   end
 
   spec.authors = [
+    'Alexander Mankuta',
     'Gregory Brown',
     'Brad Ediger',
     'Daniel Nelson',
@@ -32,6 +33,7 @@ Gem::Specification.new do |spec|
     'Cameron Dutro'
   ]
   spec.email = [
+    'alex@pointless.one',
     'gregory.t.brown@gmail.com',
     'brad@bradediger.com',
     'dnelson@bluejade.com',
