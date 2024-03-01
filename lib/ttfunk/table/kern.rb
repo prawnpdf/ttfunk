@@ -23,7 +23,7 @@ module TTFunk
       def self.encode(kerning, mapping)
         return unless kerning.exists? && kerning.tables.any?
 
-        tables = kerning.tables.map { |table| table.recode(mapping) }.compact
+        tables = kerning.tables.filter_map { |table| table.recode(mapping) }
         return if tables.empty?
 
         [0, tables.length, tables.join].pack('nnA*')
@@ -68,7 +68,7 @@ module TTFunk
           vertical: (coverage & 0x1).zero?,
           minimum: (coverage & 0x2 != 0),
           cross: (coverage & 0x4 != 0),
-          override: (coverage & 0x8 != 0)
+          override: (coverage & 0x8 != 0),
         )
       end
 
@@ -85,7 +85,7 @@ module TTFunk
             data: io.read(length - 8),
             vertical: (coverage & 0x8000 != 0),
             cross: (coverage & 0x4000 != 0),
-            variation: (coverage & 0x2000 != 0)
+            variation: (coverage & 0x2000 != 0),
           )
         end
       end

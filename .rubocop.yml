@@ -9,6 +9,19 @@ RSpec/MultipleMemoizedHelpers:
   Exclude:
     - spec/ttfunk/table/os2_spec.rb
 
+RSpec/SpecFilePathFormat:
+  CustomTransform:
+    TTFunk: ttfunk
+  Exclude:
+    - spec/ttfunk/table/cff/charstrings_index_spec.rb
+    - spec/ttfunk/table/cff/name_index_spec.rb
+
 Style/FormatStringToken:
   Exclude:
     - examples/metrics.rb
+
+
+Style/Documentation:
+  Exclude:
+    - examples/**/*.rb
+    - spec/**/*.rb

@@ -17,14 +17,14 @@ RSpec.describe TTFunk::Table::Cff::FdSelector do
       instance_double(
         TTFunk::Table::Cff::TopDict,
         :top_dict,
-        charstrings_index: charstrings_index
+        charstrings_index: charstrings_index,
       )
     end
     let(:charstrings_index) do
       instance_double(
         TTFunk::Table::Cff::CharstringsIndex,
         :charstrings_index,
-        items_count: entry_count
+        items_count: entry_count,
       )
     end
     let(:fd_selector) do
@@ -32,9 +32,7 @@ RSpec.describe TTFunk::Table::Cff::FdSelector do
     end
 
     before do
-      allow(fd_selector).to(
-        receive(:charstrings_index).and_return(charstrings_index)
-      )
+      allow(fd_selector).to receive(:charstrings_index).and_return(charstrings_index)
     end
 
     it 'includes entries for all the glyphs in the font' do
@@ -49,7 +47,7 @@ RSpec.describe TTFunk::Table::Cff::FdSelector do
       charmap = {
         0x20 => { old: 1, new: 1 },
         0x22 => { old: 3, new: 3 },
-        0x24 => { old: 5, new: 5 }
+        0x24 => { old: 5, new: 5 },
       }
       expect(fd_selector.encode(charmap)).to eq("\x00\x02\x04\x06")
     end
@@ -60,33 +58,25 @@ RSpec.describe TTFunk::Table::Cff::FdSelector do
 
     it 'includes entries for all the glyphs in the font' do
       # the charstrings index doesn't contain an entry for the .notdef glyph
-      expect(fd_selector.items_count).to(
-        eq(font.cff.top_index[0].charstrings_index.items_count + 1)
-      )
+      expect(fd_selector.items_count).to eq(font.cff.top_index[0].charstrings_index.items_count + 1)
     end
 
     it 'parses the entries correctly' do
       fd_indices = fd_selector.to_a
 
-      expect(fd_indices[0..10]).to eq(
-        [5, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15]
-      )
+      expect(fd_indices[0..10]).to eq [5, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15]
 
-      expect(fd_indices[10..20]).to eq(
-        [15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17]
-      )
+      expect(fd_indices[10..20]).to eq [15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17]
 
-      expect(fd_indices[-10..]).to eq(
-        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
-      )
+      expect(fd_indices[-10..]).to eq [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
     end
 
     it 'encodes correctly' do
-      charmap = Hash[(0..15).map { |i| [i, { old: i, new: i }] }]
+      charmap = (0..15).to_h { |i| [i, { old: i, new: i }] }
       result = fd_selector.encode(charmap)
       expect(result).to(
         #   fmt | count |  range 1  |  range 2  | n glyphs
-        eq("\x03\x00\x02\x00\x00\x05\x00\x01\x0F\x00\x10")
+        eq("\x03\x00\x02\x00\x00\x05\x00\x01\x0F\x00\x10"),
       )
     end
   end

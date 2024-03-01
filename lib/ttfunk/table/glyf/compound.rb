@@ -58,7 +58,6 @@ module TTFunk
         # @return [Integer]
         attr_reader :y_max
 
-
         # IDs of compound glyphs.
         attr_reader :glyph_ids
 
@@ -89,9 +88,9 @@ module TTFunk
           io = StringIO.new(raw)
 
           @number_of_contours, @x_min, @y_min, @x_max, @y_max =
-            io.read(10).unpack('n*').map do |i|
+            io.read(10).unpack('n*').map { |i|
               BinUtils.twos_comp_to_int(i, bit_width: 16)
-            end
+            }
 
           # Because TTFunk only cares about glyphs insofar as they (1) provide
           # a bounding box for each glyph, and (2) can be rewritten into a
@@ -109,9 +108,9 @@ module TTFunk
           loop do
             flags, glyph_id = @raw[offset, 4].unpack('n*')
             @glyph_ids << glyph_id
-            @glyph_id_offsets << offset + 2
+            @glyph_id_offsets << (offset + 2)
 
-            break unless flags & MORE_COMPONENTS != 0
+            break if (flags & MORE_COMPONENTS).zero?
 
             offset += 4
 

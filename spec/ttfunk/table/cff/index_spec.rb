@@ -15,7 +15,7 @@ RSpec.describe TTFunk::Table::Cff::Index do
       # data
       0xA,
       0xB,
-      0xC
+      0xC,
     ] => [[10], [11], [12]],
 
     [
@@ -28,20 +28,18 @@ RSpec.describe TTFunk::Table::Cff::Index do
       # data
       0x11, 0x22,
       0x33, 0x44, 0x55, 0x66,
-      0x77
+      0x77,
     ] => [[17, 34], [51, 68, 85, 102], [119]],
 
-    [0x00, 0x00] => []
+    [0x00, 0x00] => [],
   }
 
   describe 'decoding' do
     test_cases.each_with_index do |(bytes, decoded_values), idx|
-      context "test case #{idx}" do
+      context "with example #{idx}" do
         subject(:index) do
           io = StringIO.new(bytes.pack('C*'))
-          described_class.new(
-            TestFile.new(io), 0, bytes.size
-          )
+          described_class.new(TestFile.new(io), 0, bytes.size)
         end
 
         it 'parses correctly' do
@@ -79,13 +77,10 @@ RSpec.describe TTFunk::Table::Cff::Index do
         # offsets
         0x01, 0x02, 0x03, 0x04,
         # data
-        0x01, 0x02, 0x03
+        0x01, 0x02, 0x03,
       ].pack('C*')
 
-      index =
-        inc_index_class.new(
-          TestFile.new(StringIO.new(data)), 0, data.length
-        )
+      index = inc_index_class.new(TestFile.new(StringIO.new(data)), 0, data.length)
 
       expect(index.encode.string).to eq("\00\03\01\01\02\03\04\02\03\04")
     end
@@ -109,13 +104,10 @@ RSpec.describe TTFunk::Table::Cff::Index do
         # offsets
         0x01, 0x02, 0x03, 0x04,
         # data
-        0x01, 0x02, 0x03
+        0x01, 0x02, 0x03,
       ].pack('C*')
 
-      index =
-        dup_index_class.new(
-          TestFile.new(StringIO.new(data)), 0, data.length
-        )
+      index = dup_index_class.new(TestFile.new(StringIO.new(data)), 0, data.length)
 
       expect(index.encode.string).to eq("\00\06\01\01\02\03\04\05\06\07\01\01\02\02\03\03")
     end
@@ -124,7 +116,7 @@ RSpec.describe TTFunk::Table::Cff::Index do
       { item_size: 1, data_size: 6, offset_size: 1 },
       { item_size: 0xff, data_size: 262, offset_size: 2 },
       { item_size: 0xffff, data_size: 65_544, offset_size: 3 },
-      { item_size: 0xffffff, data_size: 16_777_226, offset_size: 4 }
+      { item_size: 0xffffff, data_size: 16_777_226, offset_size: 4 },
     ].each do |params|
       it "properly encodes offset size #{params[:offset_size]}" do
         gen_index_class =
@@ -145,10 +137,7 @@ RSpec.describe TTFunk::Table::Cff::Index do
 
         expect(data.length).to eq params[:data_size]
 
-        index =
-          described_class.new(
-            TestFile.new(StringIO.new(data)), 0, data.length
-          )
+        index = described_class.new(TestFile.new(StringIO.new(data)), 0, data.length)
 
         expect(index.items_count).to eq 1
       end

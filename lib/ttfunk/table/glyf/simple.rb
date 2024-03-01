@@ -55,9 +55,9 @@ module TTFunk
           io = StringIO.new(raw)
 
           @number_of_contours, @x_min, @y_min, @x_max, @y_max =
-            io.read(10).unpack('n*').map do |i|
+            io.read(10).unpack('n*').map { |i|
               BinUtils.twos_comp_to_int(i, bit_width: 16)
-            end
+            }
 
           @end_points_of_contours = io.read(number_of_contours * 2).unpack('n*')
           @instruction_length = io.read(2).unpack1('n')

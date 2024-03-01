@@ -396,8 +396,8 @@ module TTFunk
             'Medium',
             'Regular',
             'Roman',
-            'Semibold'
-          ]
+            'Semibold',
+          ],
         ).freeze
       end
     end

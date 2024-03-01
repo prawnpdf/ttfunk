@@ -8,7 +8,7 @@ RSpec.describe TTFunk::SciForm do
 
   describe '#to_f' do
     it 'converts to a float' do
-      expect(sci.to_f).to eq(612_300)
+      expect(Float(sci)).to eq(612_300)
     end
   end
 end

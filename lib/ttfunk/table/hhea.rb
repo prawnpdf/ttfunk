@@ -89,7 +89,7 @@ module TTFunk
               hhea.ascent, hhea.descent, hhea.line_gap,
               *min_max_values_for(original, mapping),
               hhea.caret_slope_rise, hhea.caret_slope_run, hhea.caret_offset,
-              0, 0, 0, 0, hhea.metric_data_format, hmtx[:number_of_metrics]
+              0, 0, 0, 0, hhea.metric_data_format, hmtx[:number_of_metrics],
             ].pack('n*')
           end
         end
@@ -102,7 +102,7 @@ module TTFunk
           max_aw = Max.new
           max_extent = Max.new
 
-          mapping.each do |_, old_glyph_id|
+          mapping.each_value do |old_glyph_id|
             horiz_metrics = original.horizontal_metrics.for(old_glyph_id)
             next unless horiz_metrics
 
@@ -114,15 +114,14 @@ module TTFunk
 
             x_delta = glyph.x_max - glyph.x_min
 
-            min_rsb << horiz_metrics.advance_width -
-              horiz_metrics.left_side_bearing - x_delta
+            min_rsb << (horiz_metrics.advance_width - horiz_metrics.left_side_bearing - x_delta)
 
-            max_extent << horiz_metrics.left_side_bearing + x_delta
+            max_extent << (horiz_metrics.left_side_bearing + x_delta)
           end
 
           [
             max_aw.value_or(0), min_lsb.value_or(0),
-            min_rsb.value_or(0), max_extent.value_or(0)
+            min_rsb.value_or(0), max_extent.value_or(0),
           ]
         end
       end

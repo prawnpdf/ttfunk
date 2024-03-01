@@ -18,7 +18,7 @@ module TTFunk
         OPERATORS = {
           subrs: 19,
           default_width_x: 20,
-          nominal_width_x: 21
+          nominal_width_x: 21,
         }.freeze
 
         # Inverse operator mapping.
@@ -54,9 +54,7 @@ module TTFunk
           encoded_subr_index = subr_index.encode
           encoded_offset = encode_integer32(private_dict_data.length)
 
-          private_dict_data.resolve_placeholder(
-            :"subrs_#{@table_offset}", encoded_offset
-          )
+          private_dict_data.resolve_placeholder(:"subrs_#{@table_offset}", encoded_offset)
 
           private_dict_data << encoded_subr_index
         end
@@ -97,9 +95,7 @@ module TTFunk
 
         def encode_subrs
           EncodedString.new do |result|
-            result << Placeholder.new(
-              :"subrs_#{@table_offset}", length: PLACEHOLDER_LENGTH
-            )
+            result << Placeholder.new(:"subrs_#{@table_offset}", length: PLACEHOLDER_LENGTH)
           end
         end
       end

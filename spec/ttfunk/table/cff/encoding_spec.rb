@@ -13,9 +13,7 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
       let(:encoding_id) { described_class::STANDARD_ENCODING_ID }
 
       it 'includes all the entries from the standard encoding' do
-        expect(encoding.to_a).to eq(
-          [0] + described_class.codes_for_encoding_id(encoding_id)
-        )
+        expect(encoding.to_a).to eq([0] + described_class.codes_for_encoding_id(encoding_id))
       end
     end
 
@@ -23,9 +21,7 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
       let(:font_path) { test_font('AlbertTextBold', :otf) }
 
       it 'parses the entries correctly' do
-        expect(encoding.to_a[0..8]).to eq(
-          [0, 26, 27, 28, 29, 30, 31, 32, 33]
-        )
+        expect(encoding.to_a[0..8]).to eq [0, 26, 27, 28, 29, 30, 31, 32, 33]
       end
     end
   end
@@ -45,7 +41,7 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
           0x29 => { old: 10, new: 10 },
           0x2d => { old: 14, new: 14 },
           0x2e => { old: 15, new: 15 },
-          0x34 => { old: 21, new: 13 }
+          0x34 => { old: 21, new: 13 },
         }
       end
 
@@ -74,15 +70,11 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
         # predefined encoding, but which is non-zero. Since, again, we're
         # testing in isolation, the parser needs to start at position 0. Long
         # story short: we need to zero out both values to run the test.
-        allow_any_instance_of(described_class).to(
-          receive(:offset).and_return(0)
-        )
+        allow_any_instance_of(described_class).to receive(:offset).and_return(0)
 
         allow(font.cff.top_index[0]).to receive(:cff_offset).and_return(0)
 
-        new_encoding = described_class.new(
-          font.cff.top_index[0], file, fake_offset, encoded.length
-        )
+        new_encoding = described_class.new(font.cff.top_index[0], file, fake_offset, encoded.length)
 
         expect(new_encoding.to_a).to eq([0, 0x20, 0x23, 0x29, 0x34, 0x2d, 0x2e])
       end
@@ -93,7 +85,7 @@ RSpec.describe TTFunk::Table::Cff::Encoding do
       let(:charmap) do
         # i.e. the first 20 characters, in order
         # (supposed to be new => old glyph IDs)
-        Hash[(1..20).map { |i| [0x20 + i, { old: i, new: i }] }]
+        (1..20).to_h { |i| [0x20 + i, { old: i, new: i }] }
       end
 
       it 'encodes using the range-based format' do

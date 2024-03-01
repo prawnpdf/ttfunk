@@ -14,10 +14,10 @@ module TTFunk
     # @yieldparam resource_file [TTFunk::ResourceFile]
     # @return [any] result of the block
     def self.open(path)
-      ::File.open(path, 'rb') do |io|
+      ::File.open(path, 'rb') { |io|
         file = new(io)
-        yield file
-      end
+        yield(file)
+      }
     end
 
     # @param io [IO]
@@ -51,7 +51,7 @@ module TTFunk
               id: id,
               attributes: attr,
               offset: data_ofs,
-              handle: handle
+              handle: handle,
             }
 
             if name_list_offset + name_ofs < map_offset + map_length
@@ -95,7 +95,7 @@ module TTFunk
     # @param type [String]
     # @return [Array<String>]
     def resources_for(type)
-      (@map[type] && @map[type][:named] || {}).keys
+      ((@map[type] && @map[type][:named]) || {}).keys
     end
 
     private

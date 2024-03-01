@@ -4,9 +4,7 @@ module TTFunk
   # Encodes a CFF-based OpenType font subset to its binary representation.
   class OTFEncoder < TTFEncoder
     # Optimal table order according to OpenType specification.
-    OPTIMAL_TABLE_ORDER = [
-      'head', 'hhea', 'maxp', 'OS/2', 'name', 'cmap', 'post', 'CFF '
-    ].freeze
+    OPTIMAL_TABLE_ORDER = ['head', 'hhea', 'maxp', 'OS/2', 'name', 'cmap', 'post', 'CFF '].freeze
 
     private
 
@@ -40,7 +38,7 @@ module TTFunk
       @tables ||= super.merge(
         'BASE' => base_table,
         'VORG' => vorg_table,
-        'CFF ' => cff_table
+        'CFF ' => cff_table,
       ).compact
     end
 

@@ -34,7 +34,7 @@ module TTFunk
         ''.b.tap do |table|
           table << [
             vorg.major_version, vorg.minor_version,
-            vorg.default_vert_origin_y, vorg.count
+            vorg.default_vert_origin_y, vorg.count,
           ].pack('n*')
 
           vorg.origins.each_pair do |glyph_id, vert_origin_y|

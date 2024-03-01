@@ -34,7 +34,7 @@ module TTFunk
           # Use microsoft unicode, instead of generic unicode, for optimal
           # Windows support
           unicode: { platform_id: 3, encoding_id: 1 }.freeze,
-          unicode_ucs4: { platform_id: 3, encoding_id: 10 }.freeze
+          unicode_ucs4: { platform_id: 3, encoding_id: 10 }.freeze,
         }.freeze
 
         # Encode encoding record.
@@ -76,8 +76,8 @@ module TTFunk
               mapping[:platform_id],
               mapping[:encoding_id],
               12,
-              result[:subtable]
-            ].pack('nnNA*')
+              result[:subtable],
+            ].pack('nnNA*'),
           )
         end
 
@@ -107,9 +107,8 @@ module TTFunk
         #
         # @return [Boolean]
         def unicode?
-          platform_id == 3 && (encoding_id == 1 || encoding_id == 10) &&
-            format != 0 ||
-            platform_id.zero? && format != 0
+          (platform_id == 3 && (encoding_id == 1 || encoding_id == 10) && format != 0) ||
+            (platform_id.zero? && format != 0)
         end
 
         # Is this encoding record format supported?

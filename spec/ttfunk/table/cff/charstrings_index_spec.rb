@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'ttfunk/table/cff'
 
-RSpec.describe TTFunk::Table::Cff do
+RSpec.describe TTFunk::Table::Cff, 'Charstring Index' do # rubocop: disable RSpec/DescribeMethod
   let(:font_path) { test_font('NotoSansCJKsc-Thin', :otf) }
   let(:font) { TTFunk::File.open(font_path) }
   let(:charstrings_index) { font.cff.top_index[0].charstrings_index }
@@ -44,8 +44,8 @@ RSpec.describe TTFunk::Table::Cff do
         [:curve, 869, 688, 916, 613, 938, 572],
         [:line, 967, 587],
         [:curve, 942, 629, 893, 704, 868, 737],
-        [:close]
-      ]
+        [:close],
+      ],
     )
   end
 
@@ -95,8 +95,8 @@ RSpec.describe TTFunk::Table::Cff do
         [:line, -332, 176],
         [:line, -127, 176],
         [:line, -127, 206],
-        [:close]
-      ]
+        [:close],
+      ],
     )
   end
 
@@ -170,8 +170,8 @@ RSpec.describe TTFunk::Table::Cff do
         [:curve, 933, 263, 941, 274, 949, 280],
         [:curve, 765, 326, 616, 387, 512, 527],
         [:curve, 518, 534, 522, 542, 527, 549],
-        [:close]
-      ]
+        [:close],
+      ],
     )
   end
 end

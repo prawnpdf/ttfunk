@@ -54,7 +54,7 @@ RSpec.describe TTFunk::TTFEncoder do
 
       tables.each_cons(2) do |first_table, second_table|
         expect(new_font.directory.tables[first_table][:offset]).to(
-          be < new_font.directory.tables[second_table][:offset]
+          be < new_font.directory.tables[second_table][:offset],
         )
       end
     end

@@ -7,7 +7,6 @@ module TTFunk
   class Table
     # Naming (`name`) table
     class Name < Table
-
       # Name Record.
       class NameString < ::String
         # Platform ID.
@@ -188,15 +187,13 @@ module TTFunk
       def self.encode(names, key = '')
         tag = Digest::SHA1.hexdigest(key)[0, 6]
 
-        postscript_name = NameString.new(
-          "#{tag}+#{names.postscript_name}", 1, 0, 0
-        )
+        postscript_name = NameString.new("#{tag}+#{names.postscript_name}", 1, 0, 0)
 
         strings = names.strings.dup
         strings[6] = [postscript_name]
         str_count = strings.reduce(0) { |sum, (_, list)| sum + list.length }
 
-        table = [0, str_count, 6 + 12 * str_count].pack('n*')
+        table = [0, str_count, 6 + (12 * str_count)].pack('n*')
         strtable = +''
 
         items = []
@@ -206,13 +203,13 @@ module TTFunk
           end
         end
         items =
-          items.sort_by do |id, string|
+          items.sort_by { |id, string|
             [string.platform_id, string.encoding_id, string.language_id, id]
-          end
+          }
         items.each do |id, string|
           table << [
             string.platform_id, string.encoding_id, string.language_id, id,
-            string.length, strtable.length
+            string.length, strtable.length,
           ].pack('n*')
           strtable << string
         end
@@ -244,7 +241,7 @@ module TTFunk
             name_id: id,
             length: length,
             offset: offset + string_offset + start_offset,
-            text: nil
+            text: nil,
           }
         end
 
@@ -257,7 +254,7 @@ module TTFunk
             @entries[i][:text] || '',
             @entries[i][:platform_id],
             @entries[i][:encoding_id],
-            @entries[i][:language_id]
+            @entries[i][:language_id],
           )
         end
 

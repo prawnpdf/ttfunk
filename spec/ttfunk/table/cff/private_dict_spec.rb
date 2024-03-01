@@ -33,9 +33,7 @@ RSpec.describe TTFunk::Table::Cff::PrivateDict do
       # when constructing charstrings. In other words, these seemingly
       # random bytes mean something specific to the charstrings code. See
       # the subr index tests for more.
-      expect(subr_index[2].bytes).to(
-        eq([127, 171, 119, 159, 248, 122, 171, 18, 11])
-      )
+      expect(subr_index[2].bytes).to eq [127, 171, 119, 159, 248, 122, 171, 18, 11]
     end
   end
 
@@ -52,9 +50,9 @@ RSpec.describe TTFunk::Table::Cff::PrivateDict do
       expect(new_dict.to_h).to(
         eq(
           private_dict.to_h.merge(
-            described_class::OPERATORS[:subrs] => [dict_length]
-          )
-        )
+            described_class::OPERATORS[:subrs] => [dict_length],
+          ),
+        ),
       )
 
       expect(new_dict.subr_index.items_count).to eq(private_dict.subr_index.items_count)

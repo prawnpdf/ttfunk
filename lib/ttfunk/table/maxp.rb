@@ -89,9 +89,7 @@ module TTFunk
             table << [maxp.version, num_glyphs].pack('Nn')
 
             if maxp.version == 0x10000
-              stats = stats_for(
-                maxp, glyphs_from_ids(maxp, new2old_glyph.values)
-              )
+              stats = stats_for(maxp, glyphs_from_ids(maxp, new2old_glyph.values))
 
               table << [
                 stats[:max_points],
@@ -108,7 +106,7 @@ module TTFunk
                 maxp.max_stack_elements,
                 stats[:max_size_of_instructions],
                 stats[:max_component_elements],
-                stats[:max_component_depth]
+                stats[:max_component_depth],
               ].pack('n*')
             end
           end
@@ -150,7 +148,7 @@ module TTFunk
             max_component_elements: max_component_elements,
             max_points: max_points,
             max_contours: max_contours,
-            max_size_of_instructions: max_size_of_instructions
+            max_size_of_instructions: max_size_of_instructions,
           }
         end
 
@@ -171,7 +169,7 @@ module TTFunk
           {
             max_component_points: max_component_points,
             max_component_depth: max_component_depth,
-            max_component_contours: max_component_contours
+            max_component_contours: max_component_contours,
           }
         end
 
@@ -182,9 +180,7 @@ module TTFunk
 
           glyphs.each do |glyph|
             if glyph.compound?
-              stats = totals_for_compound(
-                maxp, glyphs_from_ids(maxp, glyph.glyph_ids), depth + 1
-              )
+              stats = totals_for_compound(maxp, glyphs_from_ids(maxp, glyph.glyph_ids), depth + 1)
 
               total_points << stats[:total_points]
               total_contours << stats[:total_contours]
@@ -199,7 +195,7 @@ module TTFunk
           {
             total_points: total_points,
             total_contours: total_contours,
-            max_depth: max_depth
+            max_depth: max_depth,
           }
         end
       end

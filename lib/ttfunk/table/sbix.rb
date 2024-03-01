@@ -56,13 +56,11 @@ module TTFunk
         if glyph_offset && next_glyph_offset
           bytes = next_glyph_offset - glyph_offset
           if bytes.positive?
-            parse_from(offset + strike[:offset] + glyph_offset) do
+            parse_from(offset + strike[:offset] + glyph_offset) {
               x, y, type = read(8, 's2A4')
               data = StringIO.new(io.read(bytes - 8))
-              BitmapData.new(
-                x, y, type, data, strike[:ppem], strike[:resolution]
-              )
-            end
+              BitmapData.new(x, y, type, data, strike[:ppem], strike[:resolution])
+            }
           end
         end
       end
@@ -72,9 +70,9 @@ module TTFunk
       # @param glyph_id [Integer]
       # @return [Array<BitmapData>]
       def all_bitmap_data_for(glyph_id)
-        strikes.each_index.map do |strike_index|
+        strikes.each_index.filter_map { |strike_index|
           bitmap_data_for(glyph_id, strike_index)
-        end.compact
+        }
       end
 
       private
@@ -84,21 +82,21 @@ module TTFunk
         strike_offsets = Array.new(num_strikes) { read(4, 'N').first }
 
         @strikes =
-          strike_offsets.map do |strike_offset|
-            parse_from(offset + strike_offset) do
+          strike_offsets.map { |strike_offset|
+            parse_from(offset + strike_offset) {
               ppem, resolution = read(4, 'n2')
               data_offsets =
-                Array.new(file.maximum_profile.num_glyphs + 1) do
+                Array.new(file.maximum_profile.num_glyphs + 1) {
                   read(4, 'N').first
-                end
+                }
               {
                 ppem: ppem,
                 resolution: resolution,
                 offset: strike_offset,
-                glyph_data_offset: data_offsets
+                glyph_data_offset: data_offsets,
               }
-            end
-          end
+            }
+          }
       end
     end
   end

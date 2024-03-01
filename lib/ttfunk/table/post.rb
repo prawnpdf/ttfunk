@@ -64,7 +64,7 @@ module TTFunk
       #   are old glyph IDs
       # @return [String, nil]
       def self.encode(post, mapping)
-        return unless post.exists?
+        return if post.nil?
 
         post.recode(mapping)
       end
@@ -106,7 +106,7 @@ module TTFunk
           if position
             index << position
           else
-            index << 257 + strings.length
+            index << (257 + strings.length)
             strings << post_glyph
           end
         end
@@ -145,11 +145,7 @@ module TTFunk
       end
 
       def parse_format!
-        warn(
-          Kernel.format(
-            'postscript table format 0x%08X is not supported', @format
-          )
-        )
+        warn(Kernel.format('postscript table format 0x%08X is not supported', @format))
       end
     end
   end

@@ -3,21 +3,21 @@
 require_relative '../lib/ttfunk'
 
 def character_lookup(file, character)
-  puts "character     : #{character}"
+  puts("character     : #{character}")
 
   character_code = character.unpack1('U*')
-  puts "character code: #{character_code}"
+  puts("character code: #{character_code}")
 
   glyph_id = file.cmap.unicode.first[character_code]
-  puts "glyph id      : #{glyph_id}"
+  puts("glyph id      : #{glyph_id}")
 
   glyph = file.glyph_outlines.for(glyph_id)
-  puts format('glyph type    : %s', glyph.class.name.split(/::/).last.downcase)
-  puts format('glyph size    : %db', glyph.raw.length)
-  puts format('glyph bbox    : (%d,%d)-(%d,%d)', glyph.x_min, glyph.y_min, glyph.x_max, glyph.y_max)
+  puts(format('glyph type    : %s', glyph.class.name.split('::').last.downcase))
+  puts(format('glyph size    : %db', glyph.raw.length))
+  puts(format('glyph bbox    : (%d,%d)-(%d,%d)', glyph.x_min, glyph.y_min, glyph.x_max, glyph.y_max))
 
   if glyph.compound?
-    puts format('components    : %d %s', glyph.glyph_ids.length, glyph.glyph_ids.inspect)
+    puts(format('components    : %d %s', glyph.glyph_ids.length, glyph.glyph_ids.inspect))
   end
 end
 

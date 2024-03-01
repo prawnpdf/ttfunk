@@ -12,10 +12,7 @@ RSpec.describe TTFunk::Table::Vorg do
 
   describe '#origins' do
     it 'includes origins for certain chars traditionally written vertically' do
-      code_points =
-        %w[〱 ０ １ ２ ３ ４ ５ ６ ７ ８ ９].map do |c|
-          c.unpack1('U*')
-        end
+      code_points = %w[〱 ０ １ ２ ３ ４ ５ ６ ７ ８ ９].map { |c| c.unpack1('U*') }
 
       glyph_ids = code_points.map { |cp| cmap[cp] }
       glyph_ids.each { |glyph_id| expect(origins).to include(glyph_id) }
@@ -26,17 +23,13 @@ RSpec.describe TTFunk::Table::Vorg do
     it 'finds the vertical origin when explicitly available' do
       glyph_id = cmap['〱'.unpack1('U*')]
       expect(vorg_table.origins).to include(glyph_id)
-      expect(vorg_table.for(glyph_id)).to_not(
-        eq(vorg_table.default_vert_origin_y)
-      )
+      expect(vorg_table.for(glyph_id)).to_not eq(vorg_table.default_vert_origin_y)
     end
 
     it 'falls back to the default vertical origin' do
       glyph_id = cmap['ろ'.unpack1('U*')]
       expect(vorg_table.origins).to_not include(glyph_id)
-      expect(vorg_table.for(glyph_id)).to(
-        eq(vorg_table.default_vert_origin_y)
-      )
+      expect(vorg_table.for(glyph_id)).to eq(vorg_table.default_vert_origin_y)
     end
   end
 
@@ -60,9 +53,7 @@ RSpec.describe TTFunk::Table::Vorg do
     end
 
     it 'includes the same default vertical origin' do
-      expect(reconstituted.default_vert_origin_y).to(
-        eq(vorg_table.default_vert_origin_y)
-      )
+      expect(reconstituted.default_vert_origin_y).to eq(vorg_table.default_vert_origin_y)
     end
   end
 end

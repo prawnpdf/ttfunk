@@ -55,7 +55,7 @@ module TTFunk
     #
     # @return [String]
     def tag
-      self.class.name.split(/::/).last.downcase
+      self.class.name.split('::').last.downcase
     end
 
     private

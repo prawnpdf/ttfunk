@@ -37,10 +37,10 @@ RSpec.describe TTFunk::Table::Cff::FontDict do
         eq(
           font_dict.to_h.merge(
             described_class::OPERATORS[:private] => [
-              private_dict_length, dict_length
-            ]
-          )
-        )
+              private_dict_length, dict_length,
+            ],
+          ),
+        ),
       )
 
       expect(new_dict.private_dict.count).to eq(font_dict.private_dict.count)

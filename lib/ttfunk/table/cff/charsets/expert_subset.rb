@@ -111,8 +111,8 @@ module TTFunk
             'nineinferior',
             'centinferior',
             'dollarinferior',
-            'periodinferior'
-          ]
+            'periodinferior',
+          ],
         ).freeze
       end
     end

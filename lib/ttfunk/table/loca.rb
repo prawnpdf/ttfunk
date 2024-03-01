@@ -21,10 +21,10 @@ module TTFunk
       #   * `:table` - encoded bytes
       def self.encode(offsets)
         long_offsets =
-          offsets.any? do |offset|
+          offsets.any? { |offset|
             short_offset = offset / 2
             short_offset * 2 != offset || short_offset > 0xffff
-          end
+          }
 
         if long_offsets
           { type: 1, table: offsets.pack('N*') }

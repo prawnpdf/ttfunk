@@ -113,7 +113,6 @@ module TTFunk
           end
       end
 
-
       # Get the list of Glyph IDs from the original font that are in this
       # subset.
       #

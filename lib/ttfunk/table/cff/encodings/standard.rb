@@ -173,8 +173,8 @@ module TTFunk
             147,
             148,
             149,
-            *[0] * 4
-          ]
+            *[0] * 4,
+          ],
         ).freeze
       end
     end

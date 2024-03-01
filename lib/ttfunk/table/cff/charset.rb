@@ -111,7 +111,7 @@ module TTFunk
           return to_enum(__method__) unless block_given?
 
           # +1 adjusts for the implicit .notdef glyph
-          (items_count + 1).times { |i| yield self[i] }
+          (items_count + 1).times { |i| yield(self[i]) }
         end
 
         # Get character name for glyph index.
@@ -256,7 +256,7 @@ module TTFunk
           {
             array_format: 2, # SID
             range_format8: 3, # SID + Card8
-            range_format16: 4 # SID + Card16
+            range_format16: 4, # SID + Card16
           }[fmt]
         end
 
@@ -264,7 +264,7 @@ module TTFunk
           {
             array_format: 'n',
             range_format8: 'nC',
-            range_format16: 'nn'
+            range_format16: 'nn',
           }[fmt]
         end
 
@@ -282,7 +282,7 @@ module TTFunk
           {
             array_format: ARRAY_FORMAT,
             range_format8: RANGE_FORMAT_8,
-            range_format16: RANGE_FORMAT_16
+            range_format16: RANGE_FORMAT_16,
           }[sym]
         end
       end

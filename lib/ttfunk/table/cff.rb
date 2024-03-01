@@ -67,7 +67,7 @@ module TTFunk
             name_index.encode,
             top_index.encode,
             string_index.encode,
-            global_subr_index.encode
+            global_subr_index.encode,
           )
 
           charmap = subset.new_cmap_table[:charmap]
@@ -80,18 +80,9 @@ module TTFunk
       def parse!
         @header = Header.new(file, offset)
         @name_index = Index.new(file, @header.table_offset + @header.length)
-
-        @top_index = TopIndex.new(
-          file, @name_index.table_offset + @name_index.length
-        )
-
-        @string_index = OneBasedIndex.new(
-          file, @top_index.table_offset + @top_index.length
-        )
-
-        @global_subr_index = SubrIndex.new(
-          file, @string_index.table_offset + @string_index.length
-        )
+        @top_index = TopIndex.new(file, @name_index.table_offset + @name_index.length)
+        @string_index = OneBasedIndex.new(file, @top_index.table_offset + @top_index.length)
+        @global_subr_index = SubrIndex.new(file, @string_index.table_offset + @string_index.length)
       end
     end
   end

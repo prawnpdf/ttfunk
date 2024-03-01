@@ -21,8 +21,8 @@ RSpec.describe TTFunk::Table::Head do
 
       expect(
         described_class.to_long_date_time(
-          described_class.from_long_date_time(time)
-        )
+          described_class.from_long_date_time(time),
+        ),
       ).to eq time
     end
   end

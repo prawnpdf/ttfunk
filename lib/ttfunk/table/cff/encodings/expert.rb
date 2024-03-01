@@ -198,8 +198,8 @@ module TTFunk
             375,
             376,
             377,
-            378
-          ]
+            378,
+          ],
         ).freeze
       end
     end

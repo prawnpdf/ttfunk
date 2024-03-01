@@ -181,8 +181,8 @@ module TTFunk
             'Ucircumflexsmall',
             'Udieresissmall',
             'Yacutesmall',
-            'Thornsmall'
-          ]
+            'Thornsmall',
+          ],
         ).freeze
       end
     end

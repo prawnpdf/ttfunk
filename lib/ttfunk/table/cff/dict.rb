@@ -68,10 +68,11 @@ module TTFunk
         # @return [String]
         def encode
           sort_by(&:first)
-          .map do |(operator, operands)|
-            operands.map { |operand| encode_operand(operand) }.join +
-              encode_operator(operator)
-          end.join
+            .map { |(operator, operands)|
+              operands.map { |operand| encode_operand(operand) }.join +
+                encode_operator(operator)
+            }
+            .join
         end
 
         private
@@ -80,7 +81,7 @@ module TTFunk
           if operator >= WIDE_OPERATOR_ADJUSTMENT
             [
               WIDE_OPERATOR_BZERO,
-              operator - WIDE_OPERATOR_ADJUSTMENT
+              operator - WIDE_OPERATOR_ADJUSTMENT,
             ].pack('C*')
           else
             [operator].pack('C')
@@ -143,7 +144,7 @@ module TTFunk
           sig.to_s.each_char.with_object([]) do |char, ret|
             case char
             when '0'..'9'
-              ret << char.to_i
+              ret << Integer(char)
             when '.'
               ret << 0xA
             when '-'
@@ -160,7 +161,7 @@ module TTFunk
           nibbles.each_slice(2).each do |(high_nb, low_nb)|
             # low_nb can be nil if nibbles contains an odd number of elements
             low_nb ||= 0xF
-            bytes << (high_nb << 4 | low_nb)
+            bytes << ((high_nb << 4) | low_nb)
           end
 
           bytes << 0xFF if nibbles.size.even?
@@ -186,8 +187,7 @@ module TTFunk
 
               if operands.size > MAX_OPERANDS
                 raise TooManyOperandsError,
-                  'found one too many operands at '\
-                  "position #{io.pos} in dict at position #{table_offset}"
+                  "found one too many operands at position #{io.pos} in dict at position #{table_offset}"
               end
             else
               raise Error, "dict byte value #{b_zero} is reserved"
@@ -248,9 +248,9 @@ module TTFunk
         def validate_sci!(significand, exponent)
           unless valid_significand?(significand) && valid_exponent?(exponent)
             raise InvalidOperandError,
-              'invalid scientific notation operand with significand '\
-              "'#{significand}' and exponent '#{exponent}' ending at "\
-              "position #{io.pos} in dict at position #{table_offset}"
+              'invalid scientific notation operand with significand ' \
+                "'#{significand}' and exponent '#{exponent}' ending at " \
+                "position #{io.pos} in dict at position #{table_offset}"
           end
         end
 
@@ -274,24 +274,22 @@ module TTFunk
           when 247..250
             # 2 bytes
             b_one = read(1, 'C').first
-            (b_zero - 247) * 256 + b_one + 108
+            ((b_zero - 247) * 256) + b_one + 108
 
           when 251..254
             # 2 bytes
             b_one = read(1, 'C').first
-            -(b_zero - 251) * 256 - b_one - 108
+            (-(b_zero - 251) * 256) - b_one - 108
 
           when 28
             # 2 bytes in number (3 total)
             b_one, b_two = read(2, 'C*')
-            BinUtils.twos_comp_to_int(b_one << 8 | b_two, bit_width: 16)
+            BinUtils.twos_comp_to_int((b_one << 8) | b_two, bit_width: 16)
 
           when 29
             # 4 bytes in number (5 total)
             b_one, b_two, b_three, b_four = read(4, 'C*')
-            BinUtils.twos_comp_to_int(
-              b_one << 24 | b_two << 16 | b_three << 8 | b_four, bit_width: 32
-            )
+            BinUtils.twos_comp_to_int((b_one << 24) | (b_two << 16) | (b_three << 8) | b_four, bit_width: 32)
           end
         end
       end

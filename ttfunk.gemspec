@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.homepage = 'https://prawnpdf.org'
   spec.metadata = {
-    'rubygems_mfa_required' => 'true'
+    'rubygems_mfa_required' => 'true',
   }
 
   signing_key = File.expand_path('~/.gem/gem-private_key.pem')
@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
     'Daniel Nelson',
     'Jonathan Greenberg',
     'James Healy',
-    'Cameron Dutro'
+    'Cameron Dutro',
   ]
   spec.email = [
     'alex@pointless.one',
@@ -39,11 +39,11 @@ Gem::Specification.new do |spec|
     'dnelson@bluejade.com',
     'greenberg@entryway.net',
     'jimmy@deefa.com',
-    'camertron@gmail.com'
+    'camertron@gmail.com',
   ]
 
   spec.files = Dir.glob('lib/**/*') +
     ['CHANGELOG.md', 'README.md', 'COPYING', 'LICENSE', 'GPLv2', 'GPLv3']
   spec.required_ruby_version = '>= 2.7'
-  spec.add_development_dependency('prawn-dev', '~> 0.3.0')
+  spec.add_development_dependency('prawn-dev', '~> 0.4.0')
 end

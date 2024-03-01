@@ -233,8 +233,8 @@ module TTFunk
             'ugrave',
             'yacute',
             'ydieresis',
-            'zcaron'
-          ]
+            'zcaron',
+          ],
         ).freeze
       end
     end

@@ -25,7 +25,7 @@ module TTFunk
     def parse_from(position)
       saved = io.pos
       io.pos = position
-      result = yield position
+      result = yield(position)
       io.pos = saved
       result
     end
@@ -38,12 +38,12 @@ module TTFunk
         if ((i + 1) % 16).zero?
           puts
         elsif ((i + 1) % 8).zero?
-          print '  '
+          print('  ')
         else
-          print ' '
+          print(' ')
         end
       end
-      puts unless (bytes.length % 16).zero?
+      puts if (bytes.length % 16) != 0
     end
   end
 end

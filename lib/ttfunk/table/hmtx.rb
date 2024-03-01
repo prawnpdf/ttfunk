@@ -28,14 +28,14 @@ module TTFunk
       #   * `:table` - encoded table.
       def self.encode(hmtx, mapping)
         metrics =
-          mapping.keys.sort.map do |new_id|
+          mapping.keys.sort.map { |new_id|
             metric = hmtx.for(mapping[new_id])
             [metric.advance_width, metric.left_side_bearing]
-          end
+          }
 
         {
           number_of_metrics: metrics.length,
-          table: metrics.flatten.pack('n*')
+          table: metrics.flatten.pack('n*'),
         }
       end
 
@@ -56,7 +56,7 @@ module TTFunk
           metrics_cache[glyph_id] ||=
             HorizontalMetric.new(
               @metrics.last.advance_width,
-              @left_side_bearings[glyph_id - @metrics.length]
+              @left_side_bearings[glyph_id - @metrics.length],
             )
       end
 
@@ -72,7 +72,7 @@ module TTFunk
         file.horizontal_header.number_of_metrics.times do
           advance = read(2, 'n').first
           lsb = read_signed(1).first
-          @metrics.push HorizontalMetric.new(advance, lsb)
+          @metrics.push(HorizontalMetric.new(advance, lsb))
         end
 
         lsb_count = file.maximum_profile.num_glyphs -

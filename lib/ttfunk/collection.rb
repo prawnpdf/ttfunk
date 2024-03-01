@@ -17,12 +17,12 @@ module TTFunk
     #   @return [any] whatever the block returns
     def self.open(path)
       if path.respond_to?(:read)
-        result = yield new(path)
+        result = yield(new(path))
         path.rewind
         result
       else
         ::File.open(path, 'rb') do |io|
-          yield new(io)
+          yield(new(io))
         end
       end
     end
@@ -55,7 +55,7 @@ module TTFunk
     # @return [self]
     def each
       count.times do |index|
-        yield self[index]
+        yield(self[index])
       end
       self
     end

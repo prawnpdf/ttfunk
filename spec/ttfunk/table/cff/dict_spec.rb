@@ -19,7 +19,7 @@ RSpec.describe TTFunk::Table::Cff::Dict do
 
     # negative 4-byte int, positive 4-byte int, operator 9
     [0x1D, 0xBC, 0x92, 0x6A, 0xE8, 0x1D, 0x55, 0x4F, 0x3A, 0xD4, 0x09] => {
-      9 => [-1_131_255_064, 1_431_255_764]
+      9 => [-1_131_255_064, 1_431_255_764],
     },
 
     # negative float with no exponent, operator 10
@@ -30,12 +30,12 @@ RSpec.describe TTFunk::Table::Cff::Dict do
 
     # positive float with negative exponent, operator 11
     [0x1E, 0x0A, 0x14, 0x05, 0x41, 0xC3, 0xFF, 0x0B] => {
-      11 => [TTFunk::SciForm.new(0.140541, -3)]
+      11 => [TTFunk::SciForm.new(0.140541, -3)],
     },
 
     # positive float with positive exponent, operator 11
     [0x1E, 0x0A, 0x14, 0x05, 0x41, 0xB3, 0xFF, 0x0B] => {
-      11 => [TTFunk::SciForm.new(0.140541, 3)]
+      11 => [TTFunk::SciForm.new(0.140541, 3)],
     },
 
     # Float with a missing exponent, operator 1
@@ -43,12 +43,10 @@ RSpec.describe TTFunk::Table::Cff::Dict do
   }
 
   test_cases.each_with_index do |(bytes, decoded_values), idx|
-    context "test case #{idx}" do
+    context "with example #{idx}" do
       subject(:dict) do
         io = StringIO.new(bytes.pack('C*'))
-        described_class.new(
-          TestFile.new(io), 0, bytes.length
-        )
+        described_class.new(TestFile.new(io), 0, bytes.length)
       end
 
       it 'parses correctly' do
@@ -68,9 +66,7 @@ RSpec.describe TTFunk::Table::Cff::Dict do
     data = [0x1E, 0x0A, 0xFF, 0x05]
     file = TestFile.new(StringIO.new(data.pack('C*')))
 
-    expect { described_class.new(file, 0, data.length) }.to raise_error(
-      described_class::InvalidOperandError
-    )
+    expect { described_class.new(file, 0, data.length) }.to raise_error(described_class::InvalidOperandError)
   end
 
   it 'raises an error if too many operands are supplied' do
@@ -78,9 +74,7 @@ RSpec.describe TTFunk::Table::Cff::Dict do
     data << 0x05 # operator
     file = TestFile.new(StringIO.new(data.pack('C*')))
 
-    expect { described_class.new(file, 0, data.length) }.to raise_error(
-      described_class::TooManyOperandsError
-    )
+    expect { described_class.new(file, 0, data.length) }.to raise_error(described_class::TooManyOperandsError)
   end
 
   it 'allows addition of entries' do

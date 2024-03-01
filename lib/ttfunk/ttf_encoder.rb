@@ -7,7 +7,7 @@ module TTFunk
     OPTIMAL_TABLE_ORDER = [
       'head', 'hhea', 'maxp', 'OS/2', 'hmtx', 'LTSH', 'VDMX',
       'hdmx', 'cmap', 'fpgm', 'prep', 'cvt ', 'loca', 'glyf',
-      'kern', 'name', 'post', 'gasp', 'PCLT'
+      'kern', 'name', 'post', 'gasp', 'PCLT',
     ].freeze
 
     # Original font.
@@ -38,9 +38,9 @@ module TTFunk
     # @return [String]
     def encode
       # https://www.microsoft.com/typography/otspec/otff.htm#offsetTable
-      search_range = 2**Math.log2(tables.length).floor * 16
-      entry_selector = Math.log2(2**Math.log2(tables.length).floor).to_i
-      range_shift = tables.length * 16 - search_range
+      search_range = (2**Math.log2(tables.length).floor) * 16
+      entry_selector = Integer(Math.log2(2**Math.log2(tables.length).floor))
+      range_shift = (tables.length * 16) - search_range
       range_shift = 0 if range_shift.negative?
 
       newfont = EncodedString.new
@@ -50,7 +50,7 @@ module TTFunk
         tables.length,
         search_range,
         entry_selector,
-        range_shift
+        range_shift,
       ].pack('Nn*')
 
       # Tables are supposed to be listed in ascending order whereas there is a
@@ -91,51 +91,35 @@ module TTFunk
     end
 
     def glyf_table
-      @glyf_table ||= TTFunk::Table::Glyf.encode(
-        glyphs, new_to_old_glyph, old_to_new_glyph
-      )
+      @glyf_table ||= TTFunk::Table::Glyf.encode(glyphs, new_to_old_glyph, old_to_new_glyph)
     end
 
     def loca_table
-      @loca_table ||= TTFunk::Table::Loca.encode(
-        glyf_table[:offsets]
-      )
+      @loca_table ||= TTFunk::Table::Loca.encode(glyf_table[:offsets])
     end
 
     def hmtx_table
-      @hmtx_table ||= TTFunk::Table::Hmtx.encode(
-        original.horizontal_metrics, new_to_old_glyph
-      )
+      @hmtx_table ||= TTFunk::Table::Hmtx.encode(original.horizontal_metrics, new_to_old_glyph)
     end
 
     def hhea_table
-      @hhea_table = TTFunk::Table::Hhea.encode(
-        original.horizontal_header, hmtx_table, original, new_to_old_glyph
-      )
+      @hhea_table = TTFunk::Table::Hhea.encode(original.horizontal_header, hmtx_table, original, new_to_old_glyph)
     end
 
     def maxp_table
-      @maxp_table ||= TTFunk::Table::Maxp.encode(
-        original.maximum_profile, old_to_new_glyph
-      )
+      @maxp_table ||= TTFunk::Table::Maxp.encode(original.maximum_profile, old_to_new_glyph)
     end
 
     def post_table
-      @post_table ||= TTFunk::Table::Post.encode(
-        original.postscript, new_to_old_glyph
-      )
+      @post_table ||= TTFunk::Table::Post.encode(original.postscript, new_to_old_glyph)
     end
 
     def name_table
-      @name_table ||= TTFunk::Table::Name.encode(
-        original.name, glyf_table.fetch(:table, '')
-      )
+      @name_table ||= TTFunk::Table::Name.encode(original.name, glyf_table.fetch(:table, ''))
     end
 
     def head_table
-      @head_table ||= TTFunk::Table::Head.encode(
-        original.header, loca_table, new_to_old_glyph
-      )
+      @head_table ||= TTFunk::Table::Head.encode(original.header, loca_table, new_to_old_glyph)
     end
 
     # "optional" tables. Fonts may omit these if they do not need them.
@@ -169,22 +153,16 @@ module TTFunk
       # generated subfont may need a kerning table... in that case, you need
       # to opt into it.
       if options[:kerning]
-        @kern_table ||= TTFunk::Table::Kern.encode(
-          original.kerning, old_to_new_glyph
-        )
+        @kern_table ||= TTFunk::Table::Kern.encode(original.kerning, old_to_new_glyph)
       end
     end
 
     def vorg_table
-      @vorg_table ||= TTFunk::Table::Vorg.encode(
-        original.vertical_origins
-      )
+      @vorg_table ||= TTFunk::Table::Vorg.encode(original.vertical_origins)
     end
 
     def dsig_table
-      @dsig_table ||= TTFunk::Table::Dsig.encode(
-        original.digital_signature
-      )
+      @dsig_table ||= TTFunk::Table::Dsig.encode(original.digital_signature)
     end
 
     def tables
@@ -205,7 +183,7 @@ module TTFunk
         'cvt ' => cvt_table,
         'VORG' => vorg_table,
         'DSIG' => dsig_table,
-        'gasp' => gasp_table
+        'gasp' => gasp_table,
       }.compact
     end
 
@@ -231,7 +209,7 @@ module TTFunk
 
     def align(data, width)
       if (data.length % width).positive?
-        data + "\0" * (width - data.length % width)
+        data + ("\0" * (width - (data.length % width)))
       else
         data
       end

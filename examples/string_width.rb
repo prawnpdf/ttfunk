@@ -16,12 +16,12 @@ class Font
   end
 
   def width_of(string)
-    string.split('').sum { |char| character_width(char) }
+    string.chars.sum { |char| character_width(char) }
   end
 
   def character_width(character)
     width_in_units = horizontal_metrics.for(glyph_id(character)).advance_width
-    width_in_units.to_f / units_per_em
+    Float(width_in_units) / units_per_em
   end
 
   def units_per_em

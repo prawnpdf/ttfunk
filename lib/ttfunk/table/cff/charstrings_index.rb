@@ -22,9 +22,7 @@ module TTFunk
         private
 
         def decode_item(index, _offset, _length)
-          TTFunk::Table::Cff::Charstring.new(
-            index, top_dict, font_dict_for(index), super
-          )
+          TTFunk::Table::Cff::Charstring.new(index, top_dict, font_dict_for(index), super)
         end
 
         def encode_items(charmap)

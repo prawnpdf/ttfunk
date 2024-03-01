@@ -77,16 +77,16 @@ module TTFunk
         @version, num_signatures, @flags = read(8, 'Nnn')
 
         @signatures =
-          Array.new(num_signatures) do
+          Array.new(num_signatures) {
             format, length, sig_offset = read(12, 'N3')
             signature =
-              parse_from(offset + sig_offset) do
+              parse_from(offset + sig_offset) {
                 _, _, sig_length = read(8, 'nnN')
                 read(sig_length, 'C*')
-              end
+              }
 
             SignatureRecord.new(format, length, sig_offset, signature)
-          end
+          }
       end
     end
   end

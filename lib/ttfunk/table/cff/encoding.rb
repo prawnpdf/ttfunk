@@ -13,7 +13,6 @@ module TTFunk
         # Predefined Expert Encoding ID.
         EXPERT_ENCODING_ID = 1
 
-
         # Default encoding ID.
         DEFAULT_ENCODING_ID = STANDARD_ENCODING_ID
 
@@ -81,7 +80,7 @@ module TTFunk
           return to_enum(__method__) unless block_given?
 
           # +1 adjusts for the implicit .notdef glyph
-          (items_count + 1).times { |i| yield self[i] }
+          (items_count + 1).times { |i| yield(self[i]) }
         end
 
         # Get character code for glyph index.
@@ -237,7 +236,7 @@ module TTFunk
           {
             array_format: 'C',
             range_format: 'CC',
-            supplemental: 'Cn'
+            supplemental: 'Cn',
           }[fmt]
         end
 

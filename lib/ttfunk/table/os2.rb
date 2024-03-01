@@ -178,7 +178,7 @@ module TTFunk
         737 => 60,
         708 => 61,
         850 => 62,
-        437 => 63
+        437 => 63,
       }.freeze
 
       # Unicode blocks.
@@ -351,7 +351,7 @@ module TTFunk
         (0x10280..0x1029F) => 121,
         (0x10920..0x1093F) => 121,
         (0x1F030..0x1F09F) => 122,
-        (0x1F000..0x1F02F) => 122
+        (0x1F000..0x1F02F) => 122,
       }.freeze
 
       # Indicates that font supports supplementary characters.
@@ -371,10 +371,9 @@ module TTFunk
 
       # Space character code point.
       CODEPOINT_SPACE = 32
-      SPACE_GLYPH_MISSING_ERROR = "Space glyph (0x#{CODEPOINT_SPACE.to_s(16)})"\
-        ' must be included in the font'
 
       # Error message for missing space character.
+      SPACE_GLYPH_MISSING_ERROR = "Space glyph (0x#{CODEPOINT_SPACE.to_s(16)}) must be included in the font"
 
       # Used to calculate the xAvgCharWidth field.
       # From https://docs.microsoft.com/en-us/typography/opentype/spec/os2:
@@ -393,7 +392,7 @@ module TTFunk
       # chracter weights for average character width calculation.
       WEIGHT_LOWERCASE = [
         64, 14, 27, 35, 100, 20, 14, 42, 63, 3, 6, 35, 20,
-        56, 56, 17, 4, 49, 56, 71, 31, 10, 18, 3, 18, 2
+        56, 56, 17, 4, 49, 56, 71, 31, 10, 18, 3, 18, 2,
       ].freeze
 
       # Table tag.
@@ -405,7 +404,7 @@ module TTFunk
       class << self
         # Encode table.
         #
-        # @param head [TTFunk::Table::Head]
+        # @param os2 [TTFunk::Table::OS2]
         # @param subset [TTFunk::Subset::MacRoman, TTFunk::Subset::Windows1252,
         #   TTFunk::Subset::Unicode, TTFunk::Subset::Unicode8Bit]
         # @return [String]
@@ -418,7 +417,7 @@ module TTFunk
             os2.y_subscript_y_offset, os2.y_superscript_x_size,
             os2.y_superscript_y_size, os2.y_superscript_x_offset,
             os2.y_superscript_y_offset, os2.y_strikeout_size,
-            os2.y_strikeout_position, os2.family_class
+            os2.y_strikeout_position, os2.family_class,
           ].pack('n*')
 
           result << os2.panose
@@ -428,7 +427,7 @@ module TTFunk
             .slice_int(
               new_char_range.value,
               bit_width: 32,
-              slice_count: 4
+              slice_count: 4,
             )
             .pack('N*')
 
@@ -449,27 +448,27 @@ module TTFunk
           last_char_index = [code_points.last || 0, UNICODE_MAX].min
 
           result << [
-            os2.selection, first_char_index, last_char_index
+            os2.selection, first_char_index, last_char_index,
           ].pack('n*')
 
           if os2.version.positive?
             result << [
               os2.ascent, os2.descent, os2.line_gap,
-              os2.win_ascent, os2.win_descent
+              os2.win_ascent, os2.win_descent,
             ].pack('n*')
 
             result << BinUtils
               .slice_int(
                 code_pages_for(subset).value,
                 bit_width: 32,
-                slice_count: 2
+                slice_count: 2,
               )
               .pack('N*')
 
             if os2.version > 1
               result << [
                 os2.x_height, os2.cap_height, os2.default_char,
-                os2.break_char, os2.max_context
+                os2.break_char, os2.max_context,
               ].pack('n*')
             end
           end
@@ -534,7 +533,7 @@ module TTFunk
 
           # use new -> old glyph mapping in order to include compound glyphs
           # in the calculation
-          subset.new_to_old_glyph.each do |_, old_gid|
+          subset.new_to_old_glyph.each_value do |old_gid|
             if (metric = os2.file.horizontal_metrics.for(old_gid))
               total_width += metric.advance_width
               num_glyphs += 1 if metric.advance_width.positive?
@@ -585,7 +584,7 @@ module TTFunk
 
           # use new -> old glyph mapping in order to include compound glyphs
           # in the calculation
-          subset.new_to_old_glyph.each do |_, old_gid|
+          subset.new_to_old_glyph.each_value do |old_gid|
             if (metric = os2.file.horizontal_metrics.for(old_gid))
               total_width += metric.advance_width
             end
@@ -610,9 +609,7 @@ module TTFunk
           @y_strikeout_position, @family_class = read_signed(12)
         @panose = io.read(10)
 
-        @char_range = BitField.new(
-          BinUtils.stitch_int(read(16, 'N*'), bit_width: 32)
-        )
+        @char_range = BitField.new(BinUtils.stitch_int(read(16, 'N*'), bit_width: 32))
 
         @vendor_id = io.read(4)
         @selection, @first_char_index, @last_char_index = read(6, 'n*')
@@ -620,9 +617,7 @@ module TTFunk
         if @version.positive?
           @ascent, @descent, @line_gap = read_signed(3)
           @win_ascent, @win_descent = read(4, 'nn')
-          @code_page_range = BitField.new(
-            BinUtils.stitch_int(read(8, 'N*'), bit_width: 32)
-          )
+          @code_page_range = BitField.new(BinUtils.stitch_int(read(8, 'N*'), bit_width: 32))
 
           if @version > 1
             @x_height, @cap_height = read_signed(2)

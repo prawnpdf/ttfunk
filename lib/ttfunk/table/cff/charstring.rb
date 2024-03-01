@@ -30,7 +30,7 @@ module TTFunk
           28 => :shortint,
           29 => :callgsubr,
           30 => :vhcurveto,
-          31 => :hvcurveto
+          31 => :hvcurveto,
         }.freeze
 
         # Type 2 Flex operators.
@@ -38,7 +38,7 @@ module TTFunk
           35 => :flex,
           34 => :hflex,
           36 => :hflex1,
-          37 => :flex1
+          37 => :flex1,
         }.freeze
 
         # Glyph ID.
@@ -112,7 +112,7 @@ module TTFunk
             x: x,
             y: y,
             font_size: font_size,
-            units_per_em: @top_dict.file.header.units_per_em
+            units_per_em: @top_dict.file.header.units_per_em,
           )
         end
 
@@ -127,22 +127,22 @@ module TTFunk
             next if code == 11
 
             if code >= 32 && code <= 246
-              @stack << code - 139
+              @stack << (code - 139)
             elsif (m = CODE_MAP[code])
               __send__(m)
             elsif code >= 247 && code <= 250
               b0 = code
               b1 = @data[@index]
               @index += 1
-              @stack << (b0 - 247) * 256 + b1 + 108
+              @stack << (((b0 - 247) * 256) + b1 + 108)
             elsif code >= 251 && code <= 254
               b0 = code
               b1 = @data[@index]
               @index += 1
-              @stack << -(b0 - 251) * 256 - b1 - 108
+              @stack << ((-(b0 - 251) * 256) - b1 - 108)
             else
               b1, b2, b3, b4 = read_bytes(4)
-              @stack << ((b1 << 24) | (b2 << 16) | (b3 << 8) | b4) / 65_536
+              @stack << (((b1 << 24) | (b2 << 16) | (b3 << 8) | b4) / 65_536)
             end
           end
         end

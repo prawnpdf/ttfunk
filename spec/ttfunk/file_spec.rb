@@ -5,13 +5,13 @@ require 'spec_helper'
 describe TTFunk::File do
   describe '.open' do
     it 'opens file paths' do
-      font = described_class.open test_font('DejaVuSans')
+      font = described_class.open(test_font('DejaVuSans'))
       expect(font.contents.read(4)).to eq("\x00\x00\x00\x01")
     end
 
     it 'opens IO Objects' do
-      File.open test_font('DejaVuSans') do |io|
-        font = described_class.open io
+      File.open(test_font('DejaVuSans')) do |io|
+        font = described_class.open(io)
         expect(font.contents.read(4)).to eq("\x00\x00\x00\x01")
       end
     end
@@ -121,7 +121,7 @@ describe TTFunk::File do
           tag: 'head',
           checksum: 0xF95F2039,
           offset: 581_036,
-          length: 54
+          length: 54,
         )
       end
 
@@ -131,7 +131,7 @@ describe TTFunk::File do
           tag: 'hmtx',
           checksum: 0xF7E35CB8,
           offset: 581_128,
-          length: 23_712
+          length: 23_712,
         )
       end
 
@@ -141,7 +141,7 @@ describe TTFunk::File do
           tag: 'glyf',
           checksum: 0x77CAC4E8,
           offset: 51_644,
-          length: 529_392
+          length: 529_392,
         )
       end
     end
@@ -155,7 +155,7 @@ describe TTFunk::File do
           tag: 'CFF ',
           checksum: 0xE3109AB9,
           offset: 260_480,
-          length: 14_170_569
+          length: 14_170_569,
         )
       end
     end

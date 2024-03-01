@@ -12,7 +12,7 @@ RSpec.describe TTFunk::Table::Loca do
       expect(result[:table].bytes).to eq [
         0x00, 0x00,
         0x00, 0x01,
-        0x00, 0x02
+        0x00, 0x02,
       ]
     end
 
@@ -22,7 +22,7 @@ RSpec.describe TTFunk::Table::Loca do
       expect(result[:type]).to eq(0)
       expect(result[:table].bytes).to eq [
         0x00, 0x00,
-        0xFF, 0xFF
+        0xFF, 0xFF,
       ]
     end
 
@@ -33,7 +33,7 @@ RSpec.describe TTFunk::Table::Loca do
       expect(result[:table].bytes).to eq [
         0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x02,
-        0x00, 0x00, 0x00, 0x03
+        0x00, 0x00, 0x00, 0x03,
       ]
     end
 
@@ -43,7 +43,7 @@ RSpec.describe TTFunk::Table::Loca do
       expect(result[:type]).to eq(1)
       expect(result[:table].bytes).to eq [
         0x00, 0x00, 0x00, 0x00,
-        0x00, 0x01, 0xFF, 0xFF
+        0x00, 0x01, 0xFF, 0xFF,
       ]
     end
   end

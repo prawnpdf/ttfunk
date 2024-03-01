@@ -50,7 +50,7 @@ module TTFunk
         # @param x [Integer, Float]
         # @param y [Integer, Float]
         # @return [void]
-        def curve_to(x1, y1, x2, y2, x, y) # rubocop: disable Metrics/ParameterLists,Style/CommentedKeyword
+        def curve_to(x1, y1, x2, y2, x, y) # rubocop: disable Metrics/ParameterLists
           @commands << [:curve, x1, y1, x2, y2, x, y]
         end
 
@@ -86,7 +86,7 @@ module TTFunk
                 x + (cmd[3] * scale),
                 y + (-cmd[4] * scale),
                 x + (cmd[5] * scale),
-                y + (-cmd[6] * scale)
+                y + (-cmd[6] * scale),
               )
             when :close
               new_path.close_path

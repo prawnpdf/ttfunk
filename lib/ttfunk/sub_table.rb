@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './reader'
+require_relative 'reader'
 
 module TTFunk
   # SFNT sub-table

@@ -26,7 +26,7 @@ module TTFunk
           tag: tag,
           checksum: checksum,
           offset: offset,
-          length: length
+          length: length,
         }
       end
     end

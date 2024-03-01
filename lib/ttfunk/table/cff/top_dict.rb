@@ -22,14 +22,14 @@ module TTFunk
           charstrings_index: 17,
           private: 18,
           font_index: 1236,
-          font_dict_selector: 1237
+          font_dict_selector: 1237,
         }.freeze
 
         # All the operators we currently care about.
         OPERATORS = {
           **POINTER_OPERATORS,
           ros: 1230,
-          charstring_type: 1206
+          charstring_type: 1206,
         }.freeze
 
         # Inverse operator mapping.
@@ -46,7 +46,7 @@ module TTFunk
               elsif pointer_operator?(operator)
                 result << Placeholder.new(
                   OPERATOR_CODES[operator],
-                  length: POINTER_PLACEHOLDER_LENGTH
+                  length: POINTER_PLACEHOLDER_LENGTH,
                 )
               else
                 operands.each { |operand| result << encode_operand(operand) }
@@ -67,41 +67,25 @@ module TTFunk
         # @return [void]
         def finalize(new_cff_data, charmap)
           if charset
-            finalize_subtable(
-              new_cff_data, :charset, charset.encode(charmap)
-            )
+            finalize_subtable(new_cff_data, :charset, charset.encode(charmap))
           end
 
           if encoding
-            finalize_subtable(
-              new_cff_data, :encoding, encoding.encode(charmap)
-            )
+            finalize_subtable(new_cff_data, :encoding, encoding.encode(charmap))
           end
 
           if charstrings_index
-            finalize_subtable(
-              new_cff_data,
-              :charstrings_index,
-              charstrings_index.encode(charmap)
-            )
+            finalize_subtable(new_cff_data, :charstrings_index, charstrings_index.encode(charmap))
           end
 
           if font_index
-            finalize_subtable(
-              new_cff_data,
-              :font_index,
-              font_index.encode
-            )
+            finalize_subtable(new_cff_data, :font_index, font_index.encode)
 
             font_index.finalize(new_cff_data)
           end
 
           if font_dict_selector
-            finalize_subtable(
-              new_cff_data,
-              :font_dict_selector,
-              font_dict_selector.encode(charmap)
-            )
+            finalize_subtable(new_cff_data, :font_dict_selector, font_dict_selector.encode(charmap))
           end
 
           if private_dict
@@ -109,13 +93,8 @@ module TTFunk
             encoded_offset = encode_integer32(new_cff_data.length)
             encoded_length = encode_integer32(encoded_private_dict.length)
 
-            new_cff_data.resolve_placeholder(
-              :"private_length_#{@table_offset}", encoded_length
-            )
-
-            new_cff_data.resolve_placeholder(
-              :"private_offset_#{@table_offset}", encoded_offset
-            )
+            new_cff_data.resolve_placeholder(:"private_length_#{@table_offset}", encoded_length)
+            new_cff_data.resolve_placeholder(:"private_offset_#{@table_offset}", encoded_offset)
 
             private_dict.finalize(encoded_private_dict)
             new_cff_data << encoded_private_dict
@@ -178,9 +157,7 @@ module TTFunk
         def charstrings_index
           @charstrings_index ||=
             if (charstrings_offset = self[OPERATORS[:charstrings_index]])
-              CharstringsIndex.new(
-                self, file, cff_offset + charstrings_offset.first
-              )
+              CharstringsIndex.new(self, file, cff_offset + charstrings_offset.first)
             end
         end
 
@@ -220,9 +197,7 @@ module TTFunk
             if (info = self[OPERATORS[:private]])
               private_dict_length, private_dict_offset = info
 
-              PrivateDict.new(
-                file, cff_offset + private_dict_offset, private_dict_length
-              )
+              PrivateDict.new(file, cff_offset + private_dict_offset, private_dict_length)
             end
         end
 
@@ -246,12 +221,12 @@ module TTFunk
           EncodedString.new do |result|
             result << Placeholder.new(
               :"private_length_#{@table_offset}",
-              length: PLACEHOLDER_LENGTH
+              length: PLACEHOLDER_LENGTH,
             )
 
             result << Placeholder.new(
               :"private_offset_#{@table_offset}",
-              length: PLACEHOLDER_LENGTH
+              length: PLACEHOLDER_LENGTH,
             )
           end
         end

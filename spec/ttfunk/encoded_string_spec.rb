@@ -37,9 +37,7 @@ RSpec.describe TTFunk::EncodedString do
 
     it 'does not allow adding two placeholders with the same name' do
       encoded_string << TTFunk::Placeholder.new(:foo)
-      expect { encoded_string << TTFunk::Placeholder.new(:foo) }.to(
-        raise_error(TTFunk::DuplicatePlaceholderError)
-      )
+      expect { encoded_string << TTFunk::Placeholder.new(:foo) }.to raise_error(TTFunk::DuplicatePlaceholderError)
     end
 
     it 'adds padding bytes when adding a placeholder' do
@@ -83,9 +81,7 @@ RSpec.describe TTFunk::EncodedString do
     it "raises an error if any placeholders haven't been resolved" do
       encoded_string << 'foo'
       encoded_string << TTFunk::Placeholder.new(:name)
-      expect { encoded_string.string }.to(
-        raise_error(TTFunk::UnresolvedPlaceholderError)
-      )
+      expect { encoded_string.string }.to raise_error(TTFunk::UnresolvedPlaceholderError)
     end
   end
 
@@ -98,9 +94,7 @@ RSpec.describe TTFunk::EncodedString do
     it "raises an error if any placeholders haven't been resolved" do
       encoded_string << 'foo'
       encoded_string << TTFunk::Placeholder.new(:name)
-      expect { encoded_string.bytes }.to(
-        raise_error(TTFunk::UnresolvedPlaceholderError)
-      )
+      expect { encoded_string.bytes }.to raise_error(TTFunk::UnresolvedPlaceholderError)
     end
   end
 

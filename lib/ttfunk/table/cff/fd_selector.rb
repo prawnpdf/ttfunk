@@ -59,15 +59,15 @@ module TTFunk
             end
 
             range, entry =
-              entries.bsearch do |rng, _|
-              if rng.cover?(glyph_id)
-                0
-              elsif glyph_id < rng.first
-                -1
-              else
-                1
-              end
-            end
+              entries.bsearch { |rng, _|
+                if rng.cover?(glyph_id)
+                  0
+                elsif glyph_id < rng.first
+                  -1
+                else
+                  1
+                end
+              }
 
             range.each { |i| range_cache[i] = entry }
             entry
@@ -81,7 +81,7 @@ module TTFunk
         def each
           return to_enum(__method__) unless block_given?
 
-          items_count.times { |i| yield self[i] }
+          items_count.times { |i| yield(self[i]) }
         end
 
         # Encode Font dict selector.
@@ -162,11 +162,11 @@ module TTFunk
             ranges = Array.new(num_ranges) { read(RANGE_ENTRY_SIZE, 'nC') }
 
             @entries =
-              ranges.each_cons(2).map do |first, second|
+              ranges.each_cons(2).map { |first, second|
                 first_gid, fd_index = first
                 second_gid, = second
                 [(first_gid...second_gid), fd_index]
-              end
+              }
 
             # read the sentinel GID, otherwise known as the number of glyphs
             # in the font

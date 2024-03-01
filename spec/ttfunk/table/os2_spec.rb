@@ -31,7 +31,7 @@ RSpec.describe TTFunk::Table::OS2 do
   let(:font_path) { test_font('DejaVuSans') }
   let(:font) { TTFunk::File.open(font_path) }
 
-  let(:expected_fields) do # rubocop: disable Metrics/BlockLength
+  let(:expected_fields) do
     {
       version: 1,
       ave_char_width: 1038,
@@ -67,12 +67,12 @@ RSpec.describe TTFunk::Table::OS2 do
       cap_height: nil,
       default_char: nil,
       break_char: nil,
-      max_context: nil
+      max_context: nil,
     }
   end
 
   let(:error_message) do
-    <<-ERROR_MESSAGE
+    <<~ERROR_MESSAGE
          field: %<field>s
       expected: %<expected_value>s
            got: %<actual_value>s
@@ -80,13 +80,11 @@ RSpec.describe TTFunk::Table::OS2 do
   end
 
   def build_error_message(field, expected_value, actual_value)
-    strip_leading_spaces(
-      format(
-        error_message,
-        field: field,
-        expected_value: expected_value,
-        actual_value: actual_value
-      )
+    format(
+      error_message,
+      field: field,
+      expected_value: expected_value,
+      actual_value: actual_value,
     )
   end
 
@@ -96,7 +94,7 @@ RSpec.describe TTFunk::Table::OS2 do
       actual_value = actual_value.value if actual_value.respond_to?(:value)
       expect(actual_value).to(
         eq(expected_value),
-        build_error_message(field, expected_value, actual_value)
+        build_error_message(field, expected_value, actual_value),
       )
     end
   end
@@ -108,16 +106,17 @@ RSpec.describe TTFunk::Table::OS2 do
       TTFunk::BitField.new(
         TTFunk::BinUtils.stitch_int(
           encoded[code_page_range_field_indices].unpack('N*'),
-          bit_width: 32
-        )
+          bit_width: 32,
+        ),
       )
     end
 
     let(:char_range) do
       TTFunk::BitField.new(
         TTFunk::BinUtils.stitch_int(
-          encoded[char_range_field_indices].unpack('N*'), bit_width: 32
-        )
+          encoded[char_range_field_indices].unpack('N*'),
+          bit_width: 32,
+        ),
       )
     end
 
@@ -127,9 +126,7 @@ RSpec.describe TTFunk::Table::OS2 do
 
       it 'roundtrips correctly' do
         original_unicode_map.each_key { |char| subset.use(char) }
-        reconstituted = described_class.new(
-          TestFile.new(StringIO.new(encoded))
-        )
+        reconstituted = described_class.new(TestFile.new(StringIO.new(encoded)))
 
         skipped_fields = %i[char_range code_page_range]
         expected_fields.each do |field, expected_value|
@@ -140,9 +137,7 @@ RSpec.describe TTFunk::Table::OS2 do
 
           expect(actual_value).to(
             eq(expected_value),
-            build_error_message(
-              field, expected_value, actual_value
-            )
+            build_error_message(field, expected_value, actual_value),
           )
         end
 
@@ -161,13 +156,11 @@ RSpec.describe TTFunk::Table::OS2 do
           curr_symbols,
           shapes,
           ogham,
-          old_italic
+          old_italic,
         ]
 
         char_range_bits.each do |bit|
-          expect(reconstituted.char_range.on?(bit)).to(
-            eq(true), build_error_message(bit, true, false)
-          )
+          expect(reconstituted.char_range.on?(bit)).to(be(true), build_error_message(bit, true, false))
         end
       end
 
@@ -179,11 +172,11 @@ RSpec.describe TTFunk::Table::OS2 do
           end
         end
 
-        expect(char_range.on?(greek)).to eq(false)
-        expect(char_range.on?(armenian)).to eq(true)
-        expect(char_range.on?(hebrew)).to eq(false)
-        expect(char_range.on?(shapes)).to eq(true)
-        expect(char_range.on?(old_italic)).to eq(false)
+        expect(char_range.on?(greek)).to be false
+        expect(char_range.on?(armenian)).to be true
+        expect(char_range.on?(hebrew)).to be false
+        expect(char_range.on?(shapes)).to be true
+        expect(char_range.on?(old_italic)).to be false
       end
     end
 
@@ -192,9 +185,7 @@ RSpec.describe TTFunk::Table::OS2 do
       let(:mac_roman_code_page_bit) { 29 }
 
       before do
-        mapping = TTFunk::Subset::CodePage.unicode_mapping_for(
-          Encoding::MACROMAN
-        )
+        mapping = TTFunk::Subset::CodePage.unicode_mapping_for(Encoding::MACROMAN)
 
         mapping.each_value { |code_point| subset.use(code_point) }
       end
@@ -204,7 +195,7 @@ RSpec.describe TTFunk::Table::OS2 do
       end
 
       it 'sets the correct code page bit' do
-        expect(code_page_range.on?(mac_roman_code_page_bit)).to eq(true)
+        expect(code_page_range.on?(mac_roman_code_page_bit)).to be true
       end
     end
 
@@ -213,9 +204,7 @@ RSpec.describe TTFunk::Table::OS2 do
       let(:windows_1252_code_page_bit) { 0 }
 
       before do
-        mapping = TTFunk::Subset::CodePage.unicode_mapping_for(
-          Encoding::CP1252
-        )
+        mapping = TTFunk::Subset::CodePage.unicode_mapping_for(Encoding::CP1252)
 
         mapping.each_value { |code_point| subset.use(code_point) }
       end
@@ -225,7 +214,7 @@ RSpec.describe TTFunk::Table::OS2 do
       end
 
       it 'sets the correct code page bit' do
-        expect(code_page_range.on?(windows_1252_code_page_bit)).to eq(true)
+        expect(code_page_range.on?(windows_1252_code_page_bit)).to be true
       end
     end
   end

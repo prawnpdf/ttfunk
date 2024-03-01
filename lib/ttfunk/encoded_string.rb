@@ -22,7 +22,7 @@ module TTFunk
   class EncodedString
     # @yieldparam [self]
     def initialize
-      yield self if block_given?
+      yield(self) if block_given?
     end
 
     # Append to string.
@@ -35,7 +35,7 @@ module TTFunk
         io << obj
       when Placeholder
         add_placeholder(obj)
-        io << "\0" * obj.length
+        io << ("\0" * obj.length)
       when self.class
         # adjust placeholders to be relative to the entire encoded string
         obj.placeholders.each_pair do |_, placeholder|
@@ -65,7 +65,7 @@ module TTFunk
     # @return [self]
     def align!(width = 4)
       if (length % width).positive?
-        self << "\0" * (width - length % width)
+        self << ("\0" * (width - (length % width)))
       end
 
       self

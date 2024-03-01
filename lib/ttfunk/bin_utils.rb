@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module TTFunk
+module TTFunk # rubocop: disable Style/Documentation # false positive
   # Bit crunching utility methods.
   module BinUtils
     # Turn a bunch of small integers into one big integer. Assumes big-endian.
@@ -12,7 +12,7 @@ module TTFunk
       value = 0
 
       arr.each_with_index do |element, index|
-        value |= element << bit_width * index
+        value |= element << (bit_width * index)
       end
 
       value
@@ -26,10 +26,10 @@ module TTFunk
     #   needed for cases where top bits are zero.
     # @return [Array<Integer>]
     def slice_int(value, bit_width:, slice_count:)
-      mask = 2**bit_width - 1
+      mask = (2**bit_width) - 1
 
       Array.new(slice_count) do |i|
-        (value >> bit_width * i) & mask
+        (value >> (bit_width * i)) & mask
       end
     end
 

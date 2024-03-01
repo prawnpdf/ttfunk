@@ -26,11 +26,11 @@ module TTFunk
           @pairs = {}
           num_pairs.times do |i|
             # sanity check, in case there's a bad length somewhere
-            break if i * 3 + 2 > pairs.length
+            break if (i * 3) + 2 > pairs.length
 
             left = pairs[i * 3]
-            right = pairs[i * 3 + 1]
-            value = to_signed(pairs[i * 3 + 2])
+            right = pairs[(i * 3) + 1]
+            value = to_signed(pairs[(i * 3) + 2])
             @pairs[[left, right]] = value
           end
         end
@@ -69,19 +69,19 @@ module TTFunk
           return if subset.empty?
 
           num_pairs = subset.length
-          search_range = 2 * 2**(Math.log(num_pairs) / Math.log(2)).to_i
-          entry_selector = (Math.log(search_range / 2) / Math.log(2)).to_i
+          search_range = 2 * (2**Integer(Math.log(num_pairs) / Math.log(2)))
+          entry_selector = Integer(Math.log(search_range / 2) / Math.log(2))
           range_shift = (2 * num_pairs) - search_range
 
           [
             attributes[:version],
-            num_pairs * 6 + 14,
+            (num_pairs * 6) + 14,
             attributes[:coverage],
             num_pairs,
             search_range,
             entry_selector,
             range_shift,
-            subset
+            subset,
           ].flatten.pack('n*')
         end
       end

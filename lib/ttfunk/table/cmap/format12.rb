@@ -52,13 +52,13 @@ module TTFunk
             end
 
           subtable = [
-            12, 0, 16 + 12 * range_lengths.size, 0, range_lengths.size
+            12, 0, 16 + (12 * range_lengths.size), 0, range_lengths.size,
           ].pack('nnNNN')
           range_lengths.each_with_index do |length, i|
             firstglyph = range_firstglyphs[i]
             firstcode = range_firstcodes[i]
             subtable << [
-              firstcode, firstcode + length - 1, firstglyph
+              firstcode, firstcode + length - 1, firstglyph,
             ].pack('NNN')
           end
 

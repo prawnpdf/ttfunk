@@ -18,7 +18,7 @@ module TTFunk
             decode_item(
               index,
               data_reference_offset + offsets[index],
-              offsets[index + 1] - offsets[index]
+              offsets[index + 1] - offsets[index],
             )
         end
 
@@ -33,7 +33,7 @@ module TTFunk
           return to_enum(__method__) unless block
 
           items_count.times do |i|
-            yield self[i]
+            yield(self[i])
           end
         end
 
@@ -61,9 +61,9 @@ module TTFunk
 
           offsets_array =
             new_items
-              .each_with_object([1]) do |item, offsets|
-                offsets << offsets.last + item.length
-              end
+              .each_with_object([1]) { |item, offsets|
+                offsets << (offsets.last + item.length)
+              }
 
           offset_size = (offsets_array.last.bit_length / 8.0).ceil
 
@@ -72,13 +72,15 @@ module TTFunk
           EncodedString.new.concat(
             [new_items.length, offset_size].pack('nC'),
             *offsets_array,
-            *new_items
+            *new_items,
           )
         end
 
         private
 
-        attr_reader :items, :offsets, :data_reference_offset
+        attr_reader :items
+        attr_reader :offsets
+        attr_reader :data_reference_offset
 
         def entry_cache
           @entry_cache ||= {}
@@ -128,22 +130,22 @@ module TTFunk
           offset_size = read(1, 'C').first
 
           @offsets =
-            Array.new(num_entries + 1) do
+            Array.new(num_entries + 1) {
               unpack_offset(io.read(offset_size), offset_size)
-            end
+            }
 
-          @data_reference_offset = table_offset + 3 + offsets.length * offset_size - 1
+          @data_reference_offset = table_offset + 3 + (offsets.length * offset_size) - 1
 
           @length =
             2 + # num entries
             1 + # offset size
-            offsets.length * offset_size + # offsets
+            (offsets.length * offset_size) + # offsets
             offsets.last - 1 # items
 
           @items =
-            offsets.each_cons(2).map do |offset, next_offset|
+            offsets.each_cons(2).map { |offset, next_offset|
               io.read(next_offset - offset)
-            end
+            }
         end
 
         def unpack_offset(offset_data, offset_size)

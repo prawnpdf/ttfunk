@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'ttfunk/table/cff'
 
-RSpec.describe TTFunk::Table::Cff do
+RSpec.describe TTFunk::Table::Cff, 'Name Index' do # rubocop: disable RSpec/DescribeMethod
   let(:font_path) { test_font('NotoSansCJKsc-Thin', :otf) }
   let(:font) { TTFunk::File.open(font_path) }
   let(:name_index) { font.cff.name_index }
@@ -15,9 +15,7 @@ RSpec.describe TTFunk::Table::Cff do
   describe '#encode' do
     it 'encodes the index correctly' do
       encoded = name_index.encode
-      reconstituted = described_class::Index.new(
-        TestFile.new(StringIO.new(encoded.string)), 0
-      )
+      reconstituted = described_class::Index.new(TestFile.new(StringIO.new(encoded.string)), 0)
 
       expect(reconstituted.to_a).to eq(['NotoSansCJKsc-Thin'])
     end

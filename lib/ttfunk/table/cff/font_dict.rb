@@ -54,13 +54,8 @@ module TTFunk
           encoded_offset = encode_integer32(new_cff_data.length)
           encoded_length = encode_integer32(encoded_private_dict.length)
 
-          new_cff_data.resolve_placeholder(
-            :"private_length_#{@table_offset}", encoded_length
-          )
-
-          new_cff_data.resolve_placeholder(
-            :"private_offset_#{@table_offset}", encoded_offset
-          )
+          new_cff_data.resolve_placeholder(:"private_length_#{@table_offset}", encoded_length)
+          new_cff_data.resolve_placeholder(:"private_offset_#{@table_offset}", encoded_offset)
 
           private_dict.finalize(encoded_private_dict)
           new_cff_data << encoded_private_dict
@@ -77,7 +72,7 @@ module TTFunk
               PrivateDict.new(
                 file,
                 top_dict.cff_offset + private_dict_offset,
-                private_dict_length
+                private_dict_length,
               )
             end
         end
@@ -86,13 +81,8 @@ module TTFunk
 
         def encode_private
           EncodedString.new do |result|
-            result << Placeholder.new(
-              :"private_length_#{@table_offset}", length: PLACEHOLDER_LENGTH
-            )
-
-            result << Placeholder.new(
-              :"private_offset_#{@table_offset}", length: PLACEHOLDER_LENGTH
-            )
+            result << Placeholder.new(:"private_length_#{@table_offset}", length: PLACEHOLDER_LENGTH)
+            result << Placeholder.new(:"private_offset_#{@table_offset}", length: PLACEHOLDER_LENGTH)
           end
         end
       end

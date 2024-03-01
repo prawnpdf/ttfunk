@@ -100,7 +100,7 @@ module TTFunk
                 head.created, head.modified,
                 *min_max_values_for(head, mapping),
                 head.mac_style, head.lowest_rec_ppem, head.font_direction_hint,
-                loca[:type] || 0, head.glyph_data_format
+                loca[:type] || 0, head.glyph_data_format,
               ].pack('Nn2q>2n*')
           end
         end
@@ -116,7 +116,7 @@ module TTFunk
         # @param time [Time]
         # @return [Integer]
         def to_long_date_time(time)
-          time.to_i - LONG_DATE_TIME_BASIS
+          Integer(time) - LONG_DATE_TIME_BASIS
         end
 
         private
@@ -127,7 +127,7 @@ module TTFunk
           y_min = Min.new
           y_max = Max.new
 
-          mapping.each do |_, old_glyph_id|
+          mapping.each_value do |old_glyph_id|
             glyph = head.file.find_glyph(old_glyph_id)
             next unless glyph
 
@@ -139,7 +139,7 @@ module TTFunk
 
           [
             x_min.value_or(0), y_min.value_or(0),
-            x_max.value_or(0), y_max.value_or(0)
+            x_max.value_or(0), y_max.value_or(0),
           ]
         end
       end

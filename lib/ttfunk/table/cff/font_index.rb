@@ -29,9 +29,7 @@ module TTFunk
         private
 
         def decode_item(_index, offset, length)
-          TTFunk::Table::Cff::FontDict.new(
-            top_dict, file, offset, length
-          )
+          TTFunk::Table::Cff::FontDict.new(top_dict, file, offset, length)
         end
 
         def encode_items(*)

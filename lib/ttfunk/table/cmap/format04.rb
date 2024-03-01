@@ -77,10 +77,10 @@ module TTFunk
 
             if a - start_glyph_id >= 0x8000
               deltas << 0
-              range_offsets << 2 * (glyph_indices.length + segcount - segment)
+              range_offsets << (2 * (glyph_indices.length + segcount - segment))
               a.upto(b) { |code| glyph_indices << new_map[code][:new] }
             else
-              deltas << -a + start_glyph_id
+              deltas << (-a + start_glyph_id)
               range_offsets << 0
             end
 
@@ -89,14 +89,14 @@ module TTFunk
 
           # format, length, language
           subtable = [
-            4, 16 + 8 * segcount + 2 * glyph_indices.length, 0
+            4, 16 + (8 * segcount) + (2 * glyph_indices.length), 0,
           ].pack('nnn')
 
-          search_range = 2 * 2**(Math.log(segcount) / Math.log(2)).to_i
-          entry_selector = (Math.log(search_range / 2) / Math.log(2)).to_i
+          search_range = 2 * (2**Integer(Math.log(segcount) / Math.log(2)))
+          entry_selector = Integer(Math.log(search_range / 2) / Math.log(2))
           range_shift = (2 * segcount) - search_range
           subtable << [
-            segcount * 2, search_range, entry_selector, range_shift
+            segcount * 2, search_range, entry_selector, range_shift,
           ].pack('nnnn')
 
           subtable << end_codes.pack('n*') << "\0\0" << start_codes.pack('n*')
@@ -144,8 +144,7 @@ module TTFunk
               if (id_range_offset[i]).zero?
                 glyph_id = code + id_delta[i]
               else
-                index = id_range_offset[i] / 2 +
-                  (code - start_code[i]) - (segcount - i)
+                index = (id_range_offset[i] / 2) + (code - start_code[i]) - (segcount - i)
                 # Because some TTF fonts are broken
                 glyph_id = glyph_ids[index] || 0
                 glyph_id += id_delta[i] if glyph_id != 0

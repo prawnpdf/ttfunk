@@ -3,7 +3,6 @@
 module TTFunk
   # Scientific number representation
   class SciForm
-    alias eql? ==
     # Significand
     # @return [Float, Integer]
     attr_reader :significand
@@ -23,7 +22,7 @@ module TTFunk
     #
     # @return [Float]
     def to_f
-      significand * 10**exponent
+      significand * (10**exponent)
     end
 
     # Check equality to another number.
@@ -41,5 +40,7 @@ module TTFunk
         false
       end
     end
+
+    alias eql? ==
   end
 end
