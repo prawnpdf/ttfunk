@@ -45,5 +45,6 @@ Gem::Specification.new do |spec|
   spec.files = Dir.glob('lib/**/*') +
     ['CHANGELOG.md', 'README.md', 'COPYING', 'LICENSE', 'GPLv2', 'GPLv3']
   spec.required_ruby_version = '>= 2.7'
+  spec.add_runtime_dependency('bigdecimal', '~> 3.1')
   spec.add_development_dependency('prawn-dev', '~> 0.4.0')
 end
