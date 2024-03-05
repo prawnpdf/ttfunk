@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.8.0][] - 2024-03-05
+
 ### Fixed
 
 * Corrupted CFF index data
@@ -284,7 +286,8 @@ Initial release as a standalone gem
 
 
 
-[Unreleased]: https://github.com/prawnpdf/ttfunk/compare/1.7.0...HEAD
+[Unreleased]: https://github.com/prawnpdf/ttfunk/compare/1.8.0...HEAD
+[1.7.0]: https://github.com/prawnpdf/ttfunk/compare/1.7.0...1.8.0
 [1.7.0]: https://github.com/prawnpdf/ttfunk/compare/1.6.2.1...1.7.0
 [1.6.2.1]: https://github.com/prawnpdf/ttfunk/compare/1.6.2...1.6.2.1
 [1.6.2]: https://github.com/prawnpdf/ttfunk/compare/1.6.1...1.6.2
