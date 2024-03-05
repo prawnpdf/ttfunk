@@ -6,7 +6,6 @@ Gem::Specification.new do |spec|
   spec.platform = Gem::Platform::RUBY
   spec.summary = 'TrueType Font Metrics Parser'
   spec.description = 'Font Metrics Parser for the Prawn PDF generator'
-  spec.licenses = %w[Nonstandard GPL-2.0 GPL-3.0]
 
   spec.homepage = 'https://prawnpdf.org'
   spec.metadata = {
@@ -41,6 +40,7 @@ Gem::Specification.new do |spec|
     'jimmy@deefa.com',
     'camertron@gmail.com',
   ]
+  spec.licenses = %w[Nonstandard GPL-2.0-only GPL-3.0-only]
 
   spec.files = Dir.glob('lib/**/*') +
     ['CHANGELOG.md', 'README.md', 'COPYING', 'LICENSE', 'GPLv2', 'GPLv3']
