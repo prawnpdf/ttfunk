@@ -81,7 +81,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
   Peter Goldstein
 
-## 1.7.0
+## [1.7.0][] - 2020-12-29
 
 ### Changes
 
@@ -93,7 +93,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
   Tom de Grunt
 
-## [1.6.2.1]
+## [1.6.2.1][] - 2020-02-14
 
 ### Fixed
 
@@ -102,7 +102,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
   Alexander Mankuta
 
-## [1.6.2]
+## [1.6.2][] - 2020-02-14
 
 ### Fixed
 
@@ -110,7 +110,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
   Cameron Dutro
 
-## [1.6.1]
+## [1.6.1][] - 2020-01-07
 
 ### Fixed
 
@@ -118,7 +118,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
   Cameron Dutro
 
-## [1.6.0]
+## [1.6.0][] - 2020-01-04
 
 ### Added
 
@@ -180,7 +180,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
   Katsuya HIDAKA, Matjaz Gregoric, Alexander Mankuta
 
-## [1.5.1]
+## [1.5.1][] - 2017-04-11
 
 ### Fixed
 
@@ -189,7 +189,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 * Fixed checksum calculation for empty tables.
 
-## [1.5.0] - 2017-02-13
+## [1.5.0][] - 2017-02-13
 
 ### Added
 
@@ -200,35 +200,35 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 * Subset font naming is consistent now and depends on content
 
 
-## [1.4.0] - 2014-09-21
+## [1.4.0][] - 2014-09-21
 
 ### Added
 
 * sbix table support
 
 
-## [1.3.0] - 2014-09-10
+## [1.3.0][] - 2014-09-10
 
 ### Removed
 
 * Post table version 2.5
 
 
-## [1.2.2] - 2014-08-29
+## [1.2.2][] - 2014-08-29
 
 ### Fixed
 
 * Ignore unsupported cmap table versions
 
 
-## [1.2.1] - 2014-08-28
+## [1.2.1][] - 2014-08-28
 
 ### Fixed
 
 * Added missing Pathname require
 
 
-## [1.2.0] - 2014-06-23
+## [1.2.0][] - 2014-06-23
 
 ### Added
 
@@ -240,7 +240,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 * Improved preferred family name selection
 
 
-## [1.1.1] - 2014-02-24
+## [1.1.1][] - 2014-02-24
 
 ### Changed
 
@@ -251,7 +251,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 * comicsans.ttf
 
 
-## [1.1.0] - 2014-01-21
+## [1.1.0][] - 2014-01-21
 
 ### Added
 
@@ -264,7 +264,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 * Subsetting in JRuby
 
 
-## [1.0.3] - 2011-10-11
+## [1.0.3][] - 2011-10-11
 
 ### Added
 
