@@ -7,10 +7,8 @@ Gem::Specification.new do |spec|
   spec.summary = 'TrueType Font Metrics Parser'
   spec.description = 'Font Metrics Parser for the Prawn PDF generator'
 
-  spec.homepage = 'https://prawnpdf.org'
-  spec.metadata = {
-    'rubygems_mfa_required' => 'true',
-  }
+  spec.files = Dir.glob('lib/**/*') +
+    ['CHANGELOG.md', 'README.md', 'COPYING', 'LICENSE', 'GPLv2', 'GPLv3']
 
   if File.basename($PROGRAM_NAME) == 'gem' && ARGV.include?('build')
     signing_key = File.expand_path('~/.gem/gem-private_key.pem')
@@ -41,9 +39,16 @@ Gem::Specification.new do |spec|
     'camertron@gmail.com',
   ]
   spec.licenses = %w[Nonstandard GPL-2.0-only GPL-3.0-only]
+  spec.homepage = 'http://prawnpdf.org/'
+  spec.metadata = {
+    'rubygems_mfa_required' => 'true',
+    'homepage_uri' => spec.homepage,
+    'changelog_uri' => "https://github.com/prawnpdf/ttfunk/blob/#{spec.version}/CHANGELOG.md",
+    'source_code_uri' => 'https://github.com/prawnpdf/ttfunk',
+    'documentation_uri' => "https://prawnpdf.org/docs/ttfunk/#{spec.version}/",
+    'bug_tracker_uri' => 'https://github.com/prawnpdf/ttfunk/issues',
+  }
 
-  spec.files = Dir.glob('lib/**/*') +
-    ['CHANGELOG.md', 'README.md', 'COPYING', 'LICENSE', 'GPLv2', 'GPLv3']
   spec.required_ruby_version = '>= 2.7'
   spec.add_runtime_dependency('bigdecimal', '~> 3.1')
   spec.add_development_dependency('prawn-dev', '~> 0.4.0')
