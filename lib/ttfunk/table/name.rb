@@ -185,7 +185,12 @@ module TTFunk
       # @param key [String]
       # @return [String]
       def self.encode(names, key = '')
-        tag = Digest::SHA1.hexdigest(key)[0, 6]
+        digest = Digest::SHA1.hexdigest(key)[0, 6]
+
+        tag = ((0...6).map do |i|
+          idx = digest[i].ord % 26
+          ('A'.ord + idx).chr
+        end).join
 
         postscript_name = NameString.new("#{tag}+#{names.postscript_name}", 1, 0, 0)
 
