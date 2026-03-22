@@ -26,10 +26,19 @@ module TTFunk
         end
 
         def encode_items(charmap)
-          charmap
+          new_items = charmap
             .reject { |code, mapping| mapping[:new].zero? && !code.zero? }
             .sort_by { |_code, mapping| mapping[:new] }
             .map { |(_code, mapping)| items[mapping[:old]] }
+
+          # Ensure .notdef (GID 0) is included in the CharstringsIndex.
+          # The charmap may not contain a mapping for .notdef, but the
+          # CFF spec requires .notdef to always be present at index 0.
+          unless charmap.any? { |code, mapping| mapping[:new].zero? && code.zero? }
+            new_items.unshift(items[0])
+          end
+
+          new_items
         end
 
         def font_dict_for(index)

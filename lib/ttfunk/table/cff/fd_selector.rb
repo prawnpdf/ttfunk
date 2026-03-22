@@ -99,6 +99,14 @@ module TTFunk
               .sort_by { |_code, mapping| mapping[:new] }
               .map { |(_code, mapping)| [mapping[:new], self[mapping[:old]]] }
 
+          # Ensure .notdef (GID 0) is included in the FD selector.
+          # The charmap may not contain a mapping for .notdef, but the
+          # CharstringsIndex always includes .notdef at index 0, so the
+          # FD selector must have a corresponding entry for it.
+          unless new_indices.any? { |gid, _| gid.zero? }
+            new_indices.unshift([0, self[0]])
+          end
+
           ranges = rangify_gids(new_indices)
           total_range_size = ranges.size * RANGE_ENTRY_SIZE
           total_array_size = new_indices.size * ARRAY_ENTRY_SIZE

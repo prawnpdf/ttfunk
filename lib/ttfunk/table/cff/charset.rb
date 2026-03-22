@@ -158,22 +158,30 @@ module TTFunk
               .sort_by { |mapping| mapping[:new] }
               .map { |mapping| sid_for(mapping[:old]) }
 
-          ranges = TTFunk::BinUtils.rangify(sids)
-          range_max = ranges.map(&:last).max
+          # BinUtils.rangify assumes a sorted sequence of values. In
+          # CID-keyed fonts, SIDs may not be in ascending order when
+          # sorted by new GID, which causes rangify to produce incorrect
+          # ranges. Fall back to array format if SIDs are not sorted.
+          sids_sorted = sids.each_cons(2).all? { |a, b| a <= b }
 
-          range_bytes =
-            if range_max.positive?
-              (Math.log2(range_max) / 8).floor + 1
-            else
-              # for cases when there are no sequences at all
-              Float::INFINITY
-            end
+          if sids_sorted
+            ranges = TTFunk::BinUtils.rangify(sids)
+            range_max = ranges.map(&:last).max
 
-          # calculate whether storing the charset as a series of ranges is
-          # more efficient (i.e. takes up less space) vs storing it as an
-          # array of SID values
-          total_range_size = (2 * ranges.size) + (range_bytes * ranges.size)
-          total_array_size = sids.size * element_width(:array_format)
+            range_bytes =
+              if range_max.positive?
+                (Math.log2(range_max) / 8).floor + 1
+              else
+                Float::INFINITY
+              end
+
+            total_range_size = (2 * ranges.size) + (range_bytes * ranges.size)
+            total_array_size = sids.size * element_width(:array_format)
+          else
+            # Force array format when SIDs are not sorted
+            total_range_size = Float::INFINITY
+            total_array_size = 0
+          end
 
           if total_array_size <= total_range_size
             ([format_int(:array_format)] + sids).pack('Cn*')
