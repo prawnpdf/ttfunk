@@ -26,7 +26,7 @@ file = TTFunk::File.open(file_name)
 
 puts '-- FONT ------------------------------------'
 
-puts format('revision  : %08x', file.header.font_revision)
+puts format('revision  : %.3f', file.header.font_revision.to_f / 65536)
 puts "name      : #{file.name.font_name.join(', ')}"
 puts "family    : #{file.name.font_family.join(', ')}"
 puts "subfamily : #{file.name.font_subfamily.join(', ')}"
