@@ -185,12 +185,49 @@ module TTFunk
       # @param key [String]
       # @return [String]
       def self.encode(names, key = '')
-        tag = Digest::SHA1.hexdigest(key)[0, 6]
+        # Generate a 6-character uppercase tag according to PDF spec section 5.5.3
+        # Convert hex digest to uppercase letters: 0-9 -> A-J, a-f -> K-P
+        # This maintains 1-to-1 mapping while satisfying the "6 uppercase letters" requirement
+        digest = Digest::SHA1.hexdigest(key)[0, 6]
 
-        postscript_name = NameString.new("#{tag}+#{names.postscript_name}", 1, 0, 0)
+        tag = digest.chars.map do |c|
+          case c
+          when '0'..'9'
+            ('A'.ord + (c.ord - '0'.ord)).chr  # 0->A, 1->B, ..., 9->J
+          when 'a'..'f'
+            ('K'.ord + (c.ord - 'a'.ord)).chr  # a->K, b->L, ..., f->P
+          end
+        end.join
+
+        new_ps_name = "#{tag}+#{names.postscript_name}"
+
+        # Detect which platforms the original font uses for PostScript name (id=6).
+        # Mirror that structure exactly: don't add or remove platforms.
+        # Illustrator requires platform 3 (Windows UTF-16BE); Acrobat accepts platform 1 (Mac Roman).
+        # Some fonts ship only with platform 3; adding a platform-1 record they never had
+        # causes Illustrator to misread the subset and render corrupted text.
+        original_ps_records = names.strings[6]
+        has_mac = original_ps_records.any? { |s| s.platform_id == 1 }
+        has_win = original_ps_records.any? { |s| s.platform_id == 3 }
+
+        new_ps_records = []
+
+        if has_mac || !has_win
+          # Mac Roman (platform 1) — plain ASCII bytes
+          new_ps_records << NameString.new(new_ps_name, 1, 0, 0)
+        end
+
+        if has_win || !has_mac
+          # Windows Unicode UTF-16BE (platform 3, encoding 1, language 0x0409 = English US)
+          new_ps_records << NameString.new(
+            new_ps_name.encode('UTF-16BE').b,
+            3, 1, 0x0409
+          )
+        end
 
         strings = names.strings.dup
-        strings[6] = [postscript_name]
+        strings[6] = new_ps_records
+
         str_count = strings.reduce(0) { |sum, (_, list)| sum + list.length }
 
         table = [0, str_count, 6 + (12 * str_count)].pack('n*')

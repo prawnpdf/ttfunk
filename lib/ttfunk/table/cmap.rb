@@ -17,27 +17,45 @@ module TTFunk
       # @param charmap [Hash{Integer => Integer}]
       # @param encoding [Symbol]
       # @return [Hash]
-      #   * `:charmap` (<tt>Hash{Integer => Hash}</tt>) keys are the characrers in
-      #     `charset`, values are hashes:
-      #     * `:old` (<tt>Integer</tt>) - glyph ID in the original font.
-      #     * `:new` (<tt>Integer</tt>) - glyph ID in the subset font.
-      #     that maps the characters in charmap to a
-      #   * `:table` (<tt>String</tt>) - serialized table.
-      #   * `:max_glyph_id` (<tt>Integer</tt>) - maximum glyph ID in the new font.
       def self.encode(charmap, encoding)
-        result = Cmap::Subtable.encode(charmap, encoding)
+        # Encode the primary (unicode) subtable
+        unicode_result = Cmap::Subtable.encode(charmap, encoding)
 
-        # pack 'version' and 'table-count'
-        result[:table] = [0, 1, result.delete(:subtable)].pack('nnA*')
-        result
+        # Also encode Mac Roman (platform 1, encoding 0) so Illustrator can
+        # resolve glyph IDs back to characters when editing embedded font text.
+        # Without this subtable, Illustrator falls back to treating glyph IDs
+        # as raw character codes, producing gobbledygook.
+        # Only codepoints <= 0xFF can be represented in Mac Roman.
+        mac_charmap = charmap.select { |code, _| code <= 0xFF }
+        mac_result = Cmap::Subtable.encode(mac_charmap, :mac_roman)
+
+        # Strip the 8-byte record header (platformID nn + encodingID nn + offset N)
+        # that Subtable.encode prepends, leaving only the raw cmap format data.
+        mac_raw     = mac_result[:subtable][8..]
+        unicode_raw = unicode_result[:subtable][8..]
+
+        # cmap header: version(2) + numTables(2) = 4 bytes
+        # Each encoding record: platformID(2) + encodingID(2) + offset(4) = 8 bytes
+        # Two records = 16 bytes
+        # Total before subtable data = 4 + 16 = 20 bytes
+        header_and_records_size = 4 + (2 * 8)
+
+        mac_offset     = header_and_records_size
+        unicode_offset = header_and_records_size + mac_raw.bytesize
+
+        table = [0, 2].pack('nn')                    # version=0, numTables=2
+        table += [1, 0, mac_offset].pack('nnN')      # Mac Roman record
+        table += [3, 1, unicode_offset].pack('nnN')  # Windows Unicode record
+        table += mac_raw                              # Format 0 data
+        table += unicode_raw                          # Format 4 data
+
+        unicode_result.merge(table: table)
       end
 
       # Get Unicode encoding records.
       #
       # @return [Array<TTFunk::Table::Cmap::Subtable>]
       def unicode
-        # Because most callers just call .first on the result, put tables with
-        # highest-number format first. Unsupported formats will be ignored.
         @unicode ||=
           @tables
             .select { |table| table.unicode? && table.supported? }

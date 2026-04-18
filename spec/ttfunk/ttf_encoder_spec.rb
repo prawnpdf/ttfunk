@@ -66,7 +66,8 @@ RSpec.describe TTFunk::TTFEncoder do
 
       # verified via the Font-Validator tool at:
       # https://github.com/HinTak/Font-Validator
-      expect(checksum).to eq(0xEEB49DA9)
+      # Updated checksum after adding Windows UTF-16BE PostScript name record
+      expect(checksum).to eq(0xA423F7C3)
     end
 
     example_group 'maxp regression', issue: 102 do
