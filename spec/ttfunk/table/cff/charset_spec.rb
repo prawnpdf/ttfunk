@@ -162,5 +162,29 @@ RSpec.describe TTFunk::Table::Cff::Charset do
         expect(encoded.bytes).to eq([0x02, 0x00, 0x01, 0x03, 0xFF])
       end
     end
+
+    context 'when SIDs are not in ascending order' do
+      let(:charmap) do
+        # Simulate a CID-keyed font where GID order differs from SID order.
+        # SIDs in new GID order: [1, 10, 5, 8, 3] - not sorted.
+        {
+          0x20 => { old: 1, new: 1 },
+          0x21 => { old: 10, new: 2 },
+          0x22 => { old: 5, new: 3 },
+          0x23 => { old: 8, new: 4 },
+          0x24 => { old: 3, new: 5 },
+        }
+      end
+
+      it 'falls back to array format' do
+        expect(encoded.bytes[0]).to eq(0) # array format
+      end
+
+      it 'preserves the correct SID for each new GID' do
+        sids = encoded.bytes.drop(1).each_slice(2).map { |hi, lo| (hi << 8) | lo }
+        # SIDs should be in new GID order: [1, 10, 5, 8, 3]
+        expect(sids).to eq([1, 10, 5, 8, 3])
+      end
+    end
   end
 end

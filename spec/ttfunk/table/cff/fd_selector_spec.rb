@@ -49,7 +49,20 @@ RSpec.describe TTFunk::Table::Cff::FdSelector do
         0x22 => { old: 3, new: 3 },
         0x24 => { old: 5, new: 5 },
       }
-      expect(fd_selector.encode(charmap)).to eq("\x00\x02\x04\x06")
+      expect(fd_selector.encode(charmap)).to eq("\x00\x01\x02\x04\x06")
+    end
+
+    it 'includes .notdef FD entry at index 0 when charmap lacks GID 0' do
+      charmap = {
+        0x20 => { old: 1, new: 1 },
+        0x22 => { old: 3, new: 3 },
+      }
+      result = fd_selector.encode(charmap)
+      # Format byte (0x00 = array) followed by FD indices.
+      # GID 0 (.notdef) should map to FD index of original GID 0,
+      # which is entries[0] = 1 in the test fixture.
+      expect(result.bytes[0]).to eq(0) # array format
+      expect(result.bytes[1]).to eq(1) # .notdef FD index
     end
   end
 

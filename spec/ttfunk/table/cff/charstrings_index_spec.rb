@@ -174,4 +174,31 @@ RSpec.describe TTFunk::Table::Cff, 'Charstring Index' do # rubocop: disable RSpe
       ],
     )
   end
+
+  describe '#encode' do
+    let(:font_path) { test_font('NotoSansCJKsc-Thin', :otf) }
+
+    it 'includes .notdef at index 0 when charmap lacks GID 0' do
+      charmap = {
+        0x20 => { old: 1, new: 1 },
+        0x21 => { old: 2, new: 2 },
+      }
+
+      items = charstrings_index.__send__(:items)
+      encoded_items = charstrings_index.__send__(:encode_items, charmap)
+
+      # Should have 3 items: .notdef + 2 from charmap
+      expect(encoded_items.length).to eq(3)
+
+      # First item should be .notdef (items[0])
+      expect(encoded_items[0]).to eq(items[0])
+    end
+
+    it 'does not duplicate .notdef when charmap includes GID 0' do
+      charmap = (0..5).to_h { |i| [i, { old: i, new: i }] }
+      encoded_items = charstrings_index.__send__(:encode_items, charmap)
+
+      expect(encoded_items.length).to eq(6)
+    end
+  end
 end
