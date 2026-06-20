@@ -26,10 +26,10 @@ module TTFunk
         MAX_OPERANDS = 48
 
         # Scientific notation operand significand validation regular
-        # experession.
+        # expression.
         VALID_SCI_SIGNIFICAND_RE = /\A-?(\.\d+|\d+|\d+\.\d+)\z/.freeze
 
-        # Scientific notation operand exponent validation regular experession.
+        # Scientific notation operand exponent validation regular expression.
         VALID_SCI_EXPONENT_RE = /\A-?\d+\z/.freeze
 
         include Enumerable

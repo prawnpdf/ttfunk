@@ -21,7 +21,7 @@ module TTFunk
         attr_reader :platform_id
 
         # Platform-specific encoding ID.
-        # @return [Integere]
+        # @return [Integer]
         attr_reader :encoding_id
 
         # Record encoding format.

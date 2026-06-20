@@ -27,7 +27,7 @@ module TTFunk
       @subsets[subset]
     end
 
-    # Add chracters to appropiate subsets.
+    # Add characters to appropriate subsets.
     #
     # @param characters [Array<Integer>] should be an array of UTF-16 code
     #   points
