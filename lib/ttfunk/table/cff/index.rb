@@ -37,7 +37,7 @@ module TTFunk
           end
         end
 
-        # Numer of items in this index.
+        # Number of items in this index.
         #
         # @return [Integer]
         def items_count

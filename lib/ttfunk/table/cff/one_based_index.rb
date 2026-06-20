@@ -16,7 +16,7 @@ module TTFunk
           :length,
           :encode
 
-        # Underlaying Index.
+        # Underlying Index.
         # @return [TTFunk::Table::Cff::Index]
         attr_reader :base_index
 

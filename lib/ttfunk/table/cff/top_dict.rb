@@ -208,7 +208,7 @@ module TTFunk
           file.cff
         end
 
-        # Ofsset of CFF table in the file.
+        # Offset of CFF table in the file.
         #
         # @return [Integer]
         def cff_offset

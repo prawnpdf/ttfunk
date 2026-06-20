@@ -32,7 +32,7 @@ module TTFunk
           @language_id = language_id
         end
 
-        # Removes chracter incompatible with PostScript.
+        # Removes character incompatible with PostScript.
         # @return [String] PostScript-compatible version of this string.
         def strip_extended
           stripped = gsub(/[\x00-\x19\x80-\xff]/n, '')

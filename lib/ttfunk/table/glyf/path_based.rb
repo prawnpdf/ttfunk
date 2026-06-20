@@ -33,7 +33,7 @@ module TTFunk
         # @return [Integer, Float]
         attr_reader :left_side_bearing
 
-        # Rigth side bearing.
+        # Right side bearing.
         # @return [Integer, Float]
         attr_reader :right_side_bearing
 

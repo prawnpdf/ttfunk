@@ -6,7 +6,7 @@ module TTFunk
   class Table
     # Index to Location table.
     class Loca < Table
-      # Glyph ofsets
+      # Glyph offsets
       # @return [Array<Integer>]
       attr_reader :offsets
 

@@ -360,13 +360,13 @@ module TTFunk
       # Unicode block ranges.
       UNICODE_RANGES = UNICODE_BLOCKS.keys.sort_by(&:max).freeze
 
-      # Start chracter for average character width calculation.
+      # Start character for average character width calculation.
       LOWERCASE_START = 'a'.ord
 
-      # End chracter for average character width calculation.
+      # End character for average character width calculation.
       LOWERCASE_END = 'z'.ord
 
-      # Number of chracters for average character width calculation.
+      # Number of characters for average character width calculation.
       LOWERCASE_COUNT = (LOWERCASE_END - LOWERCASE_START) + 1
 
       # Space character code point.
@@ -389,7 +389,7 @@ module TTFunk
       # frequency of that letter in the English language.
       WEIGHT_SPACE = 166
 
-      # chracter weights for average character width calculation.
+      # character weights for average character width calculation.
       WEIGHT_LOWERCASE = [
         64, 14, 27, 35, 100, 20, 14, 42, 63, 3, 6, 35, 20,
         56, 56, 17, 4, 49, 56, 71, 31, 10, 18, 3, 18, 2,

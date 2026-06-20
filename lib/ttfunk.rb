@@ -143,7 +143,7 @@ module TTFunk
       io_or_path.binread
     end
 
-    # @param contents [String] binary string containg the font data
+    # @param contents [String] binary string containing the font data
     # @param offset [Integer] offset at which the font data starts
     def initialize(contents, offset = 0)
       @contents = StringIO.new(contents)
