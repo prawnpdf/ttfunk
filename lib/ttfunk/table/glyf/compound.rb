@@ -12,6 +12,10 @@ module TTFunk
         # Flags bit 0: arg1 and arg2 are words.
         ARG_1_AND_2_ARE_WORDS = 0x0001
 
+        # Flags bit 1: arg1 and arg2 are x and y offsets; otherwise they are
+        # point numbers for point matching.
+        ARGS_ARE_XY_VALUES = 0x0002
+
         # Flags bit 3: there is a simple scale for the component.
         WE_HAVE_A_SCALE = 0x0008
 
@@ -76,8 +80,10 @@ module TTFunk
         #   y-offset for component or point number.
         #   @return [Integer]
         # @!attribute [rw] transform
-        #   Transformation.
-        #   @return []
+        #   Component transformation, as F2Dot14 values: `nil` (identity),
+        #   `[scale]`, `[x_scale, y_scale]`, or
+        #   `[x_scale, scale01, scale10, y_scale]`.
+        #   @return [nil, Array<Float>]
         Component = Struct.new(:flags, :glyph_index, :arg1, :arg2, :transform)
 
         # @param id [Integer] glyph ID.
@@ -151,6 +157,56 @@ module TTFunk
           end
 
           result
+        end
+
+        # Fully parsed component records of this composite glyph.
+        #
+        # @return [Array<Component>]
+        def components
+          @components ||=
+            begin
+              io = StringIO.new(raw)
+              io.pos = 10
+              components = []
+
+              loop do
+                component = parse_component(io)
+                components << component
+                break if component.flags.nobits?(MORE_COMPONENTS)
+              end
+
+              components
+            end
+        end
+
+        private
+
+        def parse_component(io)
+          flags, glyph_index = io.read(4).unpack('n*')
+          arg1, arg2 = read_args(io, flags)
+          Component.new(flags, glyph_index, arg1, arg2, read_transform(io, flags))
+        end
+
+        def read_args(io, flags)
+          size = flags.allbits?(ARG_1_AND_2_ARE_WORDS) ? 2 : 1
+          args = Array.new(2) { io.read(size).unpack1(size == 2 ? 'n' : 'C') }
+          return args if flags.nobits?(ARGS_ARE_XY_VALUES)
+
+          args.map { |arg| BinUtils.twos_comp_to_int(arg, bit_width: size * 8) }
+        end
+
+        def read_transform(io, flags)
+          if flags.allbits?(WE_HAVE_A_TWO_BY_TWO)
+            Array.new(4) { read_f2dot14(io) }
+          elsif flags.allbits?(WE_HAVE_AN_X_AND_Y_SCALE)
+            Array.new(2) { read_f2dot14(io) }
+          elsif flags.allbits?(WE_HAVE_A_SCALE)
+            [read_f2dot14(io)]
+          end
+        end
+
+        def read_f2dot14(io)
+          BinUtils.twos_comp_to_int(io.read(2).unpack1('n'), bit_width: 16) / 16_384.0
         end
       end
     end
