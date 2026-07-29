@@ -60,7 +60,62 @@ module TTFunk
         end
       end
 
+      # Composite glyphs referencing other composites are rare and shallow;
+      # a font whose nesting exceeds this bound is treated as malformed
+      # rather than risking unbounded recursion on a reference cycle.
+      MAX_COMPONENT_DEPTH = 5
+
+      # Decoded outline contours of a glyph, with composite components
+      # resolved, positioned, and transformed.
+      #
+      # @param glyph_id [Integer]
+      # @return [Array<Array<TTFunk::Table::Glyf::Simple::Point>>] one array
+      #   of points per contour; empty for blank glyphs such as space.
+      # @raise [TTFunk::Error] on component nesting deeper than
+      #   {MAX_COMPONENT_DEPTH} or on point-matching component alignment,
+      #   which is not supported.
+      def contours_for(glyph_id)
+        resolve_contours(glyph_id, 0)
+      end
+
       private
+
+      def resolve_contours(glyph_id, depth)
+        raise Error, "component nesting deeper than #{MAX_COMPONENT_DEPTH}" if depth > MAX_COMPONENT_DEPTH
+
+        glyph = self.for(glyph_id)
+        return [] unless glyph
+        return glyph.contours unless glyph.compound?
+
+        glyph.components.flat_map { |component|
+          resolve_contours(component.glyph_index, depth + 1).map { |contour|
+            contour.map { |point| position_point(point, component) }
+          }
+        }
+      end
+
+      def position_point(point, component)
+        if component.flags.nobits?(Compound::ARGS_ARE_XY_VALUES)
+          raise Error, 'point-matching component alignment is not supported'
+        end
+
+        x, y = scale_coordinates(point.x, point.y, component.transform)
+        Simple::Point.new(x + component.arg1, y + component.arg2, point.on_curve)
+      end
+
+      def scale_coordinates(x, y, transform)
+        case transform&.length
+        when nil
+          [x, y]
+        when 1
+          [x * transform[0], y * transform[0]]
+        when 2
+          [x * transform[0], y * transform[1]]
+        else
+          a, b, c, d = transform
+          [(x * a) + (y * c), (x * b) + (y * d)]
+        end
+      end
 
       def parse!
         # because the glyf table is rather complex to parse, we defer

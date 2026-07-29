@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+
+* Decoded glyph outline access
+
+  `Glyf::Simple#contours` decodes the outline points (coordinates and
+  on-curve flags), `Glyf::Compound#components` fully parses component
+  records into the existing `Component` struct (offsets, point-matching
+  args, and F2Dot14 transforms), and `Glyf#contours_for` resolves a glyph
+  id into positioned contours, composites included.
+
 ### Fixed
 
 * `maxp` table encoding
