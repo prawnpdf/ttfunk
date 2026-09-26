@@ -9,6 +9,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Fixed
 
+* Cache code page misses in `CodePage#from_unicode`
+
+  A character outside the code page raised and rescued
+  `Encoding::UndefinedConversionError` on every lookup, because the `nil`
+  answer was never cached. Prawn asks the MacRoman subset about every
+  character first, so any non-MacRoman text paid for an exception per
+  character each time it was measured or drawn.
+
+  Mikhail Zadera
+
 * `maxp` table encoding
 
   The table was encoded with the reverse subset indexinx. This resulted in
