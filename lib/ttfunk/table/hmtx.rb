@@ -67,13 +67,15 @@ module TTFunk
       end
 
       def parse!
-        @metrics = []
-
-        file.horizontal_header.number_of_metrics.times do
-          advance = read(2, 'n').first
-          lsb = read_signed(1).first
-          @metrics.push(HorizontalMetric.new(advance, lsb))
-        end
+        number_of_metrics = file.horizontal_header.number_of_metrics
+        advances_and_bearings = read(number_of_metrics * 4, 'n*')
+        @metrics =
+          Array.new(number_of_metrics) do |index|
+            HorizontalMetric.new(
+              advances_and_bearings[index * 2],
+              to_signed(advances_and_bearings[(index * 2) + 1]),
+            )
+          end
 
         lsb_count = file.maximum_profile.num_glyphs -
           file.horizontal_header.number_of_metrics
