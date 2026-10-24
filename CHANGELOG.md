@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changes
+
+* Faster `hmtx` table parsing
+
+  Clément Joubert
+
 ### Fixed
 
 * `maxp` table encoding
